@@ -72,7 +72,6 @@ R4 = CreateSeuratObject(counts = R4_data, project = "R4")
 R4$Sample = "R4"
 R4$Treatment = "Responder"
 
-yo = "yo"
 
 
 
