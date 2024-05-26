@@ -1,0 +1,69 @@
+---
+title: 'Tils'
+author: "Michael Monsonego"
+date:  "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  html_document: 
+    fig_crop: no
+    toc: yes
+    toc_float: yes
+    fig_width: 16
+    fig_height: 16
+  pdf_document:
+    toc: yes
+editor_options:
+  
+  chunk_output_type: console
+---
+
+
+
+## 1. Load the datasets
+```{r message=FALSE, warning=FALSE, cache= TRUE}
+library(dplyr)
+library(Seurat)
+library(patchwork)
+library(tidyverse)
+library(sleepwalk)
+library(gridExtra)
+library(future)
+library(RColorBrewer)
+
+setwd("")
+
+# Load the datasets
+data = Read10X(data.dir = "")
+ = CreateSeuratObject(counts = N1_data, project = "N1")
+N1$Sample = "N1"
+N1$Treatment = "Non_Responder"
+
+data = Read10X(data.dir = "")
+ = CreateSeuratObject(counts = N2_data, project = "N2")
+N2$Sample = "N2"
+N2$Treatment = "Non_Responder"
+
+data = Read10X(data.dir = "")
+ = CreateSeuratObject(counts = N3_data, project = "N3")
+N3$Sample = "N3"
+N3$Treatment = "Non_Responder"
+
+data = Read10X(data.dir = "")
+ = CreateSeuratObject(counts = N4_data, project = "N4")
+N4$Sample = "N4"
+N4$Treatment = "Non_Responder"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
