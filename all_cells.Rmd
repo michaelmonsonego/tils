@@ -29,36 +29,48 @@ library(gridExtra)
 library(future)
 library(RColorBrewer)
 
-setwd("")
+setwd("D:\Michael\git_check\tils")
 
 # Load the datasets
-data = Read10X(data.dir = "")
- = CreateSeuratObject(counts = N1_data, project = "N1")
+N1data = Read10X(data.dir = "")
+N1 = CreateSeuratObject(counts = N1_data, project = "N1")
 N1$Sample = "N1"
 N1$Treatment = "Non_Responder"
 
-data = Read10X(data.dir = "")
- = CreateSeuratObject(counts = N2_data, project = "N2")
+N2_data = Read10X(data.dir = "")
+N2 = CreateSeuratObject(counts = N2_data, project = "N2")
 N2$Sample = "N2"
 N2$Treatment = "Non_Responder"
 
-data = Read10X(data.dir = "")
- = CreateSeuratObject(counts = N3_data, project = "N3")
+N3_data = Read10X(data.dir = "")
+N3 = CreateSeuratObject(counts = N3_data, project = "N3")
 N3$Sample = "N3"
 N3$Treatment = "Non_Responder"
 
-data = Read10X(data.dir = "")
- = CreateSeuratObject(counts = N4_data, project = "N4")
+N4_data = Read10X(data.dir = "")
+N4 = CreateSeuratObject(counts = N4_data, project = "N4")
 N4$Sample = "N4"
 N4$Treatment = "Non_Responder"
 
+R1_data = Read10X(data.dir = "")
+R1 = CreateSeuratObject(counts = R1_data, project = "R1")
+R1$Sample = "R1"
+R1$Treatment = "Responder"
 
+R2_data = Read10X(data.dir = "")
+R2 = CreateSeuratObject(counts = R2_data, project = "R2")
+R2$Sample = "R2"
+R2$Treatment = "Responder"
 
+R3_data = Read10X(data.dir = "")
+R3 = CreateSeuratObject(counts = R3_data, project = "R3")
+R3$Sample = "R3"
+R3$Treatment = "Responder"
 
-
-
-
-
+R4_data = Read10X(data.dir = "")
+R4 = CreateSeuratObject(counts = R4_data, project = "R4")
+R4$Sample = "R4"
+R4$Treatment = "Responder"
 
 
 
