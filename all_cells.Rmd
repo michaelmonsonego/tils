@@ -4,9 +4,9 @@ author: "Michael Monsonego"
 date:  "`r format(Sys.time(), '%d %B, %Y')`"
 output:
   html_document: 
-    fig_crop: no
-    toc: yes
-    toc_float: yes
+    fig_crop: false
+    toc: true
+    toc_float: true
     fig_width: 16
     fig_height: 16
   pdf_document:
@@ -19,7 +19,7 @@ editor_options:
 
 
 ## 1. Load the datasets
-```{r message=FALSE, warning=FALSE, cache= TRUE}
+```{r message=FALSE, warning=FALSE, cache=FALSE}
 library(dplyr)
 library(Seurat)
 library(patchwork)
@@ -28,52 +28,109 @@ library(sleepwalk)
 library(gridExtra)
 library(future)
 library(RColorBrewer)
-
-setwd("D:\Michael\git_check\tils")
+memory.limit(size = 16000)
+setwd("D:/Michael/git_check/tils")
 
 # Load the datasets
-N1data = Read10X(data.dir = "")
+N1_data = Read10X(data.dir = "G:/michael/tils/Tils/N1_exp72/outs/filtered_feature_bc_matrix")
 N1 = CreateSeuratObject(counts = N1_data, project = "N1")
 N1$Sample = "N1"
 N1$Treatment = "Non_Responder"
 
-N2_data = Read10X(data.dir = "")
+N2_data = Read10X(data.dir = "G:/michael/tils/Tils/N2_exp72/outs/filtered_feature_bc_matrix")
 N2 = CreateSeuratObject(counts = N2_data, project = "N2")
 N2$Sample = "N2"
 N2$Treatment = "Non_Responder"
 
-N3_data = Read10X(data.dir = "")
+N3_data = Read10X(data.dir = "G:/michael/tils/Tils/N3_exp72/outs/filtered_feature_bc_matrix")
 N3 = CreateSeuratObject(counts = N3_data, project = "N3")
 N3$Sample = "N3"
 N3$Treatment = "Non_Responder"
 
-N4_data = Read10X(data.dir = "")
+N4_data = Read10X(data.dir = "G:/michael/tils/Tils/N4_exp72/outs/filtered_feature_bc_matrix")
 N4 = CreateSeuratObject(counts = N4_data, project = "N4")
 N4$Sample = "N4"
 N4$Treatment = "Non_Responder"
 
-R1_data = Read10X(data.dir = "")
+R1_data = Read10X(data.dir = "G:/michael/tils/Tils/R1_exp72/outs/filtered_feature_bc_matrix")
 R1 = CreateSeuratObject(counts = R1_data, project = "R1")
 R1$Sample = "R1"
 R1$Treatment = "Responder"
 
-R2_data = Read10X(data.dir = "")
+R2_data = Read10X(data.dir = "G:/michael/tils/Tils/R2_exp72/outs/filtered_feature_bc_matrix")
 R2 = CreateSeuratObject(counts = R2_data, project = "R2")
 R2$Sample = "R2"
 R2$Treatment = "Responder"
 
-R3_data = Read10X(data.dir = "")
+R3_data = Read10X(data.dir = "G:/michael/tils/Tils/R3_exp72/outs/filtered_feature_bc_matrix")
 R3 = CreateSeuratObject(counts = R3_data, project = "R3")
 R3$Sample = "R3"
 R3$Treatment = "Responder"
 
-R4_data = Read10X(data.dir = "")
+R4_data = Read10X(data.dir = "G:/michael/tils/Tils/R4_exp72/outs/filtered_feature_bc_matrix")
 R4 = CreateSeuratObject(counts = R4_data, project = "R4")
 R4$Sample = "R4"
 R4$Treatment = "Responder"
 
 
+merged_0 = merge(N1_data, c(N2_data, N3_data, N4_data, R1_data, R2_data, R3_data, R4_data), add.cell.ids = c("N1_data", "N2_data", "N3_data", "N4_data", "R1_data", "R2_data", "R3_data", "R4_data"))
+merged_0$Sample = factor(merged_0$Sample, levels = c("N1_data", "N2_data", "N3_data", "N4_data", "R1_data", "R2_data", "R3_data", "R4_data"))
+merged_0$Treatment = factor(merged_0$Treatment, levels=c("Non_Responder", "Responder"))
+dim(merged_0)
+
+saveRDS(merged, file="D:/Michael/git_check/tils/objects/merged_not_processed.rds")
+
+#M# merge attempts
+temp1 <- merge(N1_data, y = N2_data, add.cell.ids = c("N1_data", "N2_data"))
+temp2 <- merge(N3_data, y = N4_data, add.cell.ids = c("N3_data", "N4_data"))
+temp3 <- merge(temp1, y = temp2, add.cell.ids = c("temp1", "temp2"))
+final_merged <- merge(temp3, c(R1_data, R2_data, R3_data, R4_data), add.cell.ids = c("temp3", "R1_data", "R2_data", "R3_data", "R4_data"))
+
+
+```
+
+## 2. QC and selecting cells for further analysis
+```{r message=FALSE, warning=FALSE, cache= TRUE, fig.width=12, fig.height= 6}
+
+merged_0[["percent.mt"]] = PercentageFeatureSet(merged_0, pattern= "^mt-")
+merged_0[["percent.ribo"]] = PercentageFeatureSet(merged_0, pattern= "^Rp[sl]")
+
+VlnPlot(merged_0, 
+        features = c("nFeature_RNA", "nCount_RNA", "percent.mt", "percent.ribo"), 
+        ncol = 4, 
+        group.by="Treatment", 
+        cols=c("#CFBAE1", "#5C7D9D","#A4DEF9"), 
+        pt.size = 0.000001)
+ggsave(filename = "Plots/QC.png", dpi=300, height=10, width=15, device = 'png')
+
+VlnPlot(merged_0, 
+        features="percent.mt", 
+        y.max=10, 
+        group.by="Treatment",
+        cols=c("#CFBAE1", "#5C7D9D","#A4DEF9"), 
+        pt.size = 0.000001)
+
+plot1 = FeatureScatter(merged_0, 
+                       feature1 = "nCount_RNA", 
+                       feature2 = "percent.mt", 
+                       group.by = "Treatment", 
+                       cols = c("#CFBAE1", "#5C7D9D","#A4DEF9")) +
+      labs(color = "Treatment")+
+      theme(axis.text.x=element_text(angle=45, hjust=1))
+plot2 = FeatureScatter(merged_0,
+                       feature1 = "nCount_RNA",
+                       feature2 = "nFeature_RNA",
+                       group.by = "Treatment", 
+                       cols = c("#CFBAE1", "#5C7D9D","#A4DEF9")) +
+      labs(color = "Treatment")+
+      theme(axis.text.x=element_text(angle=45, hjust=1))
+plot1 + plot2
+ggsave(filename = 'Plots/Scatter Feature.png', dpi=300, height=10, width=15, device = 'png')
+
+#merged = subset(merged_0, subset = nFeature_RNA > 500 & nFeature_RNA < 4000 & nCount_RNA<20000 & percent.mt < 10 & percent.ribo< 50)
+#dim(merged)
+```
 
 
 
-
+    
