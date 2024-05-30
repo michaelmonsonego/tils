@@ -31,6 +31,9 @@ library(RColorBrewer)
 memory.limit(size = 16000)
 setwd("D:/Michael/git_check/tils")
 
+8482 -> saved.seed
+set.seed(saved.seed)
+
 # Load the datasets
 N1_data = Read10X(data.dir = "G:/michael/tils/Tils/N1_exp72/outs/filtered_feature_bc_matrix")
 N1 = CreateSeuratObject(counts = N1_data, project = "N1")
@@ -77,6 +80,7 @@ merged_0 = merge(N1_data, c(N2_data, N3_data, N4_data, R1_data, R2_data, R3_data
 merged_0$Sample = factor(merged_0$Sample, levels = c("N1_data", "N2_data", "N3_data", "N4_data", "R1_data", "R2_data", "R3_data", "R4_data"))
 merged_0$Treatment = factor(merged_0$Treatment, levels=c("Non_Responder", "Responder"))
 dim(merged_0)
+
 
 saveRDS(merged, file="D:/Michael/git_check/tils/objects/merged_not_processed.rds")
 

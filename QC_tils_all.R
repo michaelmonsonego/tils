@@ -1,0 +1,169 @@
+library(Seurat)
+library(plyr)
+library(tidyverse)  
+library(patchwork)
+library(stringr)
+library(RColorBrewer)
+library(gridExtra)
+library(grid)
+library(cowplot)
+library(future)
+library(ggsignif)
+library(DT)
+library(Cairo)
+library(snakecase)
+library(scCustomize)
+
+8482 -> saved.seed
+set.seed(saved.seed)
+
+theme_set(theme_bw(base_size = 14))
+memory.limit(size=10^9)
+
+setwd("D:/Michael/git_check/tils")
+
+# set up data ----
+Sample_Names_vec <- list.files(path ='/Users/kerenreshef/Desktop/TAU/PhD/Madi_lab/Pemphigus/scRNA-seq/exp.2/samples_2exp',full.names = F)
+
+seurat_object_list <- list()
+
+# Create Seurat objects in a loop
+#for (sample in Sample_Names_vec) {
+ # seurat_object_list[[sample]] <- CreateSeuratObject(counts =  Read10X(data.dir = paste0('/Users/kerenreshef/Desktop/TAU/PhD/Madi_lab/Pemphigus/scRNA-seq/exp.2/samples_2exp/',sample,"/filtered_feature_bc_matrix/")),project = sample)
+#}
+
+# Load the datasets
+N1_data = Read10X(data.dir = "G:/michael/tils/Tils/N1_exp72/outs/filtered_feature_bc_matrix")
+N1 = CreateSeuratObject(counts = N1_data, project = "N1")
+N1$Sample = "N1"
+N1$Treatment = "Non_Responder"
+
+N2_data = Read10X(data.dir = "G:/michael/tils/Tils/N2_exp72/outs/filtered_feature_bc_matrix")
+N2 = CreateSeuratObject(counts = N2_data, project = "N2")
+N2$Sample = "N2"
+N2$Treatment = "Non_Responder"
+
+N3_data = Read10X(data.dir = "G:/michael/tils/Tils/N3_exp72/outs/filtered_feature_bc_matrix")
+N3 = CreateSeuratObject(counts = N3_data, project = "N3")
+N3$Sample = "N3"
+N3$Treatment = "Non_Responder"
+
+N4_data = Read10X(data.dir = "G:/michael/tils/Tils/N4_exp72/outs/filtered_feature_bc_matrix")
+N4 = CreateSeuratObject(counts = N4_data, project = "N4")
+N4$Sample = "N4"
+N4$Treatment = "Non_Responder"
+
+R1_data = Read10X(data.dir = "G:/michael/tils/Tils/R1_exp72/outs/filtered_feature_bc_matrix")
+R1 = CreateSeuratObject(counts = R1_data, project = "R1")
+R1$Sample = "R1"
+R1$Treatment = "Responder"
+
+R2_data = Read10X(data.dir = "G:/michael/tils/Tils/R2_exp72/outs/filtered_feature_bc_matrix")
+R2 = CreateSeuratObject(counts = R2_data, project = "R2")
+R2$Sample = "R2"
+R2$Treatment = "Responder"
+
+R3_data = Read10X(data.dir = "G:/michael/tils/Tils/R3_exp72/outs/filtered_feature_bc_matrix")
+R3 = CreateSeuratObject(counts = R3_data, project = "R3")
+R3$Sample = "R3"
+R3$Treatment = "Responder"
+
+R4_data = Read10X(data.dir = "G:/michael/tils/Tils/R4_exp72/outs/filtered_feature_bc_matrix")
+R4 = CreateSeuratObject(counts = R4_data, project = "R4")
+R4$Sample = "R4"
+R4$Treatment = "Responder"
+
+#downnsample
+seurat_object_sub_list <- list()
+
+for (sample in Sample_Names_vec) {
+  seurat_object_sub_list[[sample]] <- seurat_object_list[[sample]][, sample(colnames(seurat_object_list[[sample]]), size =8000, replace=F)]
+  
+}
+
+#mito and ribo
+for (sample in Sample_Names_vec){
+  seurat_object_sub_list[[sample]][["percent.mt"]] <- PercentageFeatureSet(seurat_object_sub_list[[sample]], pattern = "^MT-")
+  seurat_object_sub_list[[sample]][["percent.ribo"]] <- PercentageFeatureSet(seurat_object_sub_list[[sample]], pattern =  "^RP[SL]")
+}
+
+# Visualize QC metrics as a violin plot
+for (sample in Sample_Names_vec){
+  VlnPlot(seurat_object_sub_list[[sample]], features = c("nFeature_RNA", "nCount_RNA", "percent.mt", "percent.ribo") ,ncol = 4)
+  ggsave(filename = paste0(sample,'QC_Violin_Before.png'), dpi=300, height=7, width=12, device = 'png')
+}
+
+#subset
+for (sample in Sample_Names_vec){
+  seurat_object_sub_list[[sample]] <- subset(seurat_object_sub_list[[sample]],
+                            nFeature_RNA > 200 &
+                              nFeature_RNA < 4000 &
+                              nCount_RNA > 200 &
+                              nCount_RNA < 10000 &
+                              percent.mt < 15 &
+                              percent.ribo < 45
+)
+}
+
+# Visualize QC metrics as a violin plot
+for (sample in Sample_Names_vec){
+  VlnPlot(seurat_object_sub_list[[sample]], features = c("nFeature_RNA", "nCount_RNA", "percent.mt", "percent.ribo") ,ncol = 4)
+  ggsave(filename = paste0(sample,'QC_Violin_After.png'), dpi=300, height=7, width=12, device = 'png')
+}
+
+#norm
+for (sample in Sample_Names_vec){
+  seurat_object_sub_list[[sample]] <- NormalizeData(seurat_object_sub_list[[sample]], normalization.method = "LogNormalize", scale.factor = 10000)
+  seurat_object_sub_list[[sample]] <- FindVariableFeatures(seurat_object_sub_list[[sample]], selection.method = "vst", nfeatures = 3000)
+}  
+
+#pre-integrate
+features <- SelectIntegrationFeatures(object.list =seurat_object_sub_list)
+
+#integration
+immune.anchors <- FindIntegrationAnchors(object.list = seurat_object_sub_list, anchor.features = features)
+#======from this part the analysis was done on the server===== 
+saveRDS(immune.anchors, file = paste0("immune.anchors.Pem_all.rds"))
+library(Seurat)
+immune.anchors <- readRDS("immune.anchors.Pem_all.rds")
+immune.combined <- IntegrateData(anchorset = immune.anchors)
+
+# specify that we will perform downstream analysis on the corrected data note that the
+# original unmodified data still resides in the 'RNA' assay
+DefaultAssay(immune.combined) <- "integrated"
+
+# Run the standard workflow for visualization and clustering
+immune.combined <- ScaleData(immune.combined, verbose = FALSE)
+immune.combined <- RunPCA(immune.combined, npcs = 30, verbose = FALSE)
+elbow_plot <- ElbowPlot(immune.combined, ndims = 30)#M# choose dims here 
+ggsave(elbow_plot,filename = paste0('Elbow.integrate.pdf'), dpi=150, height=7, width=12)
+immune.combined <- FindNeighbors(immune.combined, reduction = "pca", dims = 1:11)
+immune.combined = RunTSNE(immune.combined, dims = 1:11)
+
+res_seq <- c(.25,.3, .35, .4, .45, .5)
+for(res in res_seq){
+  immune.combined.res_test <- FindClusters(immune.combined, resolution = res)
+  
+  res_tSNE  <- DimPlot(immune.combined.res_test, reduction = "tsne",
+                       repel = T, label = TRUE, label.size = 5) +
+    theme(legend.position = "none") + 
+    plot_annotation(title = paste("Res of", res))
+  assign(paste0("tSNE_",res), res_tSNE)
+}
+
+tSNE_ls <- list(tSNE_0.25,tSNE_0.3,tSNE_0.35,tSNE_0.4,tSNE_0.45,tSNE_0.5)
+all_tSNE <- plot_grid(tSNE_0.25,tSNE_0.3,tSNE_0.35,tSNE_0.4,tSNE_0.45,tSNE_0.5, ncol = 3) 
+ggsave(all_tSNE,filename = paste0('Pemphigus.11integrate.png'), dpi=300, height=7, width=12, device = 'png')
+
+immune.combined <- FindClusters(immune.combined, resolution = .3)
+saveRDS(immune.combined, file = paste0("Pemphigus_all.3integrgate.rds"))
+
+immune.combined <- JoinLayers(immune.combined,assay = "RNA")
+allmarkers <- FindAllMarkers(immune.combined, only.pos = TRUE, min.pct = 0.25, logfc.threshold = 0.25, assay = "RNA")
+Top50Markers <- allmarkers %>% 
+  group_by(cluster) %>% 
+  top_n(n = 50, wt = avg_log2FC) %>% 
+  as.data.frame %>% 
+  arrange(cluster, -avg_log2FC)
+
+write_csv(Top50Markers, "Top50Markers_perClust.Pemphigus.3integrgate.csv")
