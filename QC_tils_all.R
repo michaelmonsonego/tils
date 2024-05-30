@@ -23,9 +23,9 @@ memory.limit(size=10^9)
 setwd("D:/Michael/git_check/tils")
 
 # set up data ----
-Sample_Names_vec <- list.files(path ='/Users/kerenreshef/Desktop/TAU/PhD/Madi_lab/Pemphigus/scRNA-seq/exp.2/samples_2exp',full.names = F)
+#Sample_Names_vec <- list.files(path ='/Users/kerenreshef/Desktop/TAU/PhD/Madi_lab/Pemphigus/scRNA-seq/exp.2/samples_2exp',full.names = F)
 
-seurat_object_list <- list()
+#seurat_object_list <- list()
 
 # Create Seurat objects in a loop
 #for (sample in Sample_Names_vec) {
@@ -33,48 +33,60 @@ seurat_object_list <- list()
 #}
 
 # Load the datasets
+seurat_object_list <- list()
+counter <- 0
+
 N1_data = Read10X(data.dir = "G:/michael/tils/Tils/N1_exp72/outs/filtered_feature_bc_matrix")
 N1 = CreateSeuratObject(counts = N1_data, project = "N1")
 N1$Sample = "N1"
 N1$Treatment = "Non_Responder"
+seurat_object_list[["N1"]] <- N1
 
 N2_data = Read10X(data.dir = "G:/michael/tils/Tils/N2_exp72/outs/filtered_feature_bc_matrix")
 N2 = CreateSeuratObject(counts = N2_data, project = "N2")
 N2$Sample = "N2"
 N2$Treatment = "Non_Responder"
+seurat_object_list[["N2"]] <- N2
 
 N3_data = Read10X(data.dir = "G:/michael/tils/Tils/N3_exp72/outs/filtered_feature_bc_matrix")
 N3 = CreateSeuratObject(counts = N3_data, project = "N3")
 N3$Sample = "N3"
 N3$Treatment = "Non_Responder"
+seurat_object_list[["N3"]] <- N3
 
 N4_data = Read10X(data.dir = "G:/michael/tils/Tils/N4_exp72/outs/filtered_feature_bc_matrix")
 N4 = CreateSeuratObject(counts = N4_data, project = "N4")
 N4$Sample = "N4"
 N4$Treatment = "Non_Responder"
+seurat_object_list[["N4"]] <- N4
 
 R1_data = Read10X(data.dir = "G:/michael/tils/Tils/R1_exp72/outs/filtered_feature_bc_matrix")
 R1 = CreateSeuratObject(counts = R1_data, project = "R1")
 R1$Sample = "R1"
 R1$Treatment = "Responder"
+seurat_object_list[["R1"]] <- R1
 
 R2_data = Read10X(data.dir = "G:/michael/tils/Tils/R2_exp72/outs/filtered_feature_bc_matrix")
 R2 = CreateSeuratObject(counts = R2_data, project = "R2")
 R2$Sample = "R2"
 R2$Treatment = "Responder"
+seurat_object_list[["R2"]] <- R2
 
 R3_data = Read10X(data.dir = "G:/michael/tils/Tils/R3_exp72/outs/filtered_feature_bc_matrix")
 R3 = CreateSeuratObject(counts = R3_data, project = "R3")
 R3$Sample = "R3"
 R3$Treatment = "Responder"
+seurat_object_list[["R3"]] <- R3
 
 R4_data = Read10X(data.dir = "G:/michael/tils/Tils/R4_exp72/outs/filtered_feature_bc_matrix")
 R4 = CreateSeuratObject(counts = R4_data, project = "R4")
 R4$Sample = "R4"
 R4$Treatment = "Responder"
+seurat_object_list[["R4"]] <- R4
 
 #downnsample
 seurat_object_sub_list <- list()
+Sample_Names_vec <- C("N1","N2","N3","N4","R1","R2","R3","R4",)
 
 for (sample in Sample_Names_vec) {
   seurat_object_sub_list[[sample]] <- seurat_object_list[[sample]][, sample(colnames(seurat_object_list[[sample]]), size =8000, replace=F)]
@@ -94,7 +106,7 @@ for (sample in Sample_Names_vec){
 }
 
 #subset
-for (sample in Sample_Names_vec){
+for (sample in Sample_Names_vec){ #m# todo : choose values
   seurat_object_sub_list[[sample]] <- subset(seurat_object_sub_list[[sample]],
                             nFeature_RNA > 200 &
                               nFeature_RNA < 4000 &
@@ -123,9 +135,9 @@ features <- SelectIntegrationFeatures(object.list =seurat_object_sub_list)
 #integration
 immune.anchors <- FindIntegrationAnchors(object.list = seurat_object_sub_list, anchor.features = features)
 #======from this part the analysis was done on the server===== 
-saveRDS(immune.anchors, file = paste0("immune.anchors.Pem_all.rds"))
+saveRDS(immune.anchors, file = paste0("immune.anchors.tils_all.rds")) #M# why paste0 ? needed?
 library(Seurat)
-immune.anchors <- readRDS("immune.anchors.Pem_all.rds")
+immune.anchors <- readRDS("immune.anchors.tils_all.rds")
 immune.combined <- IntegrateData(anchorset = immune.anchors)
 
 # specify that we will perform downstream analysis on the corrected data note that the
@@ -135,7 +147,7 @@ DefaultAssay(immune.combined) <- "integrated"
 # Run the standard workflow for visualization and clustering
 immune.combined <- ScaleData(immune.combined, verbose = FALSE)
 immune.combined <- RunPCA(immune.combined, npcs = 30, verbose = FALSE)
-elbow_plot <- ElbowPlot(immune.combined, ndims = 30)#M# choose dims here 
+elbow_plot <- ElbowPlot(immune.combined, ndims = 30) #M# choose dims here by elbow plot
 ggsave(elbow_plot,filename = paste0('Elbow.integrate.pdf'), dpi=150, height=7, width=12)
 immune.combined <- FindNeighbors(immune.combined, reduction = "pca", dims = 1:11)
 immune.combined = RunTSNE(immune.combined, dims = 1:11)
@@ -153,10 +165,10 @@ for(res in res_seq){
 
 tSNE_ls <- list(tSNE_0.25,tSNE_0.3,tSNE_0.35,tSNE_0.4,tSNE_0.45,tSNE_0.5)
 all_tSNE <- plot_grid(tSNE_0.25,tSNE_0.3,tSNE_0.35,tSNE_0.4,tSNE_0.45,tSNE_0.5, ncol = 3) 
-ggsave(all_tSNE,filename = paste0('Pemphigus.11integrate.png'), dpi=300, height=7, width=12, device = 'png')
+ggsave(all_tSNE,filename = paste0('Pemphigus.11integrate.png'), dpi=300, height=7, width=12, device = 'png') #M# todo : change name
 
 immune.combined <- FindClusters(immune.combined, resolution = .3)
-saveRDS(immune.combined, file = paste0("Pemphigus_all.3integrgate.rds"))
+saveRDS(immune.combined, file = paste0("Pemphigus_all.3integrgate.rds")) #M# todo : change name
 
 immune.combined <- JoinLayers(immune.combined,assay = "RNA")
 allmarkers <- FindAllMarkers(immune.combined, only.pos = TRUE, min.pct = 0.25, logfc.threshold = 0.25, assay = "RNA")
@@ -166,4 +178,4 @@ Top50Markers <- allmarkers %>%
   as.data.frame %>% 
   arrange(cluster, -avg_log2FC)
 
-write_csv(Top50Markers, "Top50Markers_perClust.Pemphigus.3integrgate.csv")
+write_csv(Top50Markers, "Top50Markers_perClust.Pemphigus.3integrgate.csv") #M# todo : change name
