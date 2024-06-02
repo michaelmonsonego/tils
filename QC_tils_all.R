@@ -20,6 +20,7 @@ set.seed(saved.seed)
 theme_set(theme_bw(base_size = 14))
 memory.limit(size=10^9)
 
+#M# human rna data integration - sent from keren
 setwd("D:/Michael/git_check/tils")
 
 # set up data ----
@@ -144,10 +145,11 @@ DefaultAssay(immune.combined) <- "integrated"
 # Run the standard workflow for visualization and clustering
 immune.combined <- ScaleData(immune.combined, verbose = FALSE)
 immune.combined <- RunPCA(immune.combined, npcs = 30, verbose = FALSE)
-ElbowPlot(immune.combined, ndims = 30) #M# Todo : choose dims here by elbow plot
-ggsave(filename = 'figures/integration/Elbow.integrate.pdf', dpi=300, height=7, width=12)
-immune.combined <- FindNeighbors(immune.combined, reduction = "pca", dims = 1:11)
-immune.combined = RunTSNE(immune.combined, dims = 1:11)
+ep <- ElbowPlot(immune.combined, ndims = 30) 
+ggsave(ep, filename = 'figures/integration/Elbow.integrate.jpg', dpi=300, height=7, width=12)
+immune.combined <- FindNeighbors(immune.combined, reduction = "pca", dims = 1:15) #M# 15 works for me
+immune.combined = RunTSNE(immune.combined, dims = 1:15)
+merged = RunUMAP(immune.combined, dims = 1:15)
 
 res_seq <- c(.25,.3, .35, .4, .45, .5)
 for(res in res_seq){
@@ -162,10 +164,28 @@ for(res in res_seq){
 
 tSNE_ls <- list(tSNE_0.25,tSNE_0.3,tSNE_0.35,tSNE_0.4,tSNE_0.45,tSNE_0.5)
 all_tSNE <- plot_grid(tSNE_0.25,tSNE_0.3,tSNE_0.35,tSNE_0.4,tSNE_0.45,tSNE_0.5, ncol = 3) 
-ggsave(all_tSNE,filename = paste0('tils<how many dims>.png'), dpi=300, height=7, width=12, device = 'png') #M# todo : change name
+ggsave(all_tSNE,filename = 'figures/integration/tils_15_dim_res_test.png', dpi=300, height=10, width=16, device = 'png') #M# todo : change name
 
-immune.combined <- FindClusters(immune.combined, resolution = .3)
-saveRDS(immune.combined, file = "Pemphigus_all.3integrgate.rds") #M# todo : change name
+#M# same for umap (if needed) : 
+for(res in res_seq){
+  immune.combined.res_test <- FindClusters(immune.combined, resolution = res)
+  
+  res_umap  <- DimPlot(immune.combined.res_test, reduction = "umap",
+                       repel = T, label = TRUE, label.size = 5) +
+    theme(legend.position = "none") + 
+    plot_annotation(title = paste("Res of", res))
+  assign(paste0("umap_",res), res_umap)
+}
+umsp_ls <- list(umap_0.25,umap_0.3,umap_0.35,umap_0.4,umap_0.45,umap_0.5)
+all_umap <- plot_grid(umap_0.25,umap_0.3,umap_0.35,umap_0.4,umap_0.45,umap_0.5, ncol = 3) 
+ggsave(all_umap,filename = 'figures/integration/tils_8_dim_res_test_umap.png', dpi=300, height=10, width=16, device = 'png') #M# todo : change name
+
+
+
+
+
+immune.combined <- FindClusters(immune.combined, resolution = .45) #M# choose res here : important for rest of analysis
+saveRDS(immune.combined, file = "objects/tils_all_.45_integrgate.rds")
 
 immune.combined <- JoinLayers(immune.combined,assay = "RNA")
 allmarkers <- FindAllMarkers(immune.combined, only.pos = TRUE, min.pct = 0.25, logfc.threshold = 0.25, assay = "RNA")
@@ -175,4 +195,4 @@ Top50Markers <- allmarkers %>%
   as.data.frame %>% 
   arrange(cluster, -avg_log2FC)
 
-write_csv(Top50Markers, "Top50Markers_perClust.Pemphigus.3integrgate.csv") #M# todo : change name
+write_csv(Top50Markers, "Top50Markers_perClust.tils.45integrgate.csv") 
