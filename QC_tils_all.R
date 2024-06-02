@@ -34,7 +34,6 @@ setwd("D:/Michael/git_check/tils")
 
 # Load the datasets
 seurat_object_list <- list()
-counter <- 0
 
 N1_data = Read10X(data.dir = "G:/michael/tils/Tils/N1_exp72/outs/filtered_feature_bc_matrix")
 N1 = CreateSeuratObject(counts = N1_data, project = "N1")
@@ -86,11 +85,10 @@ seurat_object_list[["R4"]] <- R4
 
 #downnsample
 seurat_object_sub_list <- list()
-Sample_Names_vec <- C("N1","N2","N3","N4","R1","R2","R3","R4",)
+Sample_Names_vec <- c("N1","N2","N3","N4","R1","R2","R3","R4")
 
 for (sample in Sample_Names_vec) {
-  seurat_object_sub_list[[sample]] <- seurat_object_list[[sample]][, sample(colnames(seurat_object_list[[sample]]), size =8000, replace=F)]
-  
+  seurat_object_sub_list[[sample]] <- seurat_object_list[[sample]][, sample(colnames(seurat_object_list[[sample]]), size =6900, replace=F)]
 }
 
 #mito and ribo
@@ -102,16 +100,16 @@ for (sample in Sample_Names_vec){
 # Visualize QC metrics as a violin plot
 for (sample in Sample_Names_vec){
   VlnPlot(seurat_object_sub_list[[sample]], features = c("nFeature_RNA", "nCount_RNA", "percent.mt", "percent.ribo") ,ncol = 4)
-  ggsave(filename = paste0(sample,'QC_Violin_Before.png'), dpi=300, height=7, width=12, device = 'png')
+  ggsave(filename = paste0(sample,'_QC_Violin_Before.png'), path = 'figures/integration/before', dpi=300, height=7, width=12, device = 'png')
 }
 
 #subset
-for (sample in Sample_Names_vec){ #m# todo : choose values
+for (sample in Sample_Names_vec){ #m# todo : choose values : make sure with friends
   seurat_object_sub_list[[sample]] <- subset(seurat_object_sub_list[[sample]],
                             nFeature_RNA > 200 &
-                              nFeature_RNA < 4000 &
+                              nFeature_RNA < 5500 &
                               nCount_RNA > 200 &
-                              nCount_RNA < 10000 &
+                              nCount_RNA < 40000 &
                               percent.mt < 15 &
                               percent.ribo < 45
 )
@@ -120,7 +118,7 @@ for (sample in Sample_Names_vec){ #m# todo : choose values
 # Visualize QC metrics as a violin plot
 for (sample in Sample_Names_vec){
   VlnPlot(seurat_object_sub_list[[sample]], features = c("nFeature_RNA", "nCount_RNA", "percent.mt", "percent.ribo") ,ncol = 4)
-  ggsave(filename = paste0(sample,'QC_Violin_After.png'), dpi=300, height=7, width=12, device = 'png')
+  ggsave(filename = paste0(sample,'_QC_Violin_After.png'), path = 'figures/integration/after', dpi=300, height=7, width=12, device = 'png')
 }
 
 #norm
@@ -135,8 +133,7 @@ features <- SelectIntegrationFeatures(object.list =seurat_object_sub_list)
 #integration
 immune.anchors <- FindIntegrationAnchors(object.list = seurat_object_sub_list, anchor.features = features)
 #======from this part the analysis was done on the server===== 
-saveRDS(immune.anchors, file = paste0("immune.anchors.tils_all.rds")) #M# why paste0 ? needed?
-library(Seurat)
+# saveRDS(immune.anchors, file = "objects/immune.anchors.tils_all.rds") 
 immune.anchors <- readRDS("immune.anchors.tils_all.rds")
 immune.combined <- IntegrateData(anchorset = immune.anchors)
 
@@ -147,8 +144,8 @@ DefaultAssay(immune.combined) <- "integrated"
 # Run the standard workflow for visualization and clustering
 immune.combined <- ScaleData(immune.combined, verbose = FALSE)
 immune.combined <- RunPCA(immune.combined, npcs = 30, verbose = FALSE)
-elbow_plot <- ElbowPlot(immune.combined, ndims = 30) #M# choose dims here by elbow plot
-ggsave(elbow_plot,filename = paste0('Elbow.integrate.pdf'), dpi=150, height=7, width=12)
+ElbowPlot(immune.combined, ndims = 30) #M# Todo : choose dims here by elbow plot
+ggsave(filename = 'figures/integration/Elbow.integrate.pdf', dpi=300, height=7, width=12)
 immune.combined <- FindNeighbors(immune.combined, reduction = "pca", dims = 1:11)
 immune.combined = RunTSNE(immune.combined, dims = 1:11)
 
@@ -165,10 +162,10 @@ for(res in res_seq){
 
 tSNE_ls <- list(tSNE_0.25,tSNE_0.3,tSNE_0.35,tSNE_0.4,tSNE_0.45,tSNE_0.5)
 all_tSNE <- plot_grid(tSNE_0.25,tSNE_0.3,tSNE_0.35,tSNE_0.4,tSNE_0.45,tSNE_0.5, ncol = 3) 
-ggsave(all_tSNE,filename = paste0('Pemphigus.11integrate.png'), dpi=300, height=7, width=12, device = 'png') #M# todo : change name
+ggsave(all_tSNE,filename = paste0('tils<how many dims>.png'), dpi=300, height=7, width=12, device = 'png') #M# todo : change name
 
 immune.combined <- FindClusters(immune.combined, resolution = .3)
-saveRDS(immune.combined, file = paste0("Pemphigus_all.3integrgate.rds")) #M# todo : change name
+saveRDS(immune.combined, file = "Pemphigus_all.3integrgate.rds") #M# todo : change name
 
 immune.combined <- JoinLayers(immune.combined,assay = "RNA")
 allmarkers <- FindAllMarkers(immune.combined, only.pos = TRUE, min.pct = 0.25, logfc.threshold = 0.25, assay = "RNA")
