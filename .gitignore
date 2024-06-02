@@ -1,0 +1,14 @@
+Genesets/
+*files/
+*cache/
+figures/
+objects/
+
+*.pdf
+*.csv
+*.png
+*.jpg
+*.RData
+*.rdx
+*.rdb
+*.html
