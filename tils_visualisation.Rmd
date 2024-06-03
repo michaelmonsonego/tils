@@ -29,20 +29,45 @@ library(ggplot2)
 
 setwd("D:/Michael/git_check/tils")
 
-T_cells = readRDS(file="Objects/Teva_T_intermediate_object.rds")
- 
+T_cells = readRDS("objects/tils_all_.45_integrgate.rds")
+
 # counting cells in treatment and control
-unique(T_cells$orig.ident) # A, D
+unique(T_cells$orig.ident) # R1-4, N1-4
 class(T_cells$orig.ident)
-table(T_cells$orig.ident)["A"] #  
-table(T_cells$orig.ident)["D"] #  
+table(T_cells$orig.ident)["R1"] #  
+table(T_cells$orig.ident)["R2"] #  
+table(T_cells$orig.ident)["R3"] #  
+table(T_cells$orig.ident)["R4"] #  
+table(T_cells$orig.ident)["N1"] #  
+table(T_cells$orig.ident)["N2"] #  
+table(T_cells$orig.ident)["N3"] #  
+table(T_cells$orig.ident)["N4"] #  
+
 
 T_cells  = RunTSNE(T_cells , dims = 1:15, verbose = F)
 DimPlot(T_cells , reduction = "tsne", label= TRUE, pt.size=0.5)
 ```
 
+Top DE genes
+--------------
+```{r echo=FALSE}
+Top50Markers <- read.delim("D:/Michael/git_check/tils/excels/Top50Markers_perClust.tils.45integrgate.csv", sep = ",", header = T, quote="\"", check.names=FALSE)
+Top50Markers$avg_log2FC <- Top50Markers$avg_log2FC %>% round(2)
+Top50Markers <- Top50Markers[,c("cluster","gene", "avg_log2FC", "p_val")] 
+datatable(Top50Markers, rownames = FALSE, filter = 'top', colnames = c('Cluster #', 'Gene Name', "log2(FC)", 'P.value'))
+```
 
-### b. activation/exhaustion markers
+## Contribution of each group 
+```{r message=FALSE, warning=FALSE, cache= TRUE,  fig.width=15, fig.height= 8}
+ggplot(merged@meta.data, aes(x=merged@active.ident, fill=Treatment)) + geom_bar(position="fill")+
+    scale_fill_manual(values= c("#CFBAE1", "#5C7D9D"))+
+    theme_classic()+
+    labs(x="")+
+    theme(legend.title=element_text(size=16),legend.text= element_text(size=12), 
+          axis.text.x=element_text(size= 12, angle=45, hjust=1))
+```
+
+### a. activation/exhaustion markers
 ```{r message=FALSE, warning=FALSE, cache= TRUE,fig.width=16, fig.height= 16}
 # activation / exhaustion markers
 FeaturePlot(T_cells, features = c("Pdcd1", "Havcr2", "Lag3", "Tigit", "Tnfrsf4", "Tnfrsf9", "Icos", "Ctla4", "Klrd1", "Irf8", "Klrc1", "Tox"), order=TRUE,pt.size=1, reduction="tsne", ncol=3)

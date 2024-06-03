@@ -34,114 +34,11 @@ setwd("D:/Michael/git_check/tils")
 set.seed(saved.seed)
 ```
 
-## 1. Load the datasets
-```{r eval=FALSE, message=FALSE, warning=FALSE, cache=FALSE, include=FALSE}
-
-
-# Load the datasets
-N1_data = Read10X(data.dir = "G:/michael/tils/Tils/N1_exp72/outs/filtered_feature_bc_matrix")
-N1 = CreateSeuratObject(counts = N1_data, project = "N1")
-N1$Sample = "N1"
-N1$Treatment = "Non_Responder"
-
-N2_data = Read10X(data.dir = "G:/michael/tils/Tils/N2_exp72/outs/filtered_feature_bc_matrix")
-N2 = CreateSeuratObject(counts = N2_data, project = "N2")
-N2$Sample = "N2"
-N2$Treatment = "Non_Responder"
-
-N3_data = Read10X(data.dir = "G:/michael/tils/Tils/N3_exp72/outs/filtered_feature_bc_matrix")
-N3 = CreateSeuratObject(counts = N3_data, project = "N3")
-N3$Sample = "N3"
-N3$Treatment = "Non_Responder"
-
-N4_data = Read10X(data.dir = "G:/michael/tils/Tils/N4_exp72/outs/filtered_feature_bc_matrix")
-N4 = CreateSeuratObject(counts = N4_data, project = "N4")
-N4$Sample = "N4"
-N4$Treatment = "Non_Responder"
-
-R1_data = Read10X(data.dir = "G:/michael/tils/Tils/R1_exp72/outs/filtered_feature_bc_matrix")
-R1 = CreateSeuratObject(counts = R1_data, project = "R1")
-R1$Sample = "R1"
-R1$Treatment = "Responder"
-
-R2_data = Read10X(data.dir = "G:/michael/tils/Tils/R2_exp72/outs/filtered_feature_bc_matrix")
-R2 = CreateSeuratObject(counts = R2_data, project = "R2")
-R2$Sample = "R2"
-R2$Treatment = "Responder"
-
-R3_data = Read10X(data.dir = "G:/michael/tils/Tils/R3_exp72/outs/filtered_feature_bc_matrix")
-R3 = CreateSeuratObject(counts = R3_data, project = "R3")
-R3$Sample = "R3"
-R3$Treatment = "Responder"
-
-R4_data = Read10X(data.dir = "G:/michael/tils/Tils/R4_exp72/outs/filtered_feature_bc_matrix")
-R4 = CreateSeuratObject(counts = R4_data, project = "R4")
-R4$Sample = "R4"
-R4$Treatment = "Responder"
-
-
-merged_0 = merge(N1_data, c(N2_data, N3_data, N4_data, R1_data, R2_data, R3_data, R4_data), add.cell.ids = c("N1_data", "N2_data", "N3_data", "N4_data", "R1_data", "R2_data", "R3_data", "R4_data"))
-merged_0$Sample = factor(merged_0$Sample, levels = c("N1_data", "N2_data", "N3_data", "N4_data", "R1_data", "R2_data", "R3_data", "R4_data"))
-merged_0$Treatment = factor(merged_0$Treatment, levels=c("Non_Responder", "Responder"))
-dim(merged_0)
-
-
-saveRDS(merged, file="D:/Michael/git_check/tils/objects/merged_not_processed.rds")
-
-#M# merge attempts
-temp1 <- merge(N1_data, y = N2_data, add.cell.ids = c("N1_data", "N2_data"))
-temp2 <- merge(N3_data, y = N4_data, add.cell.ids = c("N3_data", "N4_data"))
-temp3 <- merge(temp1, y = temp2, add.cell.ids = c("temp1", "temp2"))
-final_merged <- merge(temp3, c(R1_data, R2_data, R3_data, R4_data), add.cell.ids = c("temp3", "R1_data", "R2_data", "R3_data", "R4_data"))
-
-
-```
-
-## 2. QC and selecting cells for further analysis
-```{r eval=FALSE, fig.width=12, message=FALSE, warning=FALSE, cache=TRUE, include=FALSE}
-
-merged_0[["percent.mt"]] = PercentageFeatureSet(merged_0, pattern= "^mt-")
-merged_0[["percent.ribo"]] = PercentageFeatureSet(merged_0, pattern= "^Rp[sl]")
-
-VlnPlot(merged_0, 
-        features = c("nFeature_RNA", "nCount_RNA", "percent.mt", "percent.ribo"), 
-        ncol = 4, 
-        group.by="Treatment", 
-        cols=c("#CFBAE1", "#5C7D9D","#A4DEF9"), 
-        pt.size = 0.000001)
-ggsave(filename = "Plots/QC.png", dpi=300, height=10, width=15, device = 'png')
-
-VlnPlot(merged_0, 
-        features="percent.mt", 
-        y.max=10, 
-        group.by="Treatment",
-        cols=c("#CFBAE1", "#5C7D9D","#A4DEF9"), 
-        pt.size = 0.000001)
-
-plot1 = FeatureScatter(merged_0, 
-                       feature1 = "nCount_RNA", 
-                       feature2 = "percent.mt", 
-                       group.by = "Treatment", 
-                       cols = c("#CFBAE1", "#5C7D9D","#A4DEF9")) +
-      labs(color = "Treatment")+
-      theme(axis.text.x=element_text(angle=45, hjust=1))
-plot2 = FeatureScatter(merged_0,
-                       feature1 = "nCount_RNA",
-                       feature2 = "nFeature_RNA",
-                       group.by = "Treatment", 
-                       cols = c("#CFBAE1", "#5C7D9D","#A4DEF9")) +
-      labs(color = "Treatment")+
-      theme(axis.text.x=element_text(angle=45, hjust=1))
-plot1 + plot2
-ggsave(filename = 'Plots/Scatter Feature.png', dpi=300, height=10, width=15, device = 'png')
-
-#merged = subset(merged_0, subset = nFeature_RNA > 500 & nFeature_RNA < 4000 & nCount_RNA<20000 & percent.mt < 10 & percent.ribo< 50)
-#dim(merged)
-```
+# QC executed earlier
 
 
 
-## 9. Lineage identification
+## 1. Lineage identification
 ```{r include=FALSE}
 merged = readRDS("objects/tils_all_.45_integrgate.rds")
 ```
@@ -153,7 +50,7 @@ ggsave(file = "figures/anotation_all_cells/Features_T.png", dpi=300, width=30, h
 ```
 
 ### b. B cells
-```{r message=FALSE, warning=FALSE, cache= TRUE, fig.width=10, fig.height= 8}
+```{r message=FALSE, warning=FALSE, cache= TRUE, fig.width=16, fig.height= 16}
 FeaturePlot(merged, features = c("CD19", "MS4A1", "IGLC1", "IGHM"), order=TRUE,pt.size=1, reduction="tsne", ncol=2, label=TRUE)
 ggsave(file = "figures/anotation_all_cells/Features_B.png", dpi=300, width=20, height=20)
 ```
@@ -166,17 +63,24 @@ ggsave(file = "figures/anotation_all_cells/Features_NK.png", dpi=300, width=30, 
 
 ### d. myeloid cells
 ```{r message=FALSE, warning=FALSE, cache= TRUE, fig.width=24, fig.height= 16}
-FeaturePlot(merged, features = c("PTPRC", "CD14","CD4", "CD8A", "FCGR3", "ITGAM", "ITGAX", "TNFSF4", "APOE","CD80","CD86","H2-AB1"), order=TRUE, pt.size=1, reduction="tsne", ncol=4, label=TRUE)
+FeaturePlot(merged, features = c("CD14", "FCGR3", "ITGAM", "ITGAX", "TNFSF4", "APOE","CD80","CD86","H2-AB1"), order=TRUE, pt.size=1, reduction="tsne", ncol=4, label=TRUE)
 ggsave(file = "figures/anotation_all_cells/Features_myeloid.png", dpi=300, width=40, height=30)
 ```
 
 
-## 10. Annotation
-
+## 2. Annotation
+```
 # saveRDS(immune.anchors, file = "objects<...>.rds") 
-
-## 11. Contribution of each group 
-
+```
+## 3. Contribution of each group 
+```{r message=FALSE, warning=FALSE, cache= TRUE,  fig.width=15, fig.height= 8}
+ggplot(merged@meta.data, aes(x=merged@active.ident, fill=Treatment)) + geom_bar(position="fill")+
+    scale_fill_manual(values= c("#CFBAE1", "#5C7D9D"))+
+    theme_classic()+
+    labs(x="")+
+    theme(legend.title=element_text(size=16),legend.text= element_text(size=12), 
+          axis.text.x=element_text(size= 12, angle=45, hjust=1))
+```
 
 &nbsp;
 <hr />
