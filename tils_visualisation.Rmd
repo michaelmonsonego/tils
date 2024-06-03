@@ -1,0 +1,50 @@
+---
+title: "tils_visualisation"
+author: "Michael Monsonego"
+date:  "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  html_document: 
+    fig_crop: no
+    toc: yes
+    toc_float: yes
+  pdf_document:
+    toc: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+## 1. tSNE plot
+```{r message=FALSE, warning=FALSE, cache=FALSE}
+library(dplyr)
+library(Seurat)
+library(patchwork)
+library(tidyverse)
+library(sleepwalk)
+library(gridExtra)
+library(future)
+library(reshape2)
+library(reticulate)
+library(ggplot2)
+
+setwd("D:/Michael/git_check/tils")
+
+T_cells = readRDS(file="Objects/Teva_T_intermediate_object.rds")
+ 
+# counting cells in treatment and control
+unique(T_cells$orig.ident) # A, D
+class(T_cells$orig.ident)
+table(T_cells$orig.ident)["A"] #  
+table(T_cells$orig.ident)["D"] #  
+
+T_cells  = RunTSNE(T_cells , dims = 1:15, verbose = F)
+DimPlot(T_cells , reduction = "tsne", label= TRUE, pt.size=0.5)
+```
+
+
+### b. activation/exhaustion markers
+```{r message=FALSE, warning=FALSE, cache= TRUE,fig.width=16, fig.height= 16}
+# activation / exhaustion markers
+FeaturePlot(T_cells, features = c("Pdcd1", "Havcr2", "Lag3", "Tigit", "Tnfrsf4", "Tnfrsf9", "Icos", "Ctla4", "Klrd1", "Irf8", "Klrc1", "Tox"), order=TRUE,pt.size=1, reduction="tsne", ncol=3)
+ggsave(file = "plots/T/features_T_activation.png", dpi=300, width=10, height=10)
+```

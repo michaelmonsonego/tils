@@ -3,6 +3,7 @@ Genesets/
 *cache/
 figures/
 objects/
+excels/
 
 *.pdf
 *.csv

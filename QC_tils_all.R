@@ -135,7 +135,7 @@ features <- SelectIntegrationFeatures(object.list =seurat_object_sub_list)
 immune.anchors <- FindIntegrationAnchors(object.list = seurat_object_sub_list, anchor.features = features)
 #======from this part the analysis was done on the server===== 
 # saveRDS(immune.anchors, file = "objects/immune.anchors.tils_all.rds") 
-immune.anchors <- readRDS("immune.anchors.tils_all.rds")
+immune.anchors <- readRDS("objects/immune.anchors.tils_all.rds")
 immune.combined <- IntegrateData(anchorset = immune.anchors)
 
 # specify that we will perform downstream analysis on the corrected data note that the
@@ -185,9 +185,10 @@ ggsave(all_umap,filename = 'figures/integration/tils_8_dim_res_test_umap.png', d
 
 
 immune.combined <- FindClusters(immune.combined, resolution = .45) #M# choose res here : important for rest of analysis
-saveRDS(immune.combined, file = "objects/tils_all_.45_integrgate.rds")
+#M# saveRDS(immune.combined, file = "objects/tils_all_.45_integrgate.rds")
+immune.combined <- readRDS("objects/tils_all_.45_integrgate.rds")
 
-immune.combined <- JoinLayers(immune.combined,assay = "RNA")
+immune.combined <- JoinLayers(immune.combined,assay = "RNA") #M# this did not work. weird error
 allmarkers <- FindAllMarkers(immune.combined, only.pos = TRUE, min.pct = 0.25, logfc.threshold = 0.25, assay = "RNA")
 Top50Markers <- allmarkers %>% 
   group_by(cluster) %>% 
