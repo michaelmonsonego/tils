@@ -1,0 +1,370 @@
+---
+title: "tils_visualisation"
+author: "Michael Monsonego"
+date:  "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  html_document: 
+    fig_crop: no
+    toc: yes
+    toc_float: yes
+  pdf_document:
+    toc: yes
+---
+```{r message=FALSE, warning=FALSE, include=FALSE, eval=TRUE}
+library(Seurat)
+library(plyr)
+library(tidyverse)  
+library(patchwork)
+library(stringr)
+library(RColorBrewer)
+library(gridExtra)
+library(grid)
+library(cowplot)
+library(future)
+library(ggsignif)
+library(DT)
+library(Cairo)
+library(snakecase)
+library(ggpubr)
+library(scales)
+#install.packages("Cairo")
+memory.limit(10^14)
+setwd("D:/Michael/git_check/tils")
+knitr::opts_chunk$set(fig.width=17) 
+x1=4.6
+#colors = c("#1b26a1", "#d48d0b")
+```
+
+Top DE genes
+--------------
+```{r echo=FALSE}
+Top50Markers <- read.delim("Top50Markers_perClust_RNA.Pemphigus.3.Tcells.csv",
+                           sep = ",", header = T, quote="\"", check.names=FALSE)
+Top50Markers$avg_log2FC <- Top50Markers$avg_log2FC %>% round(2)
+Top50Markers <- Top50Markers[,c("cluster","gene", "avg_log2FC", "p_val")] 
+datatable(Top50Markers, rownames = FALSE, filter = 'top', colnames = c('Cluster #', 'Gene Name', "log2(FC)", 'P.value'))
+```
+
+Clusters
+---------------
+
+```{r echo=FALSE, fig.height=5, fig.width=10}
+T_cells = readRDS("objects/tils_all_.45_integrgate.rds")
+
+#T_cells$orig.ident <- factor(x = T_cells$orig.ident, levels = c('C1', 'c2',"C3","C4", 'pvwt4', 'PVWT5','PVWT6','PVWT7',"pvr-9","PVR9","PVR10"))
+p1 <- DimPlot(T_cells,reduction="tsne", pt.size = 1, label = TRUE, label.size = 5)
+p2 <- DimPlot(T_cells,reduction="tsne", split.by = 'Treatment', pt.size = 1, label.size = 5)
+p2+p1+plot_layout(guides = "collect")
+```
+
+Barplots
+---------------
+
+```{r echo=FALSE, fig.height=4, fig.width=10}
+frque <- table(Idents(T_cells), T_cells$Treatment)
+frque <- as.data.frame(frque)
+frque <- frque %>% dplyr::rename(Cluster = Var1, Treatment = Var2)
+frque$Treatment <- factor(frque$Treatment)
+
+frque <- ddply(frque, .(Treatment),  transform, percentperstatus   = Freq/sum(Freq))
+frque <- ddply(frque, .(Treatment),  transform, percentperstatus   = Freq/sum(Freq))
+frque <- ddply(frque, .(Cluster), transform, percentpercluster  = Freq/sum(Freq))
+frque <- ddply(frque, .(Cluster), transform, normalizedppstatus = percentperstatus/sum(percentperstatus)*100)
+frque <- ddply(frque, .(Treatment),  transform, normalizedpcluster = percentpercluster/sum(percentpercluster))
+
+p1 <- ggplot(frque, aes(x = Cluster, y = normalizedppstatus, fill = Treatment)) +
+ theme_minimal() +
+ geom_bar(stat = "identity", width = 0.7,position="dodge") +
+ ggtitle("Normalized Cluster Counts") +
+ ylab("Normalized Proportions in %") +
+ theme(
+   axis.text.x  = element_text(size = 11, color = "black"),
+   axis.text.y  = element_text(size = 11, color = "black"),
+   axis.title.x = element_text(size = 13, color = "black"),
+   axis.title.y = element_text(size = 13, color = "black"),
+   title = element_text(size = 13),
+   legend.justification = "top",
+   panel.border = element_blank()) +
+ geom_hline(yintercept = 33.3, linetype='dotted') 
+
+p2<-ggplot(frque, aes(x= Cluster, y= Freq, fill = Treatment)) +
+ theme_minimal() +
+ geom_bar(stat = "identity", width = 0.7) +
+ ggtitle("Cluster Counts") + ylab("Cell counts\n") +
+ theme(
+   axis.text.x  = element_text(size = 11, color = "black"),
+   axis.text.y  = element_text(size = 11, color = "black"),
+   axis.title.x = element_text(size = 13, color = "black"),
+   axis.title.y = element_text(size = 13, color = "black"),
+   title = element_text(size = 13),
+   legend.justification = "top",
+   panel.border = element_blank())
+
+p2+p1+plot_layout(guides = "collect")+plot_annotation(tag_levels = 'A') 
+```
+
+t test
+
+```{r}
+T_cells@active.ident = as.factor(T_cells$Treatment)
+vp_case1 <- function(gene_signature, test_sign, file_name, y_max){
+  plot_case1 <- function(signature){
+  VlnPlot(T_cells, features = "TNF",
+            pt.size = 0, 
+            group.by = "Treatment",
+            y.max = 6.5, # add the y-axis maximum value - otherwise p-value hidden
+    ) + stat_compare_means(comparisons = list(c("control","TRAV19","WT")), label = "p.signif") + geom_boxplot(width = 0.07, alpha=.8,outlier.shape = NA, fill="white") #+ ggtitle("Tnfrsf9/41BB")
+  }
+  purrr::map(gene_signature, plot_case1) %>% cowplot::plot_grid(plotlist = .)
+ #ggsave("paper figures/IFNg_all_CD8.pdf", width = 11.5, height = 10, units = "cm")
+}
+vp_case1(c("TRAC"), list(c("control","TRAV19","WT")), "TRAC", 7)
+  #ggsave(filename=paste(figuresdir,paste(file_name, "by_type_box_p_val.pdf",sep="_"),sep=""), width = 7, height = 7)
+
+AverageExpression(T_cells,features = "TNF")
+
+# ggsave("paper figures/Fgl2_violin.pdf",  width = 12, height = 16, units = "cm")
+#ggsave("paper figures/Cebpb_Tregs.pdf", width = 14, height = 11.26, units = "cm")
+
+```
+
+Markers
+=====
+
+Proliferation Markers
+---------------
+
+```{r cache=T, fig.height=x1*1, echo=FALSE}
+Prolif <- c("TOP2A","MKI67")
+FeaturePlot(T_cells, features = Prolif, label.size = 8, pt.size = 1, label=T, ncol = 3, order = T,reduction = "tsne")
+```
+
+T Cells Markers
+---------------
+
+```{r cache=T, fig.height=x1*2, warning=FALSE, echo=FALSE}
+T_cells <- c('Cd4', 'Cd8a', 'Cd3d','Cd3e','Cd3g',"PTPRC")
+T_cells <- toupper(T_cells)
+FeaturePlot(T_cells, features = T_cells, label.size = 8, pt.size = 1, label=T, ncol = 3, order = T,reduction = "tsne")
+```
+
+Naïve T Cells Markers
+---------------
+
+```{r cache=T, fig.height=x1*1, echo=FALSE, warning=FALSE,}
+FeaturePlot(T_cells, features = c('SELL', 'TCF7', 'CCR7'), label=T, label.size = 8, pt.size = 1 , ncol = 3, order = T,reduction = "tsne")
+```
+
+Effector T Cells Markers
+---------------
+
+```{r cache=T, fig.height=x1*3,  echo=FALSE, warning=FALSE,}
+effector <- c('Tnf',"Ifng",'Prf1','Gzma','Gzmb','Gzmk',"TBX21")
+effector <- toupper(effector)
+FeaturePlot(T_cells, features = effector, label.size = 8, pt.size = 1 , label=T, ncol = 3, order = T,reduction = "tsne")
+```
+
+```{r cache=T, echo=FALSE, fig.height=x1*4,  message=FALSE, warning=FALSE}
+p1 <- VlnPlot(T_cells, features = 'PRF1', split.by = 'Treatment',colors, pt.size = 0)
+p2 <- VlnPlot(T_cells, features = 'GZMB', split.by = 'Treatment',colors, pt.size = 0)
+p3 <- VlnPlot(T_cells, features = 'TBX21', split.by = 'Treatment',colors, pt.size = 0)
+p4 <- VlnPlot(T_cells, features = 'IFNG', split.by = 'Treatment',colors, pt.size = 0)
+grid.arrange(p1,p2,p3,p4,ncol = 1)
+```
+
+Exhausted T Cells Markers
+---------------
+
+```{r cache=T, fig.height=x1*2, echo=FALSE, warning=FALSE}
+Exhausted <- c('Tigit', 'Havcr2', 'Lag3', 'Ctla4','Pdcd1',"CD160")
+Exhausted <- toupper(Exhausted)
+FeaturePlot(T_cells, features = Exhausted, label.size = 8, pt.size = 1 ,label=T, ncol = 3, order = T,reduction = "tsne")
+```
+
+```{r cache=T, echo=FALSE, fig.height=x1*3, message=FALSE, warning=FALSE}
+p1 <- VlnPlot(T_cells, features = 'TIGIT', split.by = 'Treatment',colors, pt.size = 0)
+p2 <- VlnPlot(T_cells, features = 'CD160', split.by = 'Treatment',colors, pt.size = 0)
+p3 <- VlnPlot(T_cells, features = 'CTLA4', split.by = 'Treatment',colors, pt.size = 0)
+grid.arrange(p1,p2,p3,ncol = 1)
+```
+
+Regulatory T Cells Markers
+---------------
+
+```{r cache=T, fig.height=x1*2, echo=FALSE, warning=FALSE}
+Tregs <- c('Foxp3', 'Ctla4', 'Il2ra','Il10')
+Tregs <- toupper(Tregs)
+FeaturePlot(T_cells, features = Tregs, label.size = 8, pt.size = 1 ,label=T, ncol = 3, order = T,reduction = "tsne")
+```
+
+Tr1 Markers
+---------------
+
+```{r cache=T, fig.height=x1*5, echo=FALSE, warning=FALSE}
+Tr1 = c('Ifng',    'Il10',  'Lag3', 'Prdm1',
+                'Il27ra',  'Maf',   'Ccr5', 'Cd226',
+                'Irf1',    'Eomes', 'Egr2', 'Gzmk',
+                'Ceacam1', 'Crtam', 'Ahr')
+Tr1 <- toupper(Tr1)
+FeaturePlot(T_cells, features = Tr1, label.size = 8, pt.size = 1 ,label=T, ncol = 3, order = T,reduction = "tsne")
+```
+
+
+Th1 Markers
+---------------
+
+```{r cache=T, fig.height=x1*2, echo=FALSE, warning=FALSE}
+Th1Markers <- c('Ifng', 'Tbx21', 'Cd6', 'Fasl', 'Tnf', 'Nfkb', 'Il12', 'Il2ra')
+Th1Markers <- toupper(Th1Markers)
+FeaturePlot(T_cells, features = Th1Markers, label.size = 8, pt.size = 1 ,label=T, ncol = 3, order = T,reduction = "tsne")
+```
+
+Th2 Markers
+---------------
+
+```{r cache=T, fig.height=x1*1, echo=FALSE, warning=FALSE}
+Th2Markers <- c('Il4', 'Gata3', 'Cxcr3')
+Th2Markers <- toupper(Th2Markers)
+FeaturePlot(T_cells, features = Th2Markers, label.size = 8, pt.size = 1 ,label=T, ncol = 3, order = T,reduction = "tsne")
+```
+
+Th17 Markers
+---------------
+
+```{r cache=T, fig.height=x1*4, echo=FALSE, warning=FALSE}
+Th17 <- c("RORC","IL23R", 'RORA', "STAT3", 'BATF', 'CCR6', 'ITGA4', 'KLRB1', 'GPR65', 'PRKCA','TNF')
+FeaturePlot(T_cells, features = Th17, label.size = 8, pt.size = 1 ,label=T, ncol = 3, order = T,reduction = "tsne")
+```
+
+
+```{r cache=T, echo=FALSE, fig.height=x1*3, message=FALSE, warning=FALSE}
+p1 <- VlnPlot(T_cells, features = 'IL23R', split.by = 'Treatment',colors, pt.size = 0)
+p2 <- VlnPlot(T_cells, features = 'RORC', split.by = 'Treatment',colors, pt.size = 0)
+p3 <- VlnPlot(T_cells, features = 'TNF', split.by = 'Treatment',colors, pt.size = 0)
+grid.arrange(p1,p2,p3,ncol = 1)
+```
+
+MAIT Markers
+---------------
+
+```{r cache=T, fig.height=x1*3, echo=FALSE, warning=FALSE}
+MAIT <- c("IL18", "CCR5", "CCR6", "CD44","KLRB1", 'SLC4A10', 'ZBTB16', 'CXCR6')
+FeaturePlot(T_cells, features = MAIT, label.size = 8, pt.size = 1 ,label=T, ncol = 3, order = T,reduction = "tsne")
+
+```
+
+```{r cache=T, fig.height=x1*3, echo=FALSE, warning=FALSE}
+p1 <- VlnPlot(T_cells, features = 'SLC4A10', split.by = 'Treatment', pt.size = 0)
+p2 <- VlnPlot(T_cells, features = 'ZBTB16', split.by = 'Treatment', pt.size = 0)
+p3 <- VlnPlot(T_cells, features = 'KLRB1', split.by = 'Treatment', pt.size = 0)
+grid.arrange(p1,p2,p3,ncol = 1)
+```
+
+
+Additional Markers
+---------------
+
+```{r cache=T, fig.height=x1*1, echo=FALSE, warning=FALSE}
+markers <- c("IL6", "AIRE","TNFRSF21")
+FeaturePlot(T_cells, features = markers, label.size = 8, pt.size = 1 ,label=T, ncol = 3, order = T,reduction = "tsne")
+```
+
+
+```{r cache=T, fig.height=x1*1, echo=FALSE, warning=FALSE}
+p1 <- VlnPlot(T_cells, features = 'IL6', split.by = 'Treatment', pt.size = 0,assay = "RNA")
+p2 <- VlnPlot(T_cells, features = 'AIRE', split.by = 'Treatment', pt.size = 0,assay = "RNA")
+p3 <- VlnPlot(T_cells, features = 'TNFRSF21', split.by = 'Treatment', pt.size = 0,assay = "RNA")
+grid.arrange(p1,p2,p3,ncol = 1)
+```
+
+skin homing & TRAV19
+---------------
+```{r cache=T, fig.height=x1*1, echo=FALSE,warning=FALSE}
+to_skin <- c('CCR4','CCR10','TRAV19')
+FeaturePlot(T_cells, features = to_skin, label.size = 8, pt.size = 1 ,label=T, ncol = 3, order = T,reduction = "tsne")
+```
+
+```{r cache=T, fig.height=x1*3, echo=FALSE, warning=FALSE}
+p1 <- VlnPlot(T_cells, features = 'CCR4', split.by = 'Treatment', pt.size = 0)
+p2 <- VlnPlot(T_cells, features = 'CCR10', split.by = 'Treatment', pt.size = 0)
+p3 <- VlnPlot(T_cells, features = 'TRAV19', split.by = 'Treatment', pt.size = 0)
+grid.arrange(p1,p2,p3,ncol = 1)
+```
+
+Annotation
+=====
+
+```{r fig.height=4, fig.width=7, message=FALSE, warning=FALSE, eval=T,echo=FALSE}
+Idents(T_cells) <- 'seurat_clusters'
+T_cells <- RenameIdents(T_cells, "0" = "0_CD4",
+                                 "1" = "1_CD8_effector",
+                                 "2" = "2_CD4_Naive/memory",
+                                 "3" = "3_CD4",
+                                 "4" = "4_CD4",
+                                 "5" = "5_CD8_effector",
+                                 "6" = "6_CD8_effector",
+                                 "7" = "7_CD8_Th17-like",
+                                 "8" = "8_CD8_Naive",
+                                 "9" = "9_Tregs",
+                                "10" = "10_CD8_Naive",
+                                "11" = "11_CD8_effector"
+                                                        )
+
+p <- DimPlot(T_cells, reduction = "tsne", label = F, label.size = 3.5)
+LabelClusters(p, id = "ident",  fontface = "bold",position = "median")
+#ggsave("clusters.pdf",height = 6, width = 9)
+```
+
+Barplots - Annotated
+---------------
+
+```{r echo=FALSE, fig.height=5, fig.width=14}
+frque <- table(Idents(T_cells), T_cells$Treatment)
+frque <- as.data.frame(frque)
+frque <- frque %>% dplyr::rename(Cluster = Var1, Treatment = Var2)
+frque$Treatment <- factor(frque$Treatment)
+
+frque <- ddply(frque, .(Treatment),  transform, percentperstatus   = Freq/sum(Freq))
+frque <- ddply(frque, .(Treatment),  transform, percentperstatus   = Freq/sum(Freq))
+frque <- ddply(frque, .(Cluster), transform, percentpercluster  = Freq/sum(Freq))
+frque <- ddply(frque, .(Cluster), transform, normalizedppstatus = percentperstatus/sum(percentperstatus)*100)
+frque <- ddply(frque, .(Treatment),  transform, normalizedpcluster = percentpercluster/sum(percentpercluster))
+
+p1 <- ggplot(frque, aes(x = Cluster, y = normalizedppstatus, fill = Treatment)) +
+ theme_minimal() +
+ geom_bar(stat = "identity", width = 0.7,position="dodge") +
+ ggtitle("Normalized Cluster Counts") +
+ ylab("Normalized Proportions in %") +
+ theme(
+   axis.text.x  = element_text(size = 11, color = "black",angle = 30),
+   axis.text.y  = element_text(size = 11, color = "black"),
+   axis.title.x = element_text(size = 13, color = "black"),
+   axis.title.y = element_text(size = 13, color = "black"),
+   title = element_text(size = 13),
+   legend.justification = "top",
+   panel.border = element_blank()) +
+ geom_hline(yintercept = 33.3, linetype='dotted') 
+
+p2<-ggplot(frque, aes(x= Cluster, y= Freq, fill = Treatment)) +
+ theme_minimal() +
+ geom_bar(stat = "identity", width = 0.7) +
+ ggtitle("Cluster Counts") + ylab("Cell counts\n") +
+ theme(
+   axis.text.x  = element_text(size = 11, color = "black",angle = 30),
+   axis.text.y  = element_text(size = 11, color = "black"),
+   axis.title.x = element_text(size = 13, color = "black"),
+   axis.title.y = element_text(size = 13, color = "black"),
+   title = element_text(size = 13),
+   legend.justification = "top",
+   panel.border = element_blank())
+
+p2+p1+plot_layout(guides = "collect")+plot_annotation(tag_levels = 'A') 
+```
+
+
+
+&nbsp;
+<hr />
+<p style="text-align: center;">By Keren Reshef </a></p>
+<p style="text-align: center;"> <a href="https://www.asafmadilab.com/">Madi Lab</a></p>
+&nbsp;
