@@ -188,7 +188,7 @@ immune.combined <- FindClusters(immune.combined, resolution = .45) #M# choose re
 #M# saveRDS(immune.combined, file = "objects/tils_all_.45_integrgate.rds")
 immune.combined <- readRDS("objects/tils_all_.45_integrgate.rds")
 
-immune.combined <- JoinLayers(immune.combined,assay = "RNA") #M# this did not work. weird error
+immune.combined <- JoinLayers(immune.combined, assay = "RNA") #M# this did not work. weird error
 allmarkers <- FindAllMarkers(immune.combined, only.pos = TRUE, min.pct = 0.25, logfc.threshold = 0.25, assay = "RNA")
 Top50Markers <- allmarkers %>% 
   group_by(cluster) %>% 
@@ -196,4 +196,4 @@ Top50Markers <- allmarkers %>%
   as.data.frame %>% 
   arrange(cluster, -avg_log2FC)
 
-write_csv(Top50Markers, "Top50Markers_perClust.tils.45integrgate.csv") 
+write_csv(Top50Markers, "excels/Top50Markers_perClust.tils.45integrgate.csv") 
