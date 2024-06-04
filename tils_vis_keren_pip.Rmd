@@ -38,7 +38,7 @@ x1=4.6
 Top DE genes
 --------------
 ```{r echo=FALSE}
-Top50Markers <- read.delim("Top50Markers_perClust_RNA.Pemphigus.3.Tcells.csv",
+Top50Markers <- read.delim("excels/Top50Markers_perClust.tils.45integrgate.csv",
                            sep = ",", header = T, quote="\"", check.names=FALSE)
 Top50Markers$avg_log2FC <- Top50Markers$avg_log2FC %>% round(2)
 Top50Markers <- Top50Markers[,c("cluster","gene", "avg_log2FC", "p_val")] 
@@ -143,9 +143,9 @@ T Cells Markers
 ---------------
 
 ```{r cache=T, fig.height=x1*2, warning=FALSE, echo=FALSE}
-T_cells <- c('Cd4', 'Cd8a', 'Cd3d','Cd3e','Cd3g',"PTPRC")
-T_cells <- toupper(T_cells)
-FeaturePlot(T_cells, features = T_cells, label.size = 8, pt.size = 1, label=T, ncol = 3, order = T,reduction = "tsne")
+Ts <- c('Cd4', 'Cd8a', 'Cd3d','Cd3e','Cd3g',"PTPRC")
+Ts <- toupper(Ts)
+FeaturePlot(T_cells, features = Ts, label.size = 8, pt.size = 1, label=T, ncol = 3, order = T,reduction = "tsne")
 ```
 
 Naïve T Cells Markers
@@ -294,7 +294,7 @@ grid.arrange(p1,p2,p3,ncol = 1)
 Annotation
 =====
 
-```{r fig.height=4, fig.width=7, message=FALSE, warning=FALSE, eval=T,echo=FALSE}
+```{r eval=FALSE, fig.height=4, fig.width=7, message=FALSE, warning=FALSE, include=FALSE}
 Idents(T_cells) <- 'seurat_clusters'
 T_cells <- RenameIdents(T_cells, "0" = "0_CD4",
                                  "1" = "1_CD8_effector",
@@ -318,7 +318,7 @@ LabelClusters(p, id = "ident",  fontface = "bold",position = "median")
 Barplots - Annotated
 ---------------
 
-```{r echo=FALSE, fig.height=5, fig.width=14}
+```{r eval=FALSE, fig.height=5, fig.width=14, include=FALSE}
 frque <- table(Idents(T_cells), T_cells$Treatment)
 frque <- as.data.frame(frque)
 frque <- frque %>% dplyr::rename(Cluster = Var1, Treatment = Var2)
