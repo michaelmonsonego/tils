@@ -56,7 +56,7 @@ table(T_cells$orig.ident)["N3"] #
 table(T_cells$orig.ident)["N4"] #  
 
 T_cells  = RunTSNE(T_cells , dims = 1:15, verbose = F)
-DimPlot(T_cells , reduction = "tsne", label= TRUE, pt.size=0.5, label.size = 2)
+DimPlot(T_cells , reduction = "tsne", label= TRUE, pt.size=0.5, label.size = 10)
 ```
 
 Top DE genes
@@ -81,9 +81,9 @@ ggplot(T_cells@meta.data, aes(x=T_cells@active.ident, fill=Treatment)) + geom_ba
 ggsave(file = "figures/Tcells/unnormalized_counts_per_cluster_per_treatment.png", dpi=300, width=15, height=10)
 ```
 
-```{r message=FALSE, warning=FALSE, cache= TRUE,  fig.height= 6}
+```{r message=FALSE, warning=FALSE, cache= TRUE,  fig.height= 10}
 #M# percentage of contribution to each cluster per treatment
-ggplot(T_cells@meta.data, aes(x=T_cells@active.ident, fill=Treatment)) + geom_bar(position="dodge")+
+ggplot(T_cells@meta.data, aes(x=T_cells@active.ident, fill=Treatment)) + geom_bar(position="fill")+
     scale_fill_manual(values= c("#CFBAE1", "#5C7D9D"))+
     theme_classic()+
     labs(x="")+
@@ -137,10 +137,7 @@ mfrque <- mfrque %>% dplyr::rename(Cluster = Var1, patient = Var2)
 mfrque <- ddply(mfrque, .(patient),  transform, percentperstatus   = Freq/sum(Freq))
 mfrque <- ddply(mfrque, .(Cluster), transform, percentpercluster  = Freq/sum(Freq))
 mfrque <- ddply(mfrque, .(Cluster), transform, normalizedppstatus = percentperstatus/sum(percentperstatus)*100)
-mfrque <- ddply(mfrque, .(Treatment),  transform, normalizedpcluster = percentpercluster/sum(percentpercluster))
-
-
-
+mfrque <- ddply(mfrque, .(patient),  transform, normalizedpcluster = percentpercluster/sum(percentpercluster))
 
 
 p3 <- ggplot(mfrque, aes(x = Cluster, y = normalizedppstatus, fill = patient)) +
@@ -219,17 +216,12 @@ FeaturePlot(T_cells, features = Ts, label.size = 8, pt.size = 1, label=T, ncol =
 # activation / exhaustion markers
 FeaturePlot(T_cells, features = c("PDCD1","HAVCR2","LAG3","TIGIT","TNFRSF4","TNFRSF9","ICOS","CTLA4","KLRD1","IRF8","KLRC1","TOX"), order=TRUE,pt.size=1, reduction="tsne", ncol=3)
 ggsave(file = "figures/Tcells/features_T_activation.png", dpi=300, width=10, height=10)
-
-
-upper_vector <- toupper(c("PDCD1","HAVCR2","LAG3","TIGIT","TNFRSF4","TNFRSF9","ICOS","CTLA4","KLRD1","IRF8","KLRC1","TOX"))
-quoted_vector <- sprintf('"%s"', upper_vector)
-upper_string_with_quotes <- paste(quoted_vector, collapse = ",")
-cat(upper_string_with_quotes)
 ```
-```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height=16}
-VlnPlot(T_cells, features = c("PDCD1","HAVCR2","LAG3","TIGIT","TNFRSF4","TNFRSF9"), stack=TRUE, flip= TRUE, split.by = "Treatment")+theme(axis.text.y =element_text(size=6))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
+
+```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height=20}
+VlnPlot(T_cells, features = c("PDCD1","HAVCR2","LAG3","TIGIT","TNFRSF4","TNFRSF9"), assay = "RNA", stack=TRUE, flip= TRUE, split.by = "Treatment")+theme(axis.text.y =element_text(size=20))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=20))+
 geom_boxplot(alpha=0.3,show.legend = FALSE)
-ggsave(file = "figures/Tcells/vln_activation_exhastion_cluster_by_treatment_1.png", dpi=300, width=8, height=10)
+ ggsave(file = "figures/Tcells/vln_activation_exhastion_cluster_by_treatment_1.png", dpi=300, width=8, height=10)
 
 VlnPlot(T_cells, features = c("PDCD1","HAVCR2","LAG3","TIGIT","TNFRSF4","TNFRSF9"), stack=TRUE, flip= TRUE, group.by = "Treatment", fill.by ="ident")+theme(axis.text.y =element_text(size=6))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
 geom_boxplot(alpha=0.3,show.legend = FALSE)
@@ -260,7 +252,7 @@ ggsave(file = "figures/Tcells/Vln_T_activation_exhaustion_by_cluster_2.png", dpi
 FeaturePlot(T_cells, features = c("GZMB","PRF1","IFNG","MKI67","GZMC","GZMA","KLRG1","IL7R","CD52"),order=TRUE,pt.size=1, reduction="tsne", ncol=3)
 ggsave(file = "figures/Tcells/features_T_effector.png", dpi=300, width=8, height=10)
 ```
-```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height=16}
+```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height=20}
 VlnPlot(T_cells, features = c("GZMB","PRF1","IFNG"), stack=TRUE, flip= TRUE, split.by = "Treatment")+theme(axis.text.y =element_text(size=6))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12)) +
 geom_boxplot(alpha=0.3,show.legend = FALSE)
 ggsave(file = "figures/Tcells/Vln_T_effector_cluster_by_treatment_1.png", dpi=300, width=8, height=10, limitsize=FALSE)
@@ -291,13 +283,13 @@ ggsave(file = "figures/Tcells/Vln_T_effector_by_cluster_2.png", dpi=300, width=6
 
 
 ### c. naive-like (naive or memory cells)
-```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height= 10}
+```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height= x1*2}
 # naive
 FeaturePlot(T_cells, features = c("SELL","IL7R","CCR7","MS4A4C"),order=TRUE,pt.size=1, reduction="tsne", ncol=2)
 ggsave(file = "figures/Tcells/features_T_naive.png", dpi=300, width=8, height=10)
 ```
 
-```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height= 10}
+```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height=x1*2}
 # memory 
 FeaturePlot(T_cells, features = c("SELL","CD44","IL7R","CCR7","TCF7","CXCR6"),order=TRUE,pt.size=1, reduction="tsne", ncol=3)
 ggsave(file = "figures/Tcells/features_T_memory.png", dpi=300, width=10, height=8)
@@ -361,7 +353,7 @@ ggsave(file = "figures/Tcells/T_heatmap_resident memory.png", dpi=300, width=30,
 ```
 
 ### h. T cells features signatures 
-```{r echo=FALSE, fig.height=12, message=FALSE, warning=FALSE, cache=FALSE}
+```{r echo=FALSE, fig.height=6,fig.width=6, message=FALSE, warning=FALSE, cache=FALSE}
 CD8_memory_list = list(c("IL7R","CD44","CXCR6"))
 T_cells = AddModuleScore(object = T_cells, features = CD8_memory_list, name = "CD8_memory", assay = "RNA")
 a <- FeaturePlot(object = T_cells, features = "CD8_memory1", reduction = "tsne", cols=c("grey","grey","#e46467", "#b33336", "#A73033"))+labs(title = "0_ CD8+ memory", subtitle = "(Cxcl10, Vcan, Il18,Plcb1,Cacna1d)")+ theme(plot.subtitle = element_text(hjust = 0.5))

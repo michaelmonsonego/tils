@@ -38,7 +38,7 @@ set.seed(saved.seed)
 
 ```{r eval=FALSE, include=FALSE}
 # convert gene names to uppercase fast
-upper_vector <- toupper(c("Prdm1", "Itgae", "Il7r", "Cd44", "Itga1", "Cd69", "Crtam", "Cx3cr1", "Dusp6", "Egr2", "Fabp5", "Fos", "Fosb", "Foxo3", "Gzma", "Gzmb", "Znf683", "Id3", "Il2ra", "Irf4", "Jun", "Junb", "Myc", "Nr4a1", "Rgs1"))
+upper_vector <- toupper(c())
 quoted_vector <- sprintf('"%s"', upper_vector)
 upper_string_with_quotes <- paste(quoted_vector, collapse = ",")
 cat(upper_string_with_quotes)
