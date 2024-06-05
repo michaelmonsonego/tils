@@ -9,6 +9,8 @@ output:
     toc_float: yes
   pdf_document:
     toc: yes
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
@@ -16,7 +18,7 @@ knitr::opts_chunk$set(echo = FALSE)
 knitr::opts_chunk$set(fig.width=17) 
 ```
 ## 1. number of cells per patient + tSNE plot
-```{r echo=FALSE, message=FALSE, warning=FALSE, fig.height= 8}
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.height= 12}
 library(dplyr)
 library(Seurat)
 library(patchwork)
@@ -36,6 +38,7 @@ library(ggsignif)
 library(DT)
 library(Cairo)
 library(snakecase)
+library(glue)
 
 setwd("D:/Michael/git_check/tils")
 x1=4.6
@@ -80,7 +83,7 @@ ggsave(file = "figures/Tcells/unnormalized_counts_per_cluster_per_treatment.png"
 
 ```{r message=FALSE, warning=FALSE, cache= TRUE,  fig.height= 6}
 #M# percentage of contribution to each cluster per treatment
-ggplot(T_cells@meta.data, aes(x=T_cells@active.ident, fill=Treatment)) + geom_bar(position="fill")+
+ggplot(T_cells@meta.data, aes(x=T_cells@active.ident, fill=Treatment)) + geom_bar(position="dodge")+
     scale_fill_manual(values= c("#CFBAE1", "#5C7D9D"))+
     theme_classic()+
     labs(x="")+
@@ -88,6 +91,109 @@ ggplot(T_cells@meta.data, aes(x=T_cells@active.ident, fill=Treatment)) + geom_ba
           axis.text.x=element_text(size=12,angle=45, hjust=1))+labs(title = "percentage of contribution to each cluster per treatment")
 ggsave(file = "figures/Tcells/percentage_of_contribution_stacked_bar_plot.png", dpi=300, width=10, height=10)
 ```
+
+## unnormalized contribution per patient 
+```{r message=FALSE, warning=FALSE, cache= TRUE,  fig.height= 6}
+Sample_Names_vec <- c("N1","N2","N3","N4")
+for (sample in Sample_Names_vec) {
+  Tsub = T_cells@meta.data[T_cells@meta.data$orig.ident == sample, ]
+ ggplot(Tsub, aes(x=Tsub$seurat_clusters, fill=Treatment)) + geom_bar(stat="count",position=position_dodge())+
+    scale_fill_manual(values= c("#CFBAE1"))+
+    theme_classic()+
+    labs(x="")+
+    theme(legend.title=element_text(size=18),legend.text= element_text(size=14), 
+          axis.text.x=element_text(size=12,angle=45, hjust=1))+labs(title = glue({sample}, " : unnormalized counts per cluster per treatment"))
+  ggsave(filename = glue({sample}, "_unnormalized_counts_per_cluster_per_treatment.png"), path = "figures/Tcells/", dpi=300, width=10, height=10)
+}
+
+Sample_Names_vec <- c("R1","R2","R3","R4")
+for (sample in Sample_Names_vec) {
+  Tsub = T_cells@meta.data[T_cells@meta.data$orig.ident == sample, ]
+ ggplot(Tsub, aes(x=Tsub$seurat_clusters, fill=Treatment)) + geom_bar(stat="count",position=position_dodge())+
+    scale_fill_manual(values= c("#5C7D9D"))+
+    theme_classic()+
+    labs(x="")+
+    theme(legend.title=element_text(size=18),legend.text= element_text(size=14), 
+          axis.text.x=element_text(size=12,angle=45, hjust=1))+labs(title = glue({sample}, " : unnormalized counts per cluster per treatment"))
+  ggsave(filename = glue({sample}, "_unnormalized_counts_per_cluster_per_treatment.png"), path = "figures/Tcells/", dpi=300, width=10, height=10)
+}
+```
+## normalized contribution per patient 
+```{r echo=FALSE, fig.height=4, fig.width=10}
+frque <- table(Idents(T_cells), T_cells$Treatment)
+frque <- as.data.frame(frque)
+frque <- frque %>% dplyr::rename(Cluster = Var1, Treatment = Var2)
+frque$Treatment <- factor(frque$Treatment)
+
+frque <- ddply(frque, .(Treatment),  transform, percentperstatus   = Freq/sum(Freq))
+frque <- ddply(frque, .(Cluster), transform, percentpercluster  = Freq/sum(Freq))
+frque <- ddply(frque, .(Cluster), transform, normalizedppstatus = percentperstatus/sum(percentperstatus)*100)
+frque <- ddply(frque, .(Treatment),  transform, normalizedpcluster = percentpercluster/sum(percentpercluster))
+
+mfrque <- table(Idents(T_cells), T_cells$orig.ident)
+mfrque <- as.data.frame(mfrque)
+mfrque <- mfrque %>% dplyr::rename(Cluster = Var1, patient = Var2)
+
+mfrque <- ddply(mfrque, .(patient),  transform, percentperstatus   = Freq/sum(Freq))
+mfrque <- ddply(mfrque, .(Cluster), transform, percentpercluster  = Freq/sum(Freq))
+mfrque <- ddply(mfrque, .(Cluster), transform, normalizedppstatus = percentperstatus/sum(percentperstatus)*100)
+mfrque <- ddply(mfrque, .(Treatment),  transform, normalizedpcluster = percentpercluster/sum(percentpercluster))
+
+
+
+
+
+p3 <- ggplot(mfrque, aes(x = Cluster, y = normalizedppstatus, fill = patient)) +
+ theme_minimal() +
+ geom_bar(stat = "identity", width = 0.7,position="dodge") +
+   scale_fill_manual(values= c("#CFBAE1", "#A8A5CA", "#8291B3", "#5C7D9D", "#FF6F61", "#D78459", "#AF9A52", "#88B04B"))+
+ ggtitle("Normalized Cluster Counts") +
+ ylab("Normalized Proportions in %") +
+ theme(
+   axis.text.x  = element_text(size = 11, color = "black"),
+   axis.text.y  = element_text(size = 11, color = "black"),
+   axis.title.x = element_text(size = 13, color = "black"),
+   axis.title.y = element_text(size = 13, color = "black"),
+   title = element_text(size = 13),
+   legend.justification = "top",
+   panel.border = element_blank()) +
+ geom_hline(yintercept = 20, linetype='dotted')
+  
+  
+p1 <- ggplot(frque, aes(x = Cluster, y = normalizedppstatus, fill = Treatment)) +
+ theme_minimal() +
+ geom_bar(stat = "identity", width = 0.7,position="dodge") +
+ scale_fill_manual(values= c("#CFBAE1", "#5C7D9D"))+
+ ggtitle("Normalized Cluster Counts") +
+ ylab("Normalized Proportions in %") +
+ theme(
+   axis.text.x  = element_text(size = 11, color = "black"),
+   axis.text.y  = element_text(size = 11, color = "black"),
+   axis.title.x = element_text(size = 13, color = "black"),
+   axis.title.y = element_text(size = 13, color = "black"),
+   title = element_text(size = 13),
+   legend.justification = "top",
+   panel.border = element_blank()) +
+ geom_hline(yintercept = 33.3, linetype='dotted') 
+
+p2<-ggplot(frque, aes(x= Cluster, y= Freq, fill = Treatment)) +
+ theme_minimal() +
+ geom_bar(stat = "identity", width = 0.7) +
+ scale_fill_manual(values= c("#CFBAE1", "#5C7D9D"))+
+ ggtitle("Cluster Counts") + ylab("Cell counts\n") +
+ theme(
+   axis.text.x  = element_text(size = 11, color = "black"),
+   axis.text.y  = element_text(size = 11, color = "black"),
+   axis.title.x = element_text(size = 13, color = "black"),
+   axis.title.y = element_text(size = 13, color = "black"),
+   title = element_text(size = 13),
+   legend.justification = "top",
+   panel.border = element_blank())
+
+p2+p1+plot_layout(guides = "collect")+plot_annotation(tag_levels = 'A') 
+p3
+```
+
 
 
 Markers
@@ -120,7 +226,7 @@ quoted_vector <- sprintf('"%s"', upper_vector)
 upper_string_with_quotes <- paste(quoted_vector, collapse = ",")
 cat(upper_string_with_quotes)
 ```
-```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height=10}
+```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height=16}
 VlnPlot(T_cells, features = c("PDCD1","HAVCR2","LAG3","TIGIT","TNFRSF4","TNFRSF9"), stack=TRUE, flip= TRUE, split.by = "Treatment")+theme(axis.text.y =element_text(size=6))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
 geom_boxplot(alpha=0.3,show.legend = FALSE)
 ggsave(file = "figures/Tcells/vln_activation_exhastion_cluster_by_treatment_1.png", dpi=300, width=8, height=10)
@@ -154,7 +260,7 @@ ggsave(file = "figures/Tcells/Vln_T_activation_exhaustion_by_cluster_2.png", dpi
 FeaturePlot(T_cells, features = c("GZMB","PRF1","IFNG","MKI67","GZMC","GZMA","KLRG1","IL7R","CD52"),order=TRUE,pt.size=1, reduction="tsne", ncol=3)
 ggsave(file = "figures/Tcells/features_T_effector.png", dpi=300, width=8, height=10)
 ```
-```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height=10}
+```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height=16}
 VlnPlot(T_cells, features = c("GZMB","PRF1","IFNG"), stack=TRUE, flip= TRUE, split.by = "Treatment")+theme(axis.text.y =element_text(size=6))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12)) +
 geom_boxplot(alpha=0.3,show.legend = FALSE)
 ggsave(file = "figures/Tcells/Vln_T_effector_cluster_by_treatment_1.png", dpi=300, width=8, height=10, limitsize=FALSE)
@@ -185,39 +291,39 @@ ggsave(file = "figures/Tcells/Vln_T_effector_by_cluster_2.png", dpi=300, width=6
 
 
 ### c. naive-like (naive or memory cells)
-```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height= 16}
+```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height= 10}
 # naive
 FeaturePlot(T_cells, features = c("SELL","IL7R","CCR7","MS4A4C"),order=TRUE,pt.size=1, reduction="tsne", ncol=2)
 ggsave(file = "figures/Tcells/features_T_naive.png", dpi=300, width=8, height=10)
 ```
 
-```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height= 16}
+```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height= 10}
 # memory 
 FeaturePlot(T_cells, features = c("SELL","CD44","IL7R","CCR7","TCF7","CXCR6"),order=TRUE,pt.size=1, reduction="tsne", ncol=3)
 ggsave(file = "figures/Tcells/features_T_memory.png", dpi=300, width=10, height=8)
 ```
 
 ### d. effector memory markers
-```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height= 32}
+```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height= x1*4}
 FeaturePlot(T_cells, features = c("BACH2","PRDM1","IL7R","CD44","CX3CR1","ID2","KLF2","KLRG1","LEF1","STAT4","TBX21","ZEB2"),order=TRUE,pt.size=1, reduction="tsne", ncol=3)
 ggsave(file = "figures/Tcells/features_T_effector memory.png", dpi=300, width=30, height=40)
 ```
 
 ### e. central memory markers
-```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height= 40}
+```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height= x1*5}
 FeaturePlot(T_cells, features = c("TCF7","BACH2","BCL16","CCR7","IL7R","CD27","CD44","SELL","ID3","KLF2","LCR7","LEF1","SLAMF6","STAT3","TFAP4"),order=TRUE,pt.size=1, reduction="tsne", ncol=3)
 ggsave(file = "figures/Tcells/features_T_central memory.png", dpi=300, width=30, height=50, limitsize=FALSE)
 ```
 
 
 ### f. resident memory markers
-```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height= 56}
+```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height= x1*8}
 FeaturePlot(T_cells, features = c("PRDM1","ITGAE","IL7R","CD44","ITGA1","CD69","CRTAM","DUSP6","EGR2","FOSB","FOXO3","GZMA","GZMB","ZNF683","ID3","IL2RA","IRF4","JUN","JUNB","MYC","NR4A1","RGS1"), order=TRUE, pt.size=1, reduction="tsne", ncol=3)
 ggsave(file = "figures/Tcells/features_T_resident memory.png", dpi=300, width=30, height=80, limitsize=FALSE)
 ```
 
 ### g. B cells
-```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height= 16}
+```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height=x1*3}
 FeaturePlot(T_cells, features = c("CD19","MS4A1","IGLC1","IGHM","IGKC","CD3E","CD8A"), order=TRUE,pt.size=1, reduction="tsne", ncol=3)
 ggsave(file = "figures/Tcells/Features_T_B + CD8 cells.png", dpi=300, width=30, height=30)
 ```
@@ -225,37 +331,37 @@ ggsave(file = "figures/Tcells/Features_T_B + CD8 cells.png", dpi=300, width=30, 
 ## 3. Heatmap 
 
 ### a. activation/exhaustion/effector
-```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height=6}
+```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height=12}
 DoHeatmap(T_cells, features = c("PDCD1","HAVCR2","LAG3","TIGIT","TNFRSF4","TNFRSF9","ICOS","CTLA4","KLRD1","IRF8","KLRC1","TOX1","CX3CR1","XCL1","GZMB","PRF1","MKI67","IFNG","GZMC","GZMA","KLRG1","IL7R","CD52"))+ NoLegend() + scale_fill_gradientn(colors = c("blue", "white", "red"))
 ggsave(file = "figures/Tcells/T_heatmap_activated effector.png", dpi=300, width=30, height=30)
 ```
 
 ### b. naive/memory
-```{r fig.height=6, message=FALSE, warning=FALSE, cache=TRUE}
+```{r fig.height=12, message=FALSE, warning=FALSE, cache=TRUE}
 DoHeatmap(T_cells, features = c("SELL","IL7R","CCR7","MS4A4C","SELL","CD44","IL7R","CCR7","TCF7","CXCR6","TXK","S1PR1","LEF1","SATB1" ))+ NoLegend() + scale_fill_gradientn(colors = c("blue", "white", "red"))
 ggsave(file = "figures/Tcells/T_heatmap_naive memory.png", dpi=300, width=30, height=30)
 ```
 
 ### c. effector memory
-```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height=6}
+```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height=12}
 DoHeatmap(T_cells, features = c("BACH2","PRDM1","IL7R","CD44","CX3CR1","ID2","KLF2","KLRG1","LEF1","STAT4","TBX21","ZEB2","GZMA","GZMK","NKG7","CD8A","CD8B1","CTSW","GZMB","CCL5","CST7","PRF1","ABI3","FASL","ITM2C","1500009L16RIK","EOMES","CHST12","CCR5","HCST","AOAH","HOPX","SLAMF7","CXCR3","OASL1","F2R","CXCR6"))+ NoLegend() + scale_fill_gradientn(colors = c("blue", "white", "red"))
 ggsave(file = "figures/Tcells/T_heatmap_effector memory.png", dpi=300, width=30, height=30)
 ```
 
 ### d. central memory
-```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height=6}
+```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height=12}
 DoHeatmap(T_cells, features = c("BACH2","BCL16","CCR7","IL7R","CD27","CD44","SELL","ID3","KLF2","LCR7","LEF1","SLAMF6","STAT3","TCF7","TFAP4"))+ NoLegend() + scale_fill_gradientn(colors = c("blue", "white", "red"))
 ggsave(file = "figures/Tcells/T_heatmap_central memory.png", dpi=300, width=30, height=30)
 ```
 
 ### e. resident memory
-```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height=6}
+```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height=12}
 DoHeatmap(T_cells, features = c("PRDM1","ITGAE","IL7R","CD44","ITGA1","CD69","CRTAM","CX3CR1","DUSP6","EGR2","FABP5","FOS","FOSB","FOXO3","GZMA","GZMB","ZNF683","ID3","IL2RA","IRF4","JUN","JUNB","MYC","NR4A1","RGS1"))+ NoLegend() + scale_fill_gradientn(colors = c("blue", "white", "red"))
 ggsave(file = "figures/Tcells/T_heatmap_resident memory.png", dpi=300, width=30, height=30)
 ```
 
 ### h. T cells features signatures 
-```{r echo=FALSE, message=FALSE, warning=FALSE, cache=TRUE, fig.height=6}
+```{r echo=FALSE, fig.height=12, message=FALSE, warning=FALSE, cache=FALSE}
 CD8_memory_list = list(c("IL7R","CD44","CXCR6"))
 T_cells = AddModuleScore(object = T_cells, features = CD8_memory_list, name = "CD8_memory", assay = "RNA")
 a <- FeaturePlot(object = T_cells, features = "CD8_memory1", reduction = "tsne", cols=c("grey","grey","#e46467", "#b33336", "#A73033"))+labs(title = "0_ CD8+ memory", subtitle = "(Cxcl10, Vcan, Il18,Plcb1,Cacna1d)")+ theme(plot.subtitle = element_text(hjust = 0.5))
