@@ -69,7 +69,7 @@ datatable(Top50Markers, rownames = FALSE, filter = 'top', colnames = c('Cluster 
 ```
 
 ## Contribution of each group 
-```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height= 10}
+```{r eval=FALSE, fig.height=, message=FALSE, warning=FALSE, cache=TRUE, include=FALSE}
 #M# unnormalized counts per cluster per treatment.
 ggplot(T_cells@meta.data, aes(x=T_cells@active.ident, fill=Treatment)) + geom_bar(stat="count",position=position_dodge())+
     scale_fill_manual(values= c("#CFBAE1", "#5C7D9D"))+
@@ -81,7 +81,7 @@ ggplot(T_cells@meta.data, aes(x=T_cells@active.ident, fill=Treatment)) + geom_ba
 ggsave(file = "figures/Tcells/unnormalized_counts_per_cluster_per_treatment.png", dpi=300, width=15, height=10)
 ```
 
-```{r message=FALSE, warning=FALSE, cache= TRUE,  fig.height= 10}
+```{r eval=FALSE, fig.height=, message=FALSE, warning=FALSE, cache=TRUE, include=FALSE}
 #M# percentage of contribution to each cluster per treatment
 ggplot(T_cells@meta.data, aes(x=T_cells@active.ident, fill=Treatment)) + geom_bar(position="fill")+
     scale_fill_manual(values= c("#CFBAE1", "#5C7D9D"))+
@@ -93,7 +93,7 @@ ggsave(file = "figures/Tcells/percentage_of_contribution_stacked_bar_plot.png", 
 ```
 
 ## unnormalized contribution per patient 
-```{r message=FALSE, warning=FALSE, cache= TRUE,  fig.height= 6}
+```{r eval=FALSE, fig.height=, message=FALSE, warning=FALSE, cache=TRUE, include=FALSE}
 Sample_Names_vec <- c("N1","N2","N3","N4")
 for (sample in Sample_Names_vec) {
   Tsub = T_cells@meta.data[T_cells@meta.data$orig.ident == sample, ]
@@ -219,66 +219,85 @@ ggsave(file = "figures/Tcells/features_T_activation.png", dpi=300, width=10, hei
 ```
 
 ```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height=20}
-VlnPlot(T_cells, features = c("PDCD1","HAVCR2","LAG3","TIGIT","TNFRSF4","TNFRSF9"), assay = "RNA", stack=TRUE, flip= TRUE, split.by = "Treatment")+theme(axis.text.y =element_text(size=20))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=20))+
+VlnPlot(T_cells, features = c("PDCD1","HAVCR2","LAG3","TIGIT","TNFRSF4","TNFRSF9"), assay = "RNA", stack=TRUE, flip= TRUE, split.by = "Treatment")+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) +
+  theme(
+    axis.text.y = element_text(size = 24, face = "italic"),
+    axis.title.y = element_text(size = 20, face = "bold"),
+    axis.ticks.y = element_line(size = 0.5))+
 geom_boxplot(alpha=0.3,show.legend = FALSE)
- ggsave(file = "figures/Tcells/vln_activation_exhastion_cluster_by_treatment_1.png", dpi=300, width=8, height=10)
+ ggsave(filename = "vln_activation_exhastion_cluster_by_treatment_1.png" , path = "figures/Tcells/", dpi=300, width=8, height=10)
 
-VlnPlot(T_cells, features = c("PDCD1","HAVCR2","LAG3","TIGIT","TNFRSF4","TNFRSF9"), stack=TRUE, flip= TRUE, group.by = "Treatment", fill.by ="ident")+theme(axis.text.y =element_text(size=6))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
+VlnPlot(T_cells, features = c("PDCD1","HAVCR2","LAG3","TIGIT","TNFRSF4","TNFRSF9"), assay = "RNA", stack=TRUE, flip= TRUE, group.by = "Treatment", fill.by ="ident")+theme(axis.text.y =element_text(size=6))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
 geom_boxplot(alpha=0.3,show.legend = FALSE)
 ggsave(file = "figures/Tcells/vln_activation_exhastion_by_treatment_1.png", dpi=300, width=4, height=10)
 
-VlnPlot(T_cells, features = c("PDCD1","HAVCR2","LAG3","TIGIT","TNFRSF4","TNFRSF9"), stack=TRUE, flip= TRUE, fill.by = "ident")+theme(axis.text.y =element_text(size=6))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
+VlnPlot(T_cells, features = c("PDCD1","HAVCR2","LAG3","TIGIT","TNFRSF4","TNFRSF9"), assay = "RNA", stack=TRUE, flip= TRUE, fill.by = "ident")+theme(axis.text.y =element_text(size=6))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
 geom_boxplot(alpha=0.3,show.legend = FALSE)
 ggsave(file = "figures/Tcells/vln_activation_exhastion_by_cluster_1.png", dpi=300, width=6, height=10)
 
 ##
 
-VlnPlot(T_cells, features = c("ICOS","CTLA4","KLRD1","IRF8","KLRC1","TOX"), stack=TRUE, flip= TRUE, split.by = "Treatment")+theme(axis.text.y =element_text(size=4))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
+VlnPlot(T_cells, features = c("ICOS","CTLA4","KLRD1","IRF8","KLRC1","TOX"), assay = "RNA", stack=TRUE, flip= TRUE, split.by = "Treatment")+theme(axis.text.y =element_text(size=4))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
 geom_boxplot(alpha=0.3,show.legend = FALSE)
 ggsave(file = "figures/Tcells/Vln_T_activation_exhaustion_cluster_by_treatment_2.png", dpi=300, width=8, height=10, limitsize=FALSE)
 
-VlnPlot(T_cells, features = c("ICOS","CTLA4","KLRD1","IRF8","KLRC1","TOX"), stack=TRUE, flip= TRUE, group.by = "Treatment", fill.by ="ident")+theme(axis.text.y =element_text(size=4))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
+VlnPlot(T_cells, features = c("ICOS","CTLA4","KLRD1","IRF8","KLRC1","TOX"), assay = "RNA", stack=TRUE, flip= TRUE, group.by = "Treatment", fill.by ="ident")+theme(axis.text.y =element_text(size=4))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
 geom_boxplot(alpha=0.3,show.legend = FALSE)
 ggsave(file = "figures/Tcells/Vln_T_activation_exhaustion_by_treatment_2.png", dpi=300, width=4, height=10, limitsize=FALSE)
 
-VlnPlot(T_cells, features = c("ICOS","CTLA4","KLRD1","IRF8","KLRC1","TOX"), stack=TRUE, flip= TRUE, fill.by = "ident")+theme(axis.text.y =element_text(size=4))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
+VlnPlot(T_cells, features = c("ICOS","CTLA4","KLRD1","IRF8","KLRC1","TOX"), assay = "RNA", stack=TRUE, flip= TRUE, fill.by = "ident")+theme(axis.text.y =element_text(size=4))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
 geom_boxplot(alpha=0.3,show.legend = FALSE)
 ggsave(file = "figures/Tcells/Vln_T_activation_exhaustion_by_cluster_2.png", dpi=300, width=6, height=10, limitsize=FALSE)
 
 ```
 
-### effector markers 
+### b. effector markers 
 ```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height=16}
 FeaturePlot(T_cells, features = c("GZMB","PRF1","IFNG","MKI67","GZMC","GZMA","KLRG1","IL7R","CD52"),order=TRUE,pt.size=1, reduction="tsne", ncol=3)
 ggsave(file = "figures/Tcells/features_T_effector.png", dpi=300, width=8, height=10)
 ```
 ```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height=20}
-VlnPlot(T_cells, features = c("GZMB","PRF1","IFNG"), stack=TRUE, flip= TRUE, split.by = "Treatment")+theme(axis.text.y =element_text(size=6))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12)) +
+VlnPlot(T_cells, features = c("GZMB","PRF1","IFNG"), assay = "RNA", stack=TRUE, flip= TRUE, split.by = "Treatment")+theme(axis.text.y =element_text(size=6))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12)) +
 geom_boxplot(alpha=0.3,show.legend = FALSE)
 ggsave(file = "figures/Tcells/Vln_T_effector_cluster_by_treatment_1.png", dpi=300, width=8, height=10, limitsize=FALSE)
 
-VlnPlot(T_cells, features = c("GZMB","PRF1","IFNG"), stack=TRUE, flip= TRUE, group.by = "Treatment", fill.by ="ident")+theme(axis.text.y =element_text(size=6))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12)) +
+VlnPlot(T_cells, features = c("GZMB","PRF1","IFNG"), assay = "RNA", stack=TRUE, flip= TRUE, group.by = "Treatment", fill.by ="ident")+theme(axis.text.y =element_text(size=6))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12)) +
 geom_boxplot(alpha=0.3,show.legend = FALSE)
 ggsave(file = "figures/Tcells/Vln_T_effector_by_treatment_1.png", dpi=300, width=4, height=10, limitsize=FALSE)
 
-VlnPlot(T_cells, features = c("GZMB","PRF1","IFNG"), stack=TRUE, flip= TRUE, fill.by = "ident")+theme(axis.text.y =element_text(size=6))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12)) +
+VlnPlot(T_cells, features = c("GZMB","PRF1","IFNG"), assay = "RNA", stack=TRUE, flip= TRUE, fill.by = "ident")+theme(axis.text.y =element_text(size=6))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12)) +
 geom_boxplot(alpha=0.3,show.legend = FALSE)
 ggsave(file = "figures/Tcells/Vln_T_effector_by_cluster_1.png", dpi=300, width=6, height=10, limitsize=FALSE)
 
 ##
 
-VlnPlot(T_cells, features = c("GZMC","GZMA","KLRG1","IL7R","CD52"), stack=TRUE, flip= TRUE, split.by = "Treatment")+theme(axis.text.y =element_text(size=6))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
+VlnPlot(T_cells, features = c("GZMC","GZMA","KLRG1","IL7R","CD52"), assay = "RNA", stack=TRUE, flip= TRUE, split.by = "Treatment")+theme(axis.text.y =element_text(size=6))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
 geom_boxplot(alpha=0.3,show.legend = FALSE)
 ggsave(file = "figures/Tcells/Vln_T_effector_cluster_by_treatment_2.png", dpi=300, width=8, height=10, limitsize=FALSE)
 
-VlnPlot(T_cells, features = c("GZMC","GZMA","KLRG1","IL7R","CD52"), stack=TRUE, flip= TRUE, group.by = "Treatment", fill.by ="ident")+theme(axis.text.y =element_text(size=6))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
+VlnPlot(T_cells, features = c("GZMC","GZMA","KLRG1","IL7R","CD52"), assay = "RNA", stack=TRUE, flip= TRUE, group.by = "Treatment", fill.by ="ident")+theme(axis.text.y =element_text(size=6))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
 geom_boxplot(alpha=0.3,show.legend = FALSE)
 ggsave(file = "figures/Tcells/Vln_T_effector_by_treatment_2.png", dpi=300, width=4, height=10, limitsize=FALSE)
 
-VlnPlot(T_cells, features = c("GZMC","GZMA","KLRG1","IL7R","CD52", fill.by = "ident"), stack=TRUE, flip= TRUE)+theme(axis.text.y =element_text(size=6))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
+VlnPlot(T_cells, features = c("GZMC","GZMA","KLRG1","IL7R","CD52", fill.by = "ident"), assay = "RNA", stack=TRUE, flip= TRUE)+theme(axis.text.y =element_text(size=6))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
 geom_boxplot(alpha=0.3,show.legend = FALSE)
 ggsave(file = "figures/Tcells/Vln_T_effector_by_cluster_2.png", dpi=300, width=6, height=10, limitsize=FALSE)
 
+```
+
+### CD69 + CD39
+```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height= x1}
+# naive
+FeaturePlot(T_cells, features = c("CD69","CD39"),order=TRUE,pt.size=1, reduction="tsne", ncol=2)
+ggsave(file = "figures/Tcells/CD69.png", dpi=300, width=8, height=10)
+```
+```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height= x1}
+VlnPlot(T_cells, features = c("CD69", fill.by = "ident"), assay = "RNA", stack=TRUE, flip= TRUE)+theme(axis.text.y =element_text(size=6))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
+geom_boxplot(alpha=0.3,show.legend = FALSE)
+ggsave(file = "figures/Tcells/Vln_CD69.png", dpi=300, width=6, height=10, limitsize=FALSE)
+
+VlnPlot(T_cells, features = c("CD69"), assay = "RNA", flip= TRUE, split.by = "Treatment", pt.size = 0)+theme(axis.text.y =element_text(size=6))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
+geom_boxplot(alpha=0.3,show.legend = FALSE)
 ```
 
 
@@ -314,83 +333,43 @@ FeaturePlot(T_cells, features = c("PRDM1","ITGAE","IL7R","CD44","ITGA1","CD69","
 ggsave(file = "figures/Tcells/features_T_resident memory.png", dpi=300, width=30, height=80, limitsize=FALSE)
 ```
 
-### g. B cells
-```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height=x1*3}
-FeaturePlot(T_cells, features = c("CD19","MS4A1","IGLC1","IGHM","IGKC","CD3E","CD8A"), order=TRUE,pt.size=1, reduction="tsne", ncol=3)
-ggsave(file = "figures/Tcells/Features_T_B + CD8 cells.png", dpi=300, width=30, height=30)
-```
-
-## 3. Heatmap 
-
-### a. activation/exhaustion/effector
-```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height=12}
-DoHeatmap(T_cells, features = c("PDCD1","HAVCR2","LAG3","TIGIT","TNFRSF4","TNFRSF9","ICOS","CTLA4","KLRD1","IRF8","KLRC1","TOX1","CX3CR1","XCL1","GZMB","PRF1","MKI67","IFNG","GZMC","GZMA","KLRG1","IL7R","CD52"))+ NoLegend() + scale_fill_gradientn(colors = c("blue", "white", "red"))
-ggsave(file = "figures/Tcells/T_heatmap_activated effector.png", dpi=300, width=30, height=30)
-```
-
-### b. naive/memory
-```{r fig.height=12, message=FALSE, warning=FALSE, cache=TRUE}
-DoHeatmap(T_cells, features = c("SELL","IL7R","CCR7","MS4A4C","SELL","CD44","IL7R","CCR7","TCF7","CXCR6","TXK","S1PR1","LEF1","SATB1" ))+ NoLegend() + scale_fill_gradientn(colors = c("blue", "white", "red"))
-ggsave(file = "figures/Tcells/T_heatmap_naive memory.png", dpi=300, width=30, height=30)
-```
-
-### c. effector memory
-```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height=12}
-DoHeatmap(T_cells, features = c("BACH2","PRDM1","IL7R","CD44","CX3CR1","ID2","KLF2","KLRG1","LEF1","STAT4","TBX21","ZEB2","GZMA","GZMK","NKG7","CD8A","CD8B1","CTSW","GZMB","CCL5","CST7","PRF1","ABI3","FASL","ITM2C","1500009L16RIK","EOMES","CHST12","CCR5","HCST","AOAH","HOPX","SLAMF7","CXCR3","OASL1","F2R","CXCR6"))+ NoLegend() + scale_fill_gradientn(colors = c("blue", "white", "red"))
-ggsave(file = "figures/Tcells/T_heatmap_effector memory.png", dpi=300, width=30, height=30)
-```
-
-### d. central memory
-```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height=12}
-DoHeatmap(T_cells, features = c("BACH2","BCL16","CCR7","IL7R","CD27","CD44","SELL","ID3","KLF2","LCR7","LEF1","SLAMF6","STAT3","TCF7","TFAP4"))+ NoLegend() + scale_fill_gradientn(colors = c("blue", "white", "red"))
-ggsave(file = "figures/Tcells/T_heatmap_central memory.png", dpi=300, width=30, height=30)
-```
-
-### e. resident memory
-```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height=12}
-DoHeatmap(T_cells, features = c("PRDM1","ITGAE","IL7R","CD44","ITGA1","CD69","CRTAM","CX3CR1","DUSP6","EGR2","FABP5","FOS","FOSB","FOXO3","GZMA","GZMB","ZNF683","ID3","IL2RA","IRF4","JUN","JUNB","MYC","NR4A1","RGS1"))+ NoLegend() + scale_fill_gradientn(colors = c("blue", "white", "red"))
-ggsave(file = "figures/Tcells/T_heatmap_resident memory.png", dpi=300, width=30, height=30)
-```
-
 ### h. T cells features signatures 
-```{r echo=FALSE, fig.height=6,fig.width=6, message=FALSE, warning=FALSE, cache=FALSE}
+```{r echo=FALSE, fig.height=4,fig.width=4, message=FALSE, warning=FALSE, cache=FALSE}
 CD8_memory_list = list(c("IL7R","CD44","CXCR6"))
 T_cells = AddModuleScore(object = T_cells, features = CD8_memory_list, name = "CD8_memory", assay = "RNA")
-a <- FeaturePlot(object = T_cells, features = "CD8_memory1", reduction = "tsne", cols=c("grey","grey","#e46467", "#b33336", "#A73033"))+labs(title = "0_ CD8+ memory", subtitle = "(Cxcl10, Vcan, Il18,Plcb1,Cacna1d)")+ theme(plot.subtitle = element_text(hjust = 0.5))
+a <- FeaturePlot(object = T_cells, features = "CD8_memory1", reduction = "tsne", cols=c("grey","grey","#e46467", "#b33336", "#A73033"))+labs(title = "0_ CD8+ memory", subtitle = "(IL7R,CD44,CXCR6)")+ theme(plot.subtitle = element_text(hjust = 0.5))
 a
 ggsave(file = "figures/Tcells/CD8_memory_Cxcl10.png", dpi=300, width=5, height=5)
 
-
-
 activated_list = list(c("PDCD1","KLRD1","GZMA"))
 T_cells = AddModuleScore(object = T_cells, features = activated_list, name = "activated", assay = "RNA")
-b <- FeaturePlot(object = T_cells, features = "activated1", reduction = "tsne", cols=c("grey","grey","#e46467", "#b33336", "#A73033"))+labs(title = "activated_CD8+activated", subtitle = "(Cd4, Foxp3,Il2ra, Icos)")+ theme(plot.subtitle = element_text(hjust =0.5))
+b <- FeaturePlot(object = T_cells, features = "activated1", reduction = "tsne", cols=c("grey","grey","#e46467", "#b33336", "#A73033"))+labs(title = "activated_CD8+activated", subtitle = "(PDCD1,KLRD1,GZMA)")+ theme(plot.subtitle = element_text(hjust =0.5))
 b
 ggsave(file = "figures/Tcells/activated.png", dpi=300, width=5, height=5)
 
 effector_memory_list = list(c("ID2","STAT3","GZMB","PRF1","IL7R"))
 T_cells = AddModuleScore(object = T_cells, features = effector_memory_list, name = "effector_memory", assay = "RNA")
-c <- FeaturePlot(object = T_cells, features = "effector_memory1", reduction = "tsne", cols=c("grey","grey","#e46467", "#b33336", "#A73033"))+labs(title = "2_ CD8+ effector memory", subtitle = "(Cd4, Foxp3,Il2ra, Icos)")+ theme(plot.subtitle = element_text(hjust =0.5))
+c <- FeaturePlot(object = T_cells, features = "effector_memory1", reduction = "tsne", cols=c("grey","grey","#e46467", "#b33336", "#A73033"))+labs(title = "2_ CD8+ effector memory", subtitle = "(ID2,STAT3,GZMB,PRF1,IL7R)")+ theme(plot.subtitle = element_text(hjust =0.5))
 c
 ggsave(file = "figures/Tcells/effector_memory_Tregs.png", dpi=300, width=5, height=5)
 
 cytotoxic_list = list(c("GZMB","GZMC","GRZMF"))
 T_cells = AddModuleScore(object = T_cells, features = cytotoxic_list, name = "cytotoxic", assay = "RNA")
-d <- FeaturePlot(object = T_cells, features = "cytotoxic1", reduction = "tsne", cols=c("grey","grey","#e46467", "#b33336", "#A73033"))+labs(title = "3_ CD8+ cytotoxic", subtitle = "(Cd4, Foxp3,Il2ra, Icos)")+ theme(plot.subtitle = element_text(hjust =0.5))
+d <- FeaturePlot(object = T_cells, features = "cytotoxic1", reduction = "tsne", cols=c("grey","grey","#e46467", "#b33336", "#A73033"))+labs(title = "3_ CD8+ cytotoxic", subtitle = "(GZMB,GZMC,GRZMF)")+ theme(plot.subtitle = element_text(hjust =0.5))
 d
 ggsave(file = "figures/Tcells/cytotoxic_Tregs.png", dpi=300, width=5, height=5)
 
 
 CD8_naive_memory_list = list(c("CD8A","CD4","SELL","CCR7","TCF7","LEF1","CD8","ITGAE","CXCR3","GZMA","SELL","CCR7"))
 T_cells = AddModuleScore(object = T_cells, features = CD8_naive_memory_list, name = "CD8_naive_memory", assay = "RNA")
-e <- FeaturePlot(object = T_cells, features = "CD8_naive_memory1", reduction = "tsne", cols=c("grey","grey","#e46467", "#b33336", "#A73033"))+labs(title = "4_ CD8+ naive/memory", subtitle = "(Cd4, Foxp3,Il2ra, Icos)")+ theme(plot.subtitle = element_text(hjust =0.5))
+e <- FeaturePlot(object = T_cells, features = "CD8_naive_memory1", reduction = "tsne", cols=c("grey","grey","#e46467", "#b33336", "#A73033"))+labs(title = "4_ CD8+ naive/memory", subtitle = "(CD8A,CD4,SELL,CCR7,TCF7,LEF1,CD8,ITGAE,CXCR3,GZMA,SELL,CCR7)")+ theme(plot.subtitle = element_text(hjust =0.5))
 e
 ggsave(file = "figures/Tcells/CD8_naive_memory_Tregs.png", dpi=300, width=5, height=5)
 
 
 CD4_CD8_naive_memory_list = list(c("CD8A","CD4","SELL","CCR7","TCF7","LEF1"))
 T_cells = AddModuleScore(object = T_cells, features = CD4_CD8_naive_memory_list, name = "CD4_CD8_naive_memory", assay = "RNA")
-f <- FeaturePlot(object = T_cells, features = "CD4_CD8_naive_memory1", reduction = "tsne", cols=c("grey","grey","#e46467", "#b33336", "#A73033"))+labs(title = "5_ CD4+ CD8+ naive/memory", subtitle = "(Cd8a, Cd4, Sell, Ccr7, Tcf7, Lef1)")+ theme(plot.subtitle = element_text(hjust =0.5))
+f <- FeaturePlot(object = T_cells, features = "CD4_CD8_naive_memory1", reduction = "tsne", cols=c("grey","grey","#e46467", "#b33336", "#A73033"))+labs(title = "5_ CD4+ CD8+ naive/memory", subtitle = "(CD8A,CD4,SELL,CCR7,TCF7,LEF1)")+ theme(plot.subtitle = element_text(hjust =0.5))
 f
 ggsave(file = "figures/Tcells/CD4_CD8_naive_memory_CD4_CD8_naive_memory.png", dpi=300, width=5, height=5)
 
@@ -405,13 +384,13 @@ T_cells = AddModuleScore(object = T_cells, features = Tregs_list, name = "Tregs"
 h <- FeaturePlot(object = T_cells, features = "Tregs1", reduction = "tsne", cols=c("grey","grey","#e46467", "#b33336", "#A73033"))+labs(title = "7_ Tregs", subtitle = "(Cd4, Foxp3,Il2ra, Icos, Tnfrsf4)")+ theme(plot.subtitle = element_text(hjust =0.5))
 h
 ggsave(file = "figures/Tcells/Tregs_Tregs.png", dpi=300, width=5, height=5)
-
 ```
 
 
 
 ## Annotation
 
+## Barplots - Annotated
 
 
 
