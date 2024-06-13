@@ -47,7 +47,7 @@ setwd("D:/Michael/git_check/tils")
 # setwd("C:/Users/michael monsonego/Documents/tils") #M# update between computers(git)
 
 x1=4.6
-T_cells = readRDS("objects/tils_all_.45_integrgate.rds")
+T_cells = readRDS("objects/tils_all_.45_integrgate_annotated.rds")
 DimPlot(T_cells, reduction = "tsne",
                        repel = T, label = TRUE, label.size = 5)
 
@@ -72,7 +72,7 @@ ggsave(file = "figures/data_prep_0/elbow_plot.png", dpi=300, width=10, height=10
 
 T_cells_0 <- FindNeighbors(T_cells_0, reduction = "pca", dims = 1:14) #M# choose ?
 T_cells_0 = RunTSNE(T_cells_0, dims = 1:14)
-T_cells_0 = RunUMAP(T_cells_0, dims = 1:18)
+#M# T_cells_0 = RunUMAP(T_cells_0, dims = 1:18)
 
 res_seq <- c(.05,.3, .35, .4, .45, .5)
 for(res in res_seq){

@@ -362,11 +362,40 @@ geom_boxplot(alpha=0.3,show.legend = FALSE)
 FeaturePlot(cd4_cells, features = c("SELL","CD44","IL7R","CCR7","TCF7","CXCR6"),order=TRUE,pt.size=1, reduction="tsne", ncol=3)
 ggsave(file = "figures/cd4_cells/features_T_memory.png", dpi=300, width=10, height=8)
 ```
+```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height=20}
+VlnPlot(cd4_cells, features = c("SELL","CD44","IL7R","CCR7","TCF7","CXCR6"), assay = "RNA", stack=TRUE, flip= TRUE, split.by = "Treatment")+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) +
+  theme(
+    axis.text.y = element_text(size = 24, face = "italic"),
+    axis.title.y = element_text(size = 20, face = "bold"),
+    axis.ticks.y = element_line(size = 0.5))+
+geom_boxplot(alpha=0.3,show.legend = FALSE)
+
+VlnPlot(cd4_cells, features = c("SELL","CD44","IL7R","CCR7","TCF7","CXCR6"), assay = "RNA", stack=TRUE, flip= TRUE, group.by = "Treatment", fill.by ="ident")+theme(axis.text.y =element_text(size=6))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
+geom_boxplot(alpha=0.3,show.legend = FALSE)
+
+VlnPlot(cd4_cells, features = c("SELL","CD44","IL7R","CCR7","TCF7","CXCR6"), assay = "RNA", stack=TRUE, flip= TRUE, fill.by = "ident")+theme(axis.text.y =element_text(size=6))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
+geom_boxplot(alpha=0.3,show.legend = FALSE)
+```
+
 
 ### d. effector memory markers
 ```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height= x1*4}
 FeaturePlot(cd4_cells, features = c("BACH2","PRDM1","IL7R","CD44","CX3CR1","ID2","KLF2","KLRG1","LEF1","STAT4","TBX21","ZEB2"),order=TRUE,pt.size=1, reduction="tsne", ncol=3)
 ggsave(file = "figures/cd4_cells/features_T_effector memory.png", dpi=300, width=30, height=40)
+```
+```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height=20}
+VlnPlot(cd4_cells, features = c("BACH2","PRDM1","IL7R","CD44","CX3CR1","ID2","KLF2","KLRG1","LEF1","STAT4","TBX21","ZEB2"), assay = "RNA", stack=TRUE, flip= TRUE, split.by = "Treatment")+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) +
+  theme(
+    axis.text.y = element_text(size = 24, face = "italic"),
+    axis.title.y = element_text(size = 20, face = "bold"),
+    axis.ticks.y = element_line(size = 0.5))+
+geom_boxplot(alpha=0.3,show.legend = FALSE)
+
+VlnPlot(cd4_cells, features = c("BACH2","PRDM1","IL7R","CD44","CX3CR1","ID2","KLF2","KLRG1","LEF1","STAT4","TBX21","ZEB2"), assay = "RNA", stack=TRUE, flip= TRUE, group.by = "Treatment", fill.by ="ident")+theme(axis.text.y =element_text(size=6))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
+geom_boxplot(alpha=0.3,show.legend = FALSE)
+
+VlnPlot(cd4_cells, features = c("BACH2","PRDM1","IL7R","CD44","CX3CR1","ID2","KLF2","KLRG1","LEF1","STAT4","TBX21","ZEB2"), assay = "RNA", stack=TRUE, flip= TRUE, fill.by = "ident")+theme(axis.text.y =element_text(size=6))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
+geom_boxplot(alpha=0.3,show.legend = FALSE)
 ```
 
 ### e. central memory markers
@@ -374,12 +403,41 @@ ggsave(file = "figures/cd4_cells/features_T_effector memory.png", dpi=300, width
 FeaturePlot(cd4_cells, features = c("TCF7","BACH2","BCL16","CCR7","IL7R","CD27","CD44","SELL","ID3","KLF2","LCR7","LEF1","SLAMF6","STAT3","TFAP4"),order=TRUE,pt.size=1, reduction="tsne", ncol=3)
 ggsave(file = "figures/cd4_cells/features_T_central memory.png", dpi=300, width=30, height=50, limitsize=FALSE)
 ```
+```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height=20}
+VlnPlot(cd4_cells, features = c("TCF7","BACH2","BCL16","CCR7","IL7R","CD27","CD44","SELL","ID3","KLF2","LCR7","LEF1","SLAMF6","STAT3","TFAP4"), assay = "RNA", stack=TRUE, flip= TRUE, split.by = "Treatment")+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) +
+  theme(
+    axis.text.y = element_text(size = 24, face = "italic"),
+    axis.title.y = element_text(size = 20, face = "bold"),
+    axis.ticks.y = element_line(size = 0.5))+
+geom_boxplot(alpha=0.3,show.legend = FALSE)
+
+VlnPlot(cd4_cells, features = c("TCF7","BACH2","BCL16","CCR7","IL7R","CD27","CD44","SELL","ID3","KLF2","LCR7","LEF1","SLAMF6","STAT3","TFAP4"), assay = "RNA", stack=TRUE, flip= TRUE, group.by = "Treatment", fill.by ="ident")+theme(axis.text.y =element_text(size=6))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
+geom_boxplot(alpha=0.3,show.legend = FALSE)
+
+VlnPlot(cd4_cells, features = c("TCF7","BACH2","BCL16","CCR7","IL7R","CD27","CD44","SELL","ID3","KLF2","LCR7","LEF1","SLAMF6","STAT3","TFAP4"), assay = "RNA", stack=TRUE, flip= TRUE, fill.by = "ident")+theme(axis.text.y =element_text(size=6))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
+geom_boxplot(alpha=0.3,show.legend = FALSE)
+```
+
 
 
 ### f. resident memory markers
 ```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height= x1*8}
 FeaturePlot(cd4_cells, features = c("PRDM1","ITGAE","IL7R","CD44","ITGA1","CD69","CRTAM","DUSP6","EGR2","FOSB","FOXO3","GZMA","GZMB","ZNF683","ID3","IL2RA","IRF4","JUN","JUNB","MYC","NR4A1","RGS1"), order=TRUE, pt.size=1, reduction="tsne", ncol=3)
 ggsave(file = "figures/cd4_cells/features_T_resident memory.png", dpi=300, width=30, height=80, limitsize=FALSE)
+```
+```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height=20}
+VlnPlot(cd4_cells, features = c("PRDM1","ITGAE","IL7R","CD44","ITGA1","CD69","CRTAM","DUSP6","EGR2","FOSB","FOXO3","GZMA","GZMB","ZNF683","ID3","IL2RA","IRF4","JUN","JUNB","MYC","NR4A1","RGS1"), assay = "RNA", stack=TRUE, flip= TRUE, split.by = "Treatment")+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) +
+  theme(
+    axis.text.y = element_text(size = 24, face = "italic"),
+    axis.title.y = element_text(size = 20, face = "bold"),
+    axis.ticks.y = element_line(size = 0.5))+
+geom_boxplot(alpha=0.3,show.legend = FALSE)
+
+VlnPlot(cd4_cells, features = c("PRDM1","ITGAE","IL7R","CD44","ITGA1","CD69","CRTAM","DUSP6","EGR2","FOSB","FOXO3","GZMA","GZMB","ZNF683","ID3","IL2RA","IRF4","JUN","JUNB","MYC","NR4A1","RGS1"), assay = "RNA", stack=TRUE, flip= TRUE, group.by = "Treatment", fill.by ="ident")+theme(axis.text.y =element_text(size=6))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
+geom_boxplot(alpha=0.3,show.legend = FALSE)
+
+VlnPlot(cd4_cells, features = c("PRDM1","ITGAE","IL7R","CD44","ITGA1","CD69","CRTAM","DUSP6","EGR2","FOSB","FOXO3","GZMA","GZMB","ZNF683","ID3","IL2RA","IRF4","JUN","JUNB","MYC","NR4A1","RGS1"), assay = "RNA", stack=TRUE, flip= TRUE, fill.by = "ident")+theme(axis.text.y =element_text(size=6))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
+geom_boxplot(alpha=0.3,show.legend = FALSE)
 ```
 
 ### h. T cells features signatures 
