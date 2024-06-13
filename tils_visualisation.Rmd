@@ -16,9 +16,10 @@ editor_options:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 knitr::opts_chunk$set(fig.width=17) 
+knitr::opts_chunk$set(cache = TRUE) 
 ```
 ## 1. number of cells per patient + tSNE plot
-```{r echo=FALSE, message=FALSE, warning=FALSE, fig.height= 12}
+```{r message=FALSE, warning=FALSE, fig.height= 12}
 library(dplyr)
 library(Seurat)
 library(patchwork)
@@ -68,8 +69,8 @@ Top50Markers <- Top50Markers[,c("cluster","gene", "avg_log2FC", "p_val")]
 datatable(Top50Markers, rownames = FALSE, filter = 'top', colnames = c('Cluster #', 'Gene Name', "log2(FC)", 'P.value'))
 ```
 
+```{r eval=FALSE, fig.height=8, message=FALSE, warning=FALSE, include=FALSE}
 ## Contribution of each group 
-```{r eval=FALSE, fig.height=, message=FALSE, warning=FALSE, cache=TRUE, include=FALSE}
 #M# unnormalized counts per cluster per treatment.
 ggplot(T_cells@meta.data, aes(x=T_cells@active.ident, fill=Treatment)) + geom_bar(stat="count",position=position_dodge())+
     scale_fill_manual(values= c("#CFBAE1", "#5C7D9D"))+
@@ -81,7 +82,7 @@ ggplot(T_cells@meta.data, aes(x=T_cells@active.ident, fill=Treatment)) + geom_ba
 ggsave(file = "figures/Tcells/unnormalized_counts_per_cluster_per_treatment.png", dpi=300, width=15, height=10)
 ```
 
-```{r eval=FALSE, fig.height=, message=FALSE, warning=FALSE, cache=TRUE, include=FALSE}
+```{r eval=FALSE, fig.height=8, message=FALSE, warning=FALSE, include=FALSE}
 #M# percentage of contribution to each cluster per treatment
 ggplot(T_cells@meta.data, aes(x=T_cells@active.ident, fill=Treatment)) + geom_bar(position="fill")+
     scale_fill_manual(values= c("#CFBAE1", "#5C7D9D"))+
@@ -92,8 +93,9 @@ ggplot(T_cells@meta.data, aes(x=T_cells@active.ident, fill=Treatment)) + geom_ba
 ggsave(file = "figures/Tcells/percentage_of_contribution_stacked_bar_plot.png", dpi=300, width=10, height=10)
 ```
 
+```{r eval=FALSE, fig.height=8, message=FALSE, warning=FALSE, include=FALSE}
 ## unnormalized contribution per patient 
-```{r eval=FALSE, fig.height=, message=FALSE, warning=FALSE, cache=TRUE, include=FALSE}
+
 Sample_Names_vec <- c("N1","N2","N3","N4")
 for (sample in Sample_Names_vec) {
   Tsub = T_cells@meta.data[T_cells@meta.data$orig.ident == sample, ]
@@ -198,17 +200,37 @@ Markers
 
 ### Proliferation Markers
 
-```{r cache=T, fig.height=x1*1, echo=FALSE}
+```{r fig.height=x1*1, cache=TRUE}
 Prolif <- c("TOP2A","MKI67")
 FeaturePlot(T_cells, features = Prolif, label.size = 8, pt.size = 1, label=T, ncol = 3, order = T,reduction = "tsne")
 ```
 
 ### T Cells Markers
-```{r cache=T, fig.height=x1*2,warning=FALSE, echo=FALSE}
+```{r cache=T, fig.height=x1*2,warning=FALSE}
 Ts <- c('Cd4', 'Cd8a', 'Cd3d','Cd3e','Cd3g',"PTPRC")
 Ts <- toupper(Ts)
 FeaturePlot(T_cells, features = Ts, label.size = 8, pt.size = 1, label=T, ncol = 3, order = T,reduction = "tsne")
 ```
+### checking 
+```{r cache=T, fig.height=x1*3, warning=FALSE}
+FeaturePlot(T_cells, features = c("CXCR5", "CXCL13", "BCL6", "ASCL2", "IL21", "PDCD1", "ICOS"), order=TRUE,pt.size=1, reduction="tsne", ncol=3)
+```
+
+```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height=20}
+VlnPlot(T_cells, features = c("CXCR5", "CXCL13", "BCL6", "ASCL2", "IL21", "PDCD1", "ICOS"), assay = "RNA", stack=TRUE, flip= TRUE, split.by = "Treatment")+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) +
+  theme(
+    axis.text.y = element_text(size = 24, face = "italic"),
+    axis.title.y = element_text(size = 20, face = "bold"),
+    axis.ticks.y = element_line(size = 0.5))+
+geom_boxplot(alpha=0.3,show.legend = FALSE)
+
+VlnPlot(T_cells, features = c("CXCR5", "CXCL13", "BCL6", "ASCL2", "IL21", "PDCD1", "ICOS"), assay = "RNA", stack=TRUE, flip= TRUE, group.by = "Treatment", fill.by ="ident")+theme(axis.text.y =element_text(size=6))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
+geom_boxplot(alpha=0.3,show.legend = FALSE)
+
+VlnPlot(T_cells, features = c("CXCR5", "CXCL13", "BCL6", "ASCL2", "IL21", "PDCD1", "ICOS"), assay = "RNA", stack=TRUE, flip= TRUE, fill.by = "ident")+theme(axis.text.y =element_text(size=6))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
+geom_boxplot(alpha=0.3,show.legend = FALSE)
+```
+
 
 
 ### a. activation/exhaustion markers
@@ -286,7 +308,7 @@ ggsave(file = "figures/Tcells/Vln_T_effector_by_cluster_2.png", dpi=300, width=6
 ```
 
 ### CD69 + CD39
-```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height= x1}
+```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height= x1, fig.width=8}
 # naive
 FeaturePlot(T_cells, features = c("CD69","CD39"),order=TRUE,pt.size=1, reduction="tsne", ncol=2)
 ggsave(file = "figures/Tcells/CD69.png", dpi=300, width=8, height=10)
@@ -304,7 +326,7 @@ geom_boxplot(alpha=0.3,show.legend = FALSE)
 ### c. naive-like (naive or memory cells)
 ```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height= x1*2}
 # naive
-FeaturePlot(T_cells, features = c("SELL","IL7R","CCR7","MS4A4C"),order=TRUE,pt.size=1, reduction="tsne", ncol=2)
+FeaturePlot(T_cells, features = c("SELL","IL7R","CCR7","MS4A4C"),order=TRUE,pt.size=1, reduction="tsne", ncol=3)
 ggsave(file = "figures/Tcells/features_T_naive.png", dpi=300, width=8, height=10)
 ```
 
@@ -333,8 +355,9 @@ FeaturePlot(T_cells, features = c("PRDM1","ITGAE","IL7R","CD44","ITGA1","CD69","
 ggsave(file = "figures/Tcells/features_T_resident memory.png", dpi=300, width=30, height=80, limitsize=FALSE)
 ```
 
+# add signatures to final html, takes time and cashe = FALSE manditory
 ### h. T cells features signatures 
-```{r echo=FALSE, fig.height=4,fig.width=4, message=FALSE, warning=FALSE, cache=FALSE}
+```{r eval=FALSE, fig.height=4, fig.width=4, message=FALSE, warning=FALSE, cache=FALSE, include=FALSE}
 CD8_memory_list = list(c("IL7R","CD44","CXCR6"))
 T_cells = AddModuleScore(object = T_cells, features = CD8_memory_list, name = "CD8_memory", assay = "RNA")
 a <- FeaturePlot(object = T_cells, features = "CD8_memory1", reduction = "tsne", cols=c("grey","grey","#e46467", "#b33336", "#A73033"))+labs(title = "0_ CD8+ memory", subtitle = "(IL7R,CD44,CXCR6)")+ theme(plot.subtitle = element_text(hjust = 0.5))

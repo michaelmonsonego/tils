@@ -16,6 +16,8 @@ editor_options:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 knitr::opts_chunk$set(fig.width=17) 
+knitr::opts_chunk$set(cache = TRUE) 
+
 ```
 
 ## 1. Selection of cluster 0
@@ -44,10 +46,12 @@ library(glue)
 setwd("D:/Michael/git_check/tils")
 x1=4.6
 T_cells = readRDS("objects/tils_all_.45_integrgate.rds")
+DimPlot(T_cells, reduction = "tsne",
+                       repel = T, label = TRUE, label.size = 5)
 
-T_cells_0= subset(x=T_cells, idents= "0")
+T_cells_0= subset(x=T_cells, idents= "0") #M# todo : change back to 0
 table(T_cells_0$orig.ident)
-DefaultAssay(T_cells_0) <- "integrated"
+table(T_cells_0$seurat_clusters)
 
 #M# trying to debug normalization function
 all_features <- rownames(T_cells_0[['RNA']]@data)
@@ -108,21 +112,24 @@ print(dim(T_cells_0[["integrated"]]@data))  # Should print dimensions of the int
 
 
 
-
+DefaultAssay(T_cells_0)
+DefaultAssay(T_cells_0) <- "RNA"
+T_cells_0[['RNA']]@scale.data <- matrix()
 
 #M# is it correct to put assay="RNA"?
 T_cells_0 = NormalizeData(T_cells_0,normalization.method = "LogNormalize", scale.factor = 10000) #M# not working. wonder why
-
-
 T_cells_0 = FindVariableFeatures(T_cells_0, selection.method = "vst", nfeatures = 2000) 
+
+DefaultAssay(T_cells_0) <- "integrated"
+
 T_cells_0 = ScaleData(T_cells_0, verbose = FALSE)
 T_cells_0 = RunPCA(T_cells_0, npcs = 30, verbose = FALSE)
 DimPlot(T_cells_0, reduction = "pca", group.by="Treatment", cols = c("#FDCDAC", "#B3E2CD"), pt.size=1.1)
-ElbowPlot(T_cells_0, ndims = 40) + theme_classic()
+ElbowPlot(T_cells_0, ndims = 30) + theme_classic()
 ggsave(file = "figures/data_prep_0/elbow_plot.png", dpi=300, width=10, height=10)
 
-T_cells_0 <- FindNeighbors(T_cells_0, reduction = "pca", dims = 7) #M# choose ?
-T_cells_0 = RunTSNE(T_cells_0, dims = 1:7)
+T_cells_0 <- FindNeighbors(T_cells_0, reduction = "pca", dims = 14) #M# choose ?
+T_cells_0 = RunTSNE(T_cells_0, dims = 1:14)
 T_cells_0 = RunUMAP(T_cells_0, dims = 1:18)
 
 res_seq <- c(.05,.3, .35, .4, .45, .5)
@@ -171,14 +178,85 @@ saveRDS(T_cells_0, file=".rds")
 
 
 
+```{r}
+#M# another oproach for subseting : all cells expressing CD4 above the average
+#M# average CD4 expression
+avg_CD4_expression <- mean(FetchData(T_cells, vars = "CD4")$CD4, na.rm = TRUE)
+#M# check cluster 0 expression of CD4
+cluster_0_cells <- WhichCells(T_cells, idents = 0)
+CD4_expression_cluster_0 <- FetchData(T_cells, vars = "CD4")[cluster_0_cells, "CD4"]
+num_cells_above_threshold <- sum(CD4_expression_cluster_0 > 0.1517108)
+total_cells_cluster_0 <- length(CD4_expression_cluster_0)
+percentage_above_threshold <- (num_cells_above_threshold / total_cells_cluster_0) * 100
+table(T_cells$seurat_clusters)
+table(CD4_cells$seurat_clusters)
 
+CD4_cells <- subset(T_cells, subset = CD4 > avg_CD4_expression)
 
+```
 
+```{r}
+table(CD4_cells$orig.ident)
 
+CD4_cells = NormalizeData(CD4_cells,normalization.method = "LogNormalize", scale.factor = 10000) #M# still not working. wonder why
 
+CD4_cells = FindVariableFeatures(CD4_cells, selection.method = "vst", nfeatures = 2000) 
+CD4_cells = ScaleData(CD4_cells, verbose = FALSE)
+CD4_cells = RunPCA(CD4_cells, npcs = 30, verbose = FALSE)
+DimPlot(CD4_cells, reduction = "pca", group.by="Treatment", cols = c("#FDCDAC", "#B3E2CD"), pt.size=1.1)
+ElbowPlot(CD4_cells, ndims = 40) + theme_classic()
+ggsave(file = "figures/data_prep_0/elbow_plot.png", dpi=300, width=10, height=10)
 
+CD4_cells <- FindNeighbors(CD4_cells, reduction = "pca", dims = 10) #M# choose ?
+CD4_cells = RunTSNE(CD4_cells, dims = 1:10)
+CD4_cells = RunUMAP(CD4_cells, dims = 1:10)
 
+res_seq <- c(.05,.3, .35, .4, .45, .5)
+for(res in res_seq){
+  CD4_cells.res_test <- FindClusters(CD4_cells, resolution = res)
+  
+  res_tSNE  <- DimPlot(CD4_cells.res_test, reduction = "tsne",
+                       repel = T, label = TRUE, label.size = 5) +
+    theme(legend.position = "none") + 
+    plot_annotation(title = paste("Res of", res))
+  assign(paste0("tSNE_",res), res_tSNE)
+}
 
+tSNE_ls <- list(tSNE_0.05,tSNE_0.3,tSNE_0.35,tSNE_0.4,tSNE_0.45,tSNE_0.5)
+all_tSNE <- plot_grid(tSNE_0.05,tSNE_0.3,tSNE_0.35,tSNE_0.4,tSNE_0.45,tSNE_0.5, ncol = 3) 
+ggsave(all_tSNE,filename = 'figures/data_prep_0/tils_0_18_dim_res_test.png', dpi=300, height=10, width=16)
+```
+
+```{r}
+DefaultAssay(CD4_cells)
+DefaultAssay(CD4_cells) <- "RNA"
+CD4_cells[['RNA']]@scale.data <- matrix()
+CD4_cells <- NormalizeData(CD4_cells, verbose = FALSE)
+CD4_cells <- FindVariableFeatures(CD4_cells)
+CD4_cells <- ScaleData(CD4_cells, verbose = FALSE)
+DefaultAssay(CD4_cells) <- "integrated"
+CD4_cells = RunPCA(CD4_cells, npcs = 30, verbose = FALSE)
+DimPlot(CD4_cells, reduction = "pca", group.by="Treatment", cols = c("#FDCDAC", "#B3E2CD"), pt.size=1.1)
+ElbowPlot(CD4_cells, ndims = 40) + theme_classic()
+
+CD4_cells <- FindNeighbors(CD4_cells, reduction = "pca", dims = 12) #M# choose ?
+CD4_cells = RunTSNE(CD4_cells, dims = 1:12)
+CD4_cells = RunUMAP(CD4_cells, dims = 1:12)
+
+res_seq <- c(.05,.3, .35, .4, .45, .5)
+for(res in res_seq){
+  CD4_cells.res_test <- FindClusters(CD4_cells, resolution = res)
+  
+  res_tSNE  <- DimPlot(CD4_cells.res_test, reduction = "tsne",
+                       repel = T, label = TRUE, label.size = 5) +
+    theme(legend.position = "none") + 
+    plot_annotation(title = paste("Res of", res))
+  assign(paste0("tSNE_",res), res_tSNE)
+}
+
+tSNE_ls <- list(tSNE_0.05,tSNE_0.3,tSNE_0.35,tSNE_0.4,tSNE_0.45,tSNE_0.5)
+all_tSNE <- plot_grid(tSNE_0.05,tSNE_0.3,tSNE_0.35,tSNE_0.4,tSNE_0.45,tSNE_0.5, ncol = 3)
+```
 
 
 

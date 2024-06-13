@@ -187,8 +187,9 @@ ggsave(all_umap,filename = 'figures/integration/tils_8_dim_res_test_umap.png', d
 immune.combined <- FindClusters(immune.combined, resolution = .45) #M# choose res here : important for rest of analysis
 #M# saveRDS(immune.combined, file = "objects/tils_all_.45_integrgate.rds")
 immune.combined <- readRDS("objects/tils_all_.45_integrgate.rds")
+table(immune.combined$orig.ident)
 
-immune.combined <- JoinLayers(immune.combined, assay = "RNA") #M# this did not work. weird error
+immune.combined <- JoinLayers(immune.combined, assay = "RNA") #M# this did not work : no layers in my seurat
 allmarkers <- FindAllMarkers(immune.combined, only.pos = TRUE, min.pct = 0.25, logfc.threshold = 0.25, assay = "RNA")
 Top50Markers <- allmarkers %>% 
   group_by(cluster) %>% 
