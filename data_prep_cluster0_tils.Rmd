@@ -55,72 +55,12 @@ T_cells_0= subset(x=T_cells, idents= "0") #M# todo : change back to 0
 table(T_cells_0$orig.ident)
 table(T_cells_0$seurat_clusters)
 
-#M# trying to debug normalization function
-all_features <- rownames(T_cells_0[['RNA']]@data)
-scale_features <- rownames(T_cells_0[['RNA']]@scale.data)
-meta_features <- rownames(T_cells_0[['RNA']]@meta.features)
-var_features <- T_cells_0[['RNA']]@var.features
-if (!all(scale_features %in% all_features)) {
-  stop("Some features in scale.data are missing in data")
-}
-if (nrow(T_cells_0[['RNA']]@meta.features) != nrow(T_cells_0[['RNA']]@data)) {
-  stop("meta.features does not match the number of rows in data")
-}
-if (!all(var_features %in% all_features)) {
-  stop("Some var.features are missing in data")
-}
-
-assay <- T_cells_0[['RNA']]
-is.null(assay@counts)
-is.null(assay@data)
-
-# Check and fix `scale.data`
-if (!all(rownames(assay@scale.data) %in% rownames(assay@data))) {
-  scale_data_features <- rownames(assay@scale.data)
-  valid_features <- intersect(scale_data_features, rownames(assay@data))
-  assay@scale.data <- assay@scale.data[valid_features, , drop = FALSE]
-}
-# Check and fix `meta.features`
-if (nrow(assay@meta.features) != nrow(assay@data)) {
-  assay@meta.features <- assay@meta.features[rownames(assay@data), , drop = FALSE]
-}
-# Check and fix `var.features`
-if (!all(assay@var.features %in% rownames(assay@data))) {
-  valid_var_features <- intersect(assay@var.features, rownames(assay@data))
-  assay@var.features <- valid_var_features
-}
-# Recreate the Assay object to ensure it is valid
-T_cells_0[['RNA']] <- CreateAssayObject(counts = assay@counts)
-# Ensure the Seurat object is valid
-validObject(T_cells_0)
-
-
-pca_embeddings <- Embeddings(T_cells_0, "pca")
-print(class(pca_embeddings)) 
-
-
-print(DefaultAssay(T_cells_0))  # Should print "integrated"
-print(dim(T_cells_0[["integrated"]]@data))  # Should print dimensions of the integrated data matrix
-
-
-
-
-
-
-
-
-
-
-
-
-
 DefaultAssay(T_cells_0)
 DefaultAssay(T_cells_0) <- "RNA"
-T_cells_0[['RNA']]@scale.data <- matrix()
 
 #M# is it correct to put assay="RNA"?
-T_cells_0 = NormalizeData(T_cells_0,normalization.method = "LogNormalize", scale.factor = 10000) #M# not working. wonder why
-T_cells_0 = FindVariableFeatures(T_cells_0, selection.method = "vst", nfeatures = 2000) 
+T_cells_0 = NormalizeData(T_cells_0,assay = "RNA",normalization.method = "LogNormalize", scale.factor = 10000) #M# not working. wonder why
+T_cells_0 = FindVariableFeatures(T_cells_0,,assay = "RNA", selection.method = "vst", nfeatures = 2000) 
 
 DefaultAssay(T_cells_0) <- "integrated"
 
@@ -130,7 +70,7 @@ DimPlot(T_cells_0, reduction = "pca", group.by="Treatment", cols = c("#FDCDAC", 
 ElbowPlot(T_cells_0, ndims = 30) + theme_classic()
 ggsave(file = "figures/data_prep_0/elbow_plot.png", dpi=300, width=10, height=10)
 
-T_cells_0 <- FindNeighbors(T_cells_0, reduction = "pca", dims = 14) #M# choose ?
+T_cells_0 <- FindNeighbors(T_cells_0, reduction = "pca", dims = 1:14) #M# choose ?
 T_cells_0 = RunTSNE(T_cells_0, dims = 1:14)
 T_cells_0 = RunUMAP(T_cells_0, dims = 1:18)
 
@@ -147,7 +87,10 @@ for(res in res_seq){
 
 tSNE_ls <- list(tSNE_0.05,tSNE_0.3,tSNE_0.35,tSNE_0.4,tSNE_0.45,tSNE_0.5)
 all_tSNE <- plot_grid(tSNE_0.05,tSNE_0.3,tSNE_0.35,tSNE_0.4,tSNE_0.45,tSNE_0.5, ncol = 3) 
-ggsave(all_tSNE,filename = 'figures/data_prep_0/tils_0_18_dim_res_test.png', dpi=300, height=10, width=16)
+ggsave(all_tSNE,filename = 'figures/data_prep_0/tils_0_14_dim_res_test.png', dpi=300, height=10, width=16)
+
+T_cells_0 <- FindClusters(T_cells_0, resolution = 0.4)
+saveRDS(T_cells_0, file = "objects/tils_0_.4.rds")
 ```
 
 
@@ -155,7 +98,9 @@ ggsave(all_tSNE,filename = 'figures/data_prep_0/tils_0_18_dim_res_test.png', dpi
 Lineage identification
 ### a. T cells
 ```{r message=FALSE, warning=FALSE, cache= TRUE, fig.width=24, fig.height= 16}
-FeaturePlot(T_cells_0, features = c("Ptprc", "Cd3e", "Cd8a", "Cd4", "Foxp3"), order=TRUE,pt.size=1, reduction="tsne", ncol=3)
+Ts <- c('Cd4', 'Cd8a', 'Cd3d','Cd3e','Cd3g',"PTPRC")
+Ts <- toupper(Ts)
+FeaturePlot(T_cells_0, features = Ts, order=TRUE,pt.size=1, reduction="tsne", ncol=3)
 ggsave(file = "figures/data_prep_0/features_T.png", dpi=300, width=30, height=20)
 ```
  Finding differentially expressed features (cluster biomarkers)
@@ -168,19 +113,18 @@ Top50Markers_T =
   top_n(n = 50, wt = avg_log2FC) %>%
   as.data.frame %>% 
   arrange(cluster,-avg_log2FC)
-write_csv(Top50Markers_T, "Excels/memory_T cells_50_DE genes.csv")
+write_csv(Top50Markers_T, "Excels/cluster0_analysis_DE genes.csv")
 
 T_cells_0.markers %>%
     group_by(cluster) %>%
     top_n(n = 10, wt = avg_log2FC) -> top10_T
 DoHeatmap(T_cells_0, features = top10_T$gene) + NoLegend() + scale_fill_gradientn(colors = c("blue", "white", "red"))
 ggsave(file = "figures/data_prep_0/T cells markers - heatmap.png", dpi=300, width=12, height=20)
-saveRDS(T_cells_0, file=".rds")
 ```
 
 
 
-```{r}
+```{r eval=FALSE, include=FALSE}
 #M# another oproach for subseting : all cells expressing CD4 above the average
 #M# average CD4 expression
 avg_CD4_expression <- mean(FetchData(T_cells, vars = "CD4")$CD4, na.rm = TRUE)
@@ -194,71 +138,14 @@ table(T_cells$seurat_clusters)
 table(CD4_cells$seurat_clusters)
 
 CD4_cells <- subset(T_cells, subset = CD4 > avg_CD4_expression)
-
 ```
 
-```{r}
-table(CD4_cells$orig.ident)
 
-CD4_cells = NormalizeData(CD4_cells,normalization.method = "LogNormalize", scale.factor = 10000) #M# still not working. wonder why
-
-CD4_cells = FindVariableFeatures(CD4_cells, selection.method = "vst", nfeatures = 2000) 
-CD4_cells = ScaleData(CD4_cells, verbose = FALSE)
-CD4_cells = RunPCA(CD4_cells, npcs = 30, verbose = FALSE)
-DimPlot(CD4_cells, reduction = "pca", group.by="Treatment", cols = c("#FDCDAC", "#B3E2CD"), pt.size=1.1)
-ElbowPlot(CD4_cells, ndims = 40) + theme_classic()
-ggsave(file = "figures/data_prep_0/elbow_plot.png", dpi=300, width=10, height=10)
-
-CD4_cells <- FindNeighbors(CD4_cells, reduction = "pca", dims = 10) #M# choose ?
-CD4_cells = RunTSNE(CD4_cells, dims = 1:10)
-CD4_cells = RunUMAP(CD4_cells, dims = 1:10)
-
-res_seq <- c(.05,.3, .35, .4, .45, .5)
-for(res in res_seq){
-  CD4_cells.res_test <- FindClusters(CD4_cells, resolution = res)
-  
-  res_tSNE  <- DimPlot(CD4_cells.res_test, reduction = "tsne",
-                       repel = T, label = TRUE, label.size = 5) +
-    theme(legend.position = "none") + 
-    plot_annotation(title = paste("Res of", res))
-  assign(paste0("tSNE_",res), res_tSNE)
-}
-
-tSNE_ls <- list(tSNE_0.05,tSNE_0.3,tSNE_0.35,tSNE_0.4,tSNE_0.45,tSNE_0.5)
-all_tSNE <- plot_grid(tSNE_0.05,tSNE_0.3,tSNE_0.35,tSNE_0.4,tSNE_0.45,tSNE_0.5, ncol = 3) 
-ggsave(all_tSNE,filename = 'figures/data_prep_0/tils_0_18_dim_res_test.png', dpi=300, height=10, width=16)
-```
-
-```{r}
-DefaultAssay(CD4_cells)
-DefaultAssay(CD4_cells) <- "RNA"
-CD4_cells[['RNA']]@scale.data <- matrix()
-CD4_cells <- NormalizeData(CD4_cells, verbose = FALSE)
-CD4_cells <- FindVariableFeatures(CD4_cells)
-CD4_cells <- ScaleData(CD4_cells, verbose = FALSE)
-DefaultAssay(CD4_cells) <- "integrated"
-CD4_cells = RunPCA(CD4_cells, npcs = 30, verbose = FALSE)
-DimPlot(CD4_cells, reduction = "pca", group.by="Treatment", cols = c("#FDCDAC", "#B3E2CD"), pt.size=1.1)
-ElbowPlot(CD4_cells, ndims = 40) + theme_classic()
-
-CD4_cells <- FindNeighbors(CD4_cells, reduction = "pca", dims = 12) #M# choose ?
-CD4_cells = RunTSNE(CD4_cells, dims = 1:12)
-CD4_cells = RunUMAP(CD4_cells, dims = 1:12)
-
-res_seq <- c(.05,.3, .35, .4, .45, .5)
-for(res in res_seq){
-  CD4_cells.res_test <- FindClusters(CD4_cells, resolution = res)
-  
-  res_tSNE  <- DimPlot(CD4_cells.res_test, reduction = "tsne",
-                       repel = T, label = TRUE, label.size = 5) +
-    theme(legend.position = "none") + 
-    plot_annotation(title = paste("Res of", res))
-  assign(paste0("tSNE_",res), res_tSNE)
-}
-
-tSNE_ls <- list(tSNE_0.05,tSNE_0.3,tSNE_0.35,tSNE_0.4,tSNE_0.45,tSNE_0.5)
-all_tSNE <- plot_grid(tSNE_0.05,tSNE_0.3,tSNE_0.35,tSNE_0.4,tSNE_0.45,tSNE_0.5, ncol = 3)
-```
+&nbsp;
+<hr />
+<p style="text-align: center;">Work by Michael Monsonego</a></p>
+<p style="text-align: center;"> <a href="https://www.asafmadilab.com/">Madi Lab</a></p>
+&nbsp;
 
 
 
