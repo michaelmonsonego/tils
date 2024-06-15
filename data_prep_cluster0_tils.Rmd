@@ -43,8 +43,8 @@ library(Cairo)
 library(snakecase)
 library(glue)
 
-setwd("D:/Michael/git_check/tils")
-# setwd("C:/Users/michael monsonego/Documents/tils") #M# update between computers(git)
+#setwd("D:/Michael/git_check/tils")
+setwd("C:/Users/michael monsonego/Documents/tils") #M# update between computers(git)
 
 x1=4.6
 T_cells = readRDS("objects/tils_all_.45_integrgate_annotated.rds")
@@ -91,6 +91,7 @@ ggsave(all_tSNE,filename = 'figures/data_prep_0/tils_0_14_dim_res_test.png', dpi
 
 T_cells_0 <- FindClusters(T_cells_0, resolution = 0.4)
 saveRDS(T_cells_0, file = "objects/tils_0_.4.rds")
+T_cells_0 <- readRDS("objects/tils_0_.4.rds")
 ```
 
 
