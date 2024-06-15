@@ -1,5 +1,5 @@
 ---
-title: "tils_visualisation"
+title: "data_prep_cluster0_tils"
 author: "Michael Monsonego"
 date:  "`r format(Sys.time(), '%d %B, %Y')`"
 output:
@@ -90,7 +90,7 @@ all_tSNE <- plot_grid(tSNE_0.05,tSNE_0.3,tSNE_0.35,tSNE_0.4,tSNE_0.45,tSNE_0.5, 
 ggsave(all_tSNE,filename = 'figures/data_prep_0/tils_0_14_dim_res_test.png', dpi=300, height=10, width=16)
 
 T_cells_0 <- FindClusters(T_cells_0, resolution = 0.4)
-saveRDS(T_cells_0, file = "objects/tils_0_.4.rds")
+#saveRDS(T_cells_0, file = "objects/tils_0_.4.rds")
 T_cells_0 <- readRDS("objects/tils_0_.4.rds")
 ```
 

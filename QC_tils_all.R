@@ -189,7 +189,7 @@ immune.combined <- FindClusters(immune.combined, resolution = .45) #M# choose re
 immune.combined <- readRDS("objects/tils_all_.45_integrgate.rds")
 table(immune.combined$orig.ident)
 
-immune.combined <- JoinLayers(immune.combined, assay = "RNA") #M# this did not work : no layers in my seurat
+# immune.combined <- JoinLayers(immune.combined, assay = "RNA") #M# this did not work : no layers in my seurat
 allmarkers <- FindAllMarkers(immune.combined, only.pos = TRUE, min.pct = 0.25, logfc.threshold = 0.25, assay = "RNA")
 Top50Markers <- allmarkers %>% 
   group_by(cluster) %>% 

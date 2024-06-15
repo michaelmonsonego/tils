@@ -41,7 +41,9 @@ library(Cairo)
 library(snakecase)
 library(glue)
 
-setwd("D:/Michael/git_check/tils")
+#setwd("D:/Michael/git_check/tils")
+setwd("C:/Users/michael monsonego/Documents/tils") #M# update between computers(git)
+
 x1=4.6
 T_cells = readRDS("objects/tils_all_.45_integrgate_annotated.rds")
 
@@ -63,7 +65,7 @@ DimPlot(T_cells , reduction = "tsne", label= TRUE, pt.size=0.5, label.size = 10)
 Top DE genes
 --------------
 ```{r echo=FALSE, cashe = TRUE}
-Top50Markers <- read.delim("D:/Michael/git_check/tils/excels/Top50Markers_perClust.tils.45integrgate.csv", sep = ",", header = T, quote="\"", check.names=FALSE)
+Top50Markers <- read.delim("excels/Top50Markers_perClust.tils.45integrgate.csv", sep = ",", header = T, quote="\"", check.names=FALSE)
 Top50Markers$avg_log2FC <- Top50Markers$avg_log2FC %>% round(2)
 Top50Markers <- Top50Markers[,c("cluster","gene", "avg_log2FC", "p_val")] 
 datatable(Top50Markers, rownames = FALSE, filter = 'top', colnames = c('Cluster #', 'Gene Name', "log2(FC)", 'P.value'))
@@ -149,7 +151,7 @@ p3 <- ggplot(mfrque, aes(x = Cluster, y = normalizedppstatus, fill = patient)) +
  ggtitle("Normalized Cluster Counts") +
  ylab("Normalized Proportions in %") +
  theme(
-   axis.text.x  = element_text(size = 11, color = "black"),
+   axis.text.x  = element_text(angle = 67, hjust = 1, size = 11, color = "black"),
    axis.text.y  = element_text(size = 11, color = "black"),
    axis.title.x = element_text(size = 13, color = "black"),
    axis.title.y = element_text(size = 13, color = "black"),
@@ -166,7 +168,7 @@ p1 <- ggplot(frque, aes(x = Cluster, y = normalizedppstatus, fill = Treatment)) 
  ggtitle("Normalized Cluster Counts") +
  ylab("Normalized Proportions in %") +
  theme(
-   axis.text.x  = element_text(size = 11, color = "black"),
+   axis.text.x  = element_text(angle = 67, hjust = 1, size = 11, color = "black"),
    axis.text.y  = element_text(size = 11, color = "black"),
    axis.title.x = element_text(size = 13, color = "black"),
    axis.title.y = element_text(size = 13, color = "black"),
@@ -181,7 +183,7 @@ p2<-ggplot(frque, aes(x= Cluster, y= Freq, fill = Treatment)) +
  scale_fill_manual(values= c("#CFBAE1", "#5C7D9D"))+
  ggtitle("Cluster Counts") + ylab("Cell counts\n") +
  theme(
-   axis.text.x  = element_text(size = 11, color = "black"),
+   axis.text.x  = element_text(angle = 67, hjust = 1, size = 11, color = "black"),
    axis.text.y  = element_text(size = 11, color = "black"),
    axis.title.x = element_text(size = 13, color = "black"),
    axis.title.y = element_text(size = 13, color = "black"),
@@ -190,7 +192,11 @@ p2<-ggplot(frque, aes(x= Cluster, y= Freq, fill = Treatment)) +
    panel.border = element_blank())
 
 p2+p1+plot_layout(guides = "collect")+plot_annotation(tag_levels = 'A') 
+ggsave(file = "figures/Tcells/unnormalized_and_normalized_contribution_per_patient.png", dpi=300, width=10, height=10)
+
 p3
+ggsave(file = "figures/Tcells/normalized_cluster_counts.png", dpi=300, width=10, height=10)
+
 ```
 
 
@@ -202,7 +208,7 @@ Markers
 
 ```{r fig.height=x1*1, cache=TRUE}
 Prolif <- c("TOP2A","MKI67")
-FeaturePlot(T_cells, features = Prolif, label.size = 8, pt.size = 1, label=T, ncol = 3, order = T,reduction = "tsne")
+FeaturePlot(T_cells, features = Prolif, label.size = 8, pt.size = 1, label=F, ncol = 3, order = T,reduction = "tsne")
 ```
 
 ### T Cells Markers
@@ -324,7 +330,7 @@ geom_boxplot(alpha=0.3,show.legend = FALSE)
 
 
 ### c. naive-like (naive or memory cells)
-```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height= x1*2}
+```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height= x1}
 # naive
 FeaturePlot(T_cells, features = c("SELL","IL7R","CCR7","MS4A4C"),order=TRUE,pt.size=1, reduction="tsne", ncol=3)
 ggsave(file = "figures/Tcells/features_T_naive.png", dpi=300, width=8, height=10)
@@ -459,7 +465,7 @@ p3 <- ggplot(mfrque, aes(x = Cluster, y = normalizedppstatus, fill = patient)) +
  ggtitle("Normalized Cluster Counts") +
  ylab("Normalized Proportions in %") +
  theme(
-   axis.text.x  = element_text(size = 11, color = "black"),
+   axis.text.x  = element_text(angle = 67, hjust = 1, size = 11, color = "black"),
    axis.text.y  = element_text(size = 11, color = "black"),
    axis.title.x = element_text(size = 13, color = "black"),
    axis.title.y = element_text(size = 13, color = "black"),
@@ -476,7 +482,7 @@ p1 <- ggplot(frque, aes(x = Cluster, y = normalizedppstatus, fill = Treatment)) 
  ggtitle("Normalized Cluster Counts") +
  ylab("Normalized Proportions in %") +
  theme(
-   axis.text.x  = element_text(size = 11, color = "black"),
+   axis.text.x  = element_text(angle = 67, hjust = 1, size = 11, color = "black"),
    axis.text.y  = element_text(size = 11, color = "black"),
    axis.title.x = element_text(size = 13, color = "black"),
    axis.title.y = element_text(size = 13, color = "black"),
@@ -491,7 +497,7 @@ p2<-ggplot(frque, aes(x= Cluster, y= Freq, fill = Treatment)) +
  scale_fill_manual(values= c("#CFBAE1", "#5C7D9D"))+
  ggtitle("Cluster Counts") + ylab("Cell counts\n") +
  theme(
-   axis.text.x  = element_text(size = 11, color = "black"),
+   axis.text.x  = element_text(angle = 67, hjust = 1, size = 11, color = "black"),
    axis.text.y  = element_text(size = 11, color = "black"),
    axis.title.x = element_text(size = 13, color = "black"),
    axis.title.y = element_text(size = 13, color = "black"),
