@@ -43,17 +43,25 @@ library(Cairo)
 library(snakecase)
 library(glue)
 
-#setwd("D:/Michael/git_check/tils")
-setwd("C:/Users/michael monsonego/Documents/tils") #M# update between computers(git)
+setwd("D:/Michael/git_check/tils")
+# setwd("C:/Users/michael monsonego/Documents/tils") #M# update between computers(git)
 
 x1=4.6
 T_cells = readRDS("objects/tils_all_.45_integrgate_annotated.rds")
 DimPlot(T_cells, reduction = "tsne",
                        repel = T, label = TRUE, label.size = 5)
 
-T_cells_0= subset(x=T_cells, idents= "0") #M# todo : change back to 0
+FetchData(T_cells, vars = c("CD8A", "CD8B")) #M# just to see cd8 expression
+T_cells_0 <- subset(T_cells, idents = c("0" = "0_activated_memory_CD4")) #M# also subset out CD8 cells
 table(T_cells_0$orig.ident)
 table(T_cells_0$seurat_clusters)
+T_cells_0 <- subset(T_cells_0, subset = CD8A < 0.5 & CD8B < 0.5)
+table(T_cells_0$orig.ident)
+table(T_cells_0$seurat_clusters)
+all_features <- rownames(T_cells_0)
+print("CD8A" %in% all_features)
+print("CD8B" %in% all_features)
+
 
 DefaultAssay(T_cells_0)
 DefaultAssay(T_cells_0) <- "RNA"
@@ -106,8 +114,8 @@ ggsave(file = "figures/data_prep_0/features_T.png", dpi=300, width=30, height=20
 ```
  Finding differentially expressed features (cluster biomarkers)
 ```{r message=FALSE, warning=FALSE, cache= TRUE, fig.width=12, fig.height= 28}
-T_cells_0.markers = FindAllMarkers(T_cells_0, only.pos = TRUE, min.pct = 0.25, logfc.threshold = 0.25, return.thresh = 0.05)
-
+T_cells_0.markers = FindAllMarkers(T_cells_0, only.pos = TRUE, min.pct = 0.25, logfc.threshold = 0.25, assay = "RNA")
+                    
 Top50Markers_T =
   T_cells_0.markers %>%
   group_by(cluster) %>%

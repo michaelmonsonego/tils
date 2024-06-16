@@ -40,9 +40,11 @@ library(DT)
 library(Cairo)
 library(snakecase)
 library(glue)
+library(ggrepel)
 
-#setwd("D:/Michael/git_check/tils")
-setwd("C:/Users/michael monsonego/Documents/tils") #M# update between computers(git)
+
+setwd("D:/Michael/git_check/tils")
+# setwd("C:/Users/michael monsonego/Documents/tils") #M# update between computers(git)
 
 x1=4.6
 T_cells = readRDS("objects/tils_all_.45_integrgate_annotated.rds")
@@ -57,6 +59,7 @@ table(T_cells$orig.ident)["N1"] #
 table(T_cells$orig.ident)["N2"] #  
 table(T_cells$orig.ident)["N3"] #  
 table(T_cells$orig.ident)["N4"] #  
+table(T_cells$Treatment)
 
 T_cells  = RunTSNE(T_cells , dims = 1:15, verbose = F)
 DimPlot(T_cells , reduction = "tsne", label= TRUE, pt.size=0.5, label.size = 10)
@@ -65,7 +68,7 @@ ggsave(file = "figures/Tcells/tsne.png", dpi=300, width=15, height=10)
 
 Top DE genes
 --------------
-```{r echo=FALSE, cashe = TRUE}
+```{r}
 Top50Markers <- read.delim("excels/Top50Markers_perClust.tils.45integrgate.csv", sep = ",", header = T, quote="\"", check.names=FALSE)
 Top50Markers$avg_log2FC <- Top50Markers$avg_log2FC %>% round(2)
 Top50Markers <- Top50Markers[,c("cluster","gene", "avg_log2FC", "p_val")] 
@@ -124,7 +127,7 @@ for (sample in Sample_Names_vec) {
 }
 ```
 ## normalized contribution per patient 
-```{r echo=FALSE, fig.height=4, fig.width=10}
+```{r echo=FALSE, fig.height=10, fig.width=10}
 frque <- table(Idents(T_cells), T_cells$Treatment)
 frque <- as.data.frame(frque)
 frque <- frque %>% dplyr::rename(Cluster = Var1, Treatment = Var2)
@@ -200,7 +203,56 @@ ggsave(file = "figures/Tcells/normalized_cluster_counts.png", dpi=300, width=14,
 
 ```
 
+volcano plot
+--------------
+```{r}
+# DE_genes <- FindMarkers(T_cells, ident.1 = "Responder", ident.2 = "Non_Responder", group.by = "Treatment", assay = "RNA")
+# DE_genes <- rownames_to_column(DE_genes, var = "gene")
+# write_csv(DE_genes, "excels/DE_genes_res_nonRes_all.csv") 
+# Top100Markers <- DE_genes %>% 
+#   top_n(n = 100, wt = avg_log2FC) %>% 
+#   as.data.frame
+# write_csv(Top100Markers, "excels/Top100Markers_per_treatment_tils_all.csv") 
 
+DE_genes <- read.csv("excels/DE_genes_res_nonRes_all.csv")
+
+DE_genes$Significance <- "Not Significant"
+DE_genes$Significance[DE_genes$p_val_adj < 0.05 & DE_genes$avg_log2FC > 0] <- "Upregulated"
+DE_genes$Significance[DE_genes$p_val_adj < 0.05 & DE_genes$avg_log2FC < 0] <- "Downregulated"
+
+genes_of_interest <- c("ILR7", "GNZMB")  # replace with gene names of interest to see on volcano plot
+
+top_1000_genes <- DE_genes %>%
+  arrange(p_val_adj) %>%
+  head(1000) %>%
+  pull(gene) 
+
+label_genes <- union(genes_of_interest, top_1000_genes)
+DE_genes$Label <- ifelse(DE_genes$gene %in% label_genes, DE_genes$gene, NA)
+
+ggplot(DE_genes, aes(x = avg_log2FC, y = -log10(p_val_adj))) +
+  geom_point(aes(color = Significance)) +
+  scale_color_manual(values = c("Not Significant" = "grey", "Upregulated" = "blue", "Downregulated" = "red")) +
+  theme_minimal() +
+  labs(title = "Volcano Plot", x = "Log2 Fold Change", y = "-Log10 Adjusted P-value") +
+  theme(legend.title = element_blank()) +
+  geom_text_repel(aes(label = Label), 
+                  box.padding = 0.35, 
+                  point.padding = 0.3, 
+                  max.overlaps = 10, 
+                  segment.color = 'grey50')+
+  ylim(0, 300)
+ggsave(file = "figures/Tcells/volcano.png", dpi=300, width=15, height=10)
+
+```
+Top DE genes between responders and non-responders
+--------------
+```{r}
+Top50Markers <- read.delim("excels/DE_genes_res_nonRes_all.csv", sep = ",", header = T, quote="\"", check.names=FALSE)
+Top50Markers$avg_log2FC <- Top50Markers$avg_log2FC %>% round(2)
+Top50Markers <- Top50Markers[,c("cluster","gene", "avg_log2FC", "p_val")] 
+datatable(Top50Markers, rownames = FALSE, filter = 'top', colnames = c('Cluster #', 'Gene Name', "log2(FC)", 'P.value'))
+```
 
 Markers
 =====
