@@ -1,5 +1,5 @@
 ---
-title: "CD4_analysis_visualisation"
+title: "Cluster1_analysis_visualisation"
 author: "Michael Monsonego"
 date:  "`r format(Sys.time(), '%d %B, %Y')`"
 output:
@@ -46,7 +46,7 @@ library(ggrepel)
 setwd("D:/Michael/git_check/tils")
 # setwd("C:/Users/michael monsonego/Documents/tils") #M# update between computers(git)
 x1=4.6
-clus1 = readRDS("objects/tils_1_??.rds")
+clus1 = readRDS("objects/tils_1_.3.rds")
 
 DimPlot(clus1 , reduction = "tsne", label= TRUE, pt.size=0.5, label.size = 6)
 ggsave(file = "figures/clus1/tsne.png", dpi=300, width=6, height=4)
@@ -190,10 +190,15 @@ ggsave(file = "figures/clus1/normalized_cluster_counts.png", dpi=300, width=14, 
 
 volcano plot
 --------------
-```{r fig.height=20}
-DE_genes <- FindMarkers(clus1, ident.1 = "Responder", ident.2 = "Non_Responder", group.by = "Treatment", assay = "RNA")
-DE_genes <- rownames_to_column(DE_genes, var = "gene")
-write_csv(DE_genes, "excels/DE_genes_res_nonRes_clus1.csv") 
+```{r fig.height=10}
+# DE_genes <- FindMarkers(clus1, ident.1 = "Responder", ident.2 = "Non_Responder", group.by = "Treatment", assay = "RNA")
+# DE_genes <- rownames_to_column(DE_genes, var = "gene")
+# write_csv(DE_genes, "excels/DE_genes_res_nonRes_clus1.csv") 
+# Top100Markers <- DE_genes %>% 
+#  top_n(n = 100, wt = avg_log2FC) %>% 
+#  as.data.frame
+# write_csv(Top100Markers, "excels/Top100Markers_per_treatment_tils_1_.3.csv") 
+
 DE_genes <- read.csv("excels/DE_genes_res_nonRes_clus1.csv")
 
 DE_genes$Significance <- "Not Significant"
@@ -202,12 +207,12 @@ DE_genes$Significance[DE_genes$p_val_adj < 0.05 & DE_genes$avg_log2FC < 0] <- "D
 
 genes_of_interest <- c("ILR7", "GNZMB")  # replace with gene names of interest to see on volcano plot
 
-top_10_genes <- DE_genes %>%
+top_1000_genes <- DE_genes %>%
   arrange(p_val_adj) %>%
   head(1000) %>%
   pull(gene) 
 
-label_genes <- union(genes_of_interest, top_10_genes)
+label_genes <- union(genes_of_interest, top_1000_genes)
 DE_genes$Label <- ifelse(DE_genes$gene %in% label_genes, DE_genes$gene, NA)
 
 ggplot(DE_genes, aes(x = avg_log2FC, y = -log10(p_val_adj))) +
@@ -228,10 +233,10 @@ ggsave(file = "figures/clus1/volcano.png", dpi=300, width=15, height=10)
 Top DE genes between responders and non-responders
 --------------
 ```{r}
-Top50Markers <- read.delim("excels/DE_genes_res_nonRes_clus1.csv", sep = ",", header = T, quote="\"", check.names=FALSE)
-Top50Markers$avg_log2FC <- Top50Markers$avg_log2FC %>% round(2)
-Top50Markers <- Top50Markers[,c("cluster","gene", "avg_log2FC", "p_val")] 
-datatable(Top50Markers, rownames = FALSE, filter = 'top', colnames = c('Cluster #', 'Gene Name', "log2(FC)", 'P.value'))
+Top100Markers <- read.delim("excels/Top100Markers_per_treatment_tils_1_.3.csv", sep = ",", header = T, quote="\"", check.names=FALSE)
+Top100Markers$avg_log2FC <- Top100Markers$avg_log2FC %>% round(2)
+Top100Markers <- Top100Markers[,c("gene", "avg_log2FC", "p_val")] 
+datatable(Top100Markers, rownames = FALSE, filter = 'top', colnames = c('Gene Name', "log2(FC)", 'P.value'))
 ```
 
 Markers
@@ -254,22 +259,26 @@ ggsave(file = "figures/clus1/T_Cells_Markers.png", dpi=300, width=15, height=x1*
 ```
 ### checking 
 ```{r cache=T, fig.height=x1*3, warning=FALSE}
-FeaturePlot(clus1, features = c("CXCR5", "CXCL13", "BCL6", "ASCL2", "IL21", "PDCD1", "ICOS"), order=TRUE,pt.size=1, reduction="tsne", ncol=3)
+FeaturePlot(clus1, features = c("ENTPD1", "GZMB", "PRF1", "CD40LG","CD8A","CD8B"), order=TRUE,pt.size=1, reduction="tsne", ncol=3)
+ggsave(file = "figures/clus1/checking.png", dpi=300, width=15, height=x1*2)
 ```
 
 ```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height=20}
-VlnPlot(clus1, features = c("CXCR5", "CXCL13", "BCL6", "ASCL2", "IL21", "PDCD1", "ICOS"), assay = "RNA", stack=TRUE, flip= TRUE, split.by = "Treatment")+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) +
+VlnPlot(clus1, features = c("ENTPD1", "GZMB", "PRF1", "CD40LG","CD8A","CD8B"), assay = "RNA", stack=TRUE, flip= TRUE, split.by = "Treatment")+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) +
   theme(
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
     axis.ticks.y = element_line(size = 0.5))+
-geom_boxplot(alpha=0.3,show.legend = FALSE)
+geom_boxplot(alpha=0.3,show.legend = FALSE) 
+ggsave(file = "figures/clus1/checking1.png", dpi=300, width=15, height=x1*2)
 
-VlnPlot(clus1, features = c("CXCR5", "CXCL13", "BCL6", "ASCL2", "IL21", "PDCD1", "ICOS"), assay = "RNA", stack=TRUE, flip= TRUE, group.by = "Treatment", fill.by ="ident")+theme(axis.text.y =element_text(size=6))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
+VlnPlot(clus1, features = c("ENTPD1", "GZMB", "PRF1", "CD40LG","CD8A","CD8B"), assay = "RNA", stack=TRUE, flip= TRUE, group.by = "Treatment", fill.by ="ident")+theme(axis.text.y =element_text(size=6))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
 geom_boxplot(alpha=0.3,show.legend = FALSE)
+ggsave(file = "figures/clus1/checking2.png", dpi=300, width=4, height=x1*2)
 
-VlnPlot(clus1, features = c("CXCR5", "CXCL13", "BCL6", "ASCL2", "IL21", "PDCD1", "ICOS"), assay = "RNA", stack=TRUE, flip= TRUE, fill.by = "ident")+theme(axis.text.y =element_text(size=6))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
+VlnPlot(clus1, features = c("ENTPD1", "GZMB", "PRF1", "CD40LG","CD8A","CD8B"), assay = "RNA", stack=TRUE, flip= TRUE, fill.by = "ident")+theme(axis.text.y =element_text(size=6))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
 geom_boxplot(alpha=0.3,show.legend = FALSE)
+ggsave(file = "figures/clus1/checking3.png", dpi=300, width=15, height=x1*2)
 ```
 
 
@@ -318,13 +327,13 @@ ggsave(file = "figures/clus1/vln_activation_exhastion_by_cluster_1.png", dpi=300
 
 
 ### a. activation/exhaustion markers
-```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height= 16}
+```{r message=FALSE, warning=FALSE, fig.height= 16}
 # activation / exhaustion markers
 FeaturePlot(clus1, features = c("PDCD1","HAVCR2","LAG3","TIGIT","TNFRSF4","TNFRSF9","ICOS","CTLA4","KLRD1","IRF8","KLRC1","TOX"), order=TRUE,pt.size=1, reduction="tsne", ncol=3)
 ggsave(file = "figures/clus1/features_T_activation.png", dpi=300, width=10, height=10)
 ```
 
-```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height=20}
+```{r message=FALSE, warning=FALSE, fig.height=20}
 VlnPlot(clus1, features = c("PDCD1","HAVCR2","LAG3","TIGIT","TNFRSF4","TNFRSF9"), assay = "RNA", stack=TRUE, flip= TRUE, split.by = "Treatment")+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) +
   theme(
     axis.text.y = element_text(size = 24, face = "italic"),
@@ -394,15 +403,18 @@ ggsave(file = "figures/clus1/Vln_T_effector_by_cluster_2.png", dpi=300, width=6,
 ### CD69 + CD39
 ```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height= x1, fig.width=8}
 # naive
-FeaturePlot(clus1, features = c("CD69","CD39"),order=TRUE,pt.size=1, reduction="tsne", ncol=2)
+FeaturePlot(clus1, features = c("CD69","ENTPD1"),order=TRUE,pt.size=1, reduction="tsne", ncol=2)
 ggsave(file = "figures/clus1/CD69.png", dpi=300, width=8, height=10)
 ```
 ```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height= x1}
-VlnPlot(clus1, features = c("CD69", fill.by = "ident"), assay = "RNA", stack=TRUE, flip= TRUE)+theme(axis.text.y =element_text(size=6))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
+VlnPlot(clus1, features = c("CD69","ENTPD1"), fill.by = "ident", assay = "RNA", stack=TRUE, flip= TRUE)+theme(axis.text.y =element_text(size=6))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
 geom_boxplot(alpha=0.3,show.legend = FALSE)
 ggsave(file = "figures/clus1/Vln_CD69.png", dpi=300, width=6, height=10, limitsize=FALSE)
 
 VlnPlot(clus1, features = c("CD69"), assay = "RNA", flip= TRUE, split.by = "Treatment", pt.size = 0)+theme(axis.text.y =element_text(size=6))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
+geom_boxplot(alpha=0.3,show.legend = FALSE)
+
+VlnPlot(clus1, features = c("ENTPD1"), assay = "RNA", flip= TRUE, split.by = "Treatment", pt.size = 0)+theme(axis.text.y =element_text(size=6))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
 geom_boxplot(alpha=0.3,show.legend = FALSE)
 ```
 
@@ -434,7 +446,7 @@ geom_boxplot(alpha=0.3,show.legend = FALSE)
 FeaturePlot(clus1, features = c("BACH2","PRDM1","IL7R","CD44","CX3CR1","ID2","KLF2","KLRG1","LEF1","STAT4","TBX21","ZEB2"),order=TRUE,pt.size=1, reduction="tsne", ncol=3)
 ggsave(file = "figures/clus1/features_T_effector memory.png", dpi=300, width=30, height=40)
 ```
-```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height=20}
+```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height=x1*12}
 VlnPlot(clus1, features = c("BACH2","PRDM1","IL7R","CD44","CX3CR1","ID2","KLF2","KLRG1","LEF1","STAT4","TBX21","ZEB2"), assay = "RNA", stack=TRUE, flip= TRUE, split.by = "Treatment")+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) +
   theme(
     axis.text.y = element_text(size = 24, face = "italic"),
@@ -454,7 +466,7 @@ geom_boxplot(alpha=0.3,show.legend = FALSE)
 FeaturePlot(clus1, features = c("TCF7","BACH2","BCL16","CCR7","IL7R","CD27","CD44","SELL","ID3","KLF2","LCR7","LEF1","SLAMF6","STAT3","TFAP4"),order=TRUE,pt.size=1, reduction="tsne", ncol=3)
 ggsave(file = "figures/clus1/features_T_central memory.png", dpi=300, width=30, height=50, limitsize=FALSE)
 ```
-```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height=20}
+```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height=x1*12}
 VlnPlot(clus1, features = c("TCF7","BACH2","BCL16","CCR7","IL7R","CD27","CD44","SELL","ID3","KLF2","LCR7","LEF1","SLAMF6","STAT3","TFAP4"), assay = "RNA", stack=TRUE, flip= TRUE, split.by = "Treatment")+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) +
   theme(
     axis.text.y = element_text(size = 24, face = "italic"),
@@ -476,7 +488,7 @@ geom_boxplot(alpha=0.3,show.legend = FALSE)
 FeaturePlot(clus1, features = c("PRDM1","ITGAE","IL7R","CD44","ITGA1","CD69","CRTAM","DUSP6","EGR2","FOSB","FOXO3","GZMA","GZMB","ZNF683","ID3","IL2RA","IRF4","JUN","JUNB","MYC","NR4A1","RGS1"), order=TRUE, pt.size=1, reduction="tsne", ncol=3)
 ggsave(file = "figures/clus1/features_T_resident memory.png", dpi=300, width=30, height=80, limitsize=FALSE)
 ```
-```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height=20}
+```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height=x1*12}
 VlnPlot(clus1, features = c("PRDM1","ITGAE","IL7R","CD44","ITGA1","CD69","CRTAM","DUSP6","EGR2","FOSB","FOXO3","GZMA","GZMB","ZNF683","ID3","IL2RA","IRF4","JUN","JUNB","MYC","NR4A1","RGS1"), assay = "RNA", stack=TRUE, flip= TRUE, split.by = "Treatment")+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) +
   theme(
     axis.text.y = element_text(size = 24, face = "italic"),

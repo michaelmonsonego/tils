@@ -198,3 +198,8 @@ Top50Markers <- allmarkers %>%
   arrange(cluster, -avg_log2FC)
 
 write_csv(Top50Markers, "excels/Top50Markers_perClust.tils.45integrgate.csv") 
+
+
+
+
+

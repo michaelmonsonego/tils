@@ -48,23 +48,15 @@ setwd("D:/Michael/git_check/tils")
 
 x1=4.6
 T_cells = readRDS("objects/tils_all_.45_integrgate_annotated.rds")
-DimPlot(T_cells, reduction = "tsne",
-                       repel = T, label = TRUE, label.size = 5)
-
-FetchData(T_cells, vars = c("CD8A", "CD8B")) #M# just to see cd8 expression
+DimPlot(T_cells, reduction = "tsne",repel = T, label = TRUE, label.size = 5)
+DefaultAssay(T_cells) <- "RNA" #M# important before subseting! otherwise doesnt find cd8
 T_cells_0 <- subset(T_cells, idents = c("0" = "0_activated_memory_CD4")) #M# also subset out CD8 cells
 table(T_cells_0$orig.ident)
 table(T_cells_0$seurat_clusters)
 T_cells_0 <- subset(T_cells_0, subset = CD8A < 0.5 & CD8B < 0.5)
 table(T_cells_0$orig.ident)
 table(T_cells_0$seurat_clusters)
-all_features <- rownames(T_cells_0)
-print("CD8A" %in% all_features)
-print("CD8B" %in% all_features)
-
-
 DefaultAssay(T_cells_0)
-DefaultAssay(T_cells_0) <- "RNA"
 
 #M# is it correct to put assay="RNA"?
 T_cells_0 = NormalizeData(T_cells_0,assay = "RNA",normalization.method = "LogNormalize", scale.factor = 10000) #M# not working. wonder why

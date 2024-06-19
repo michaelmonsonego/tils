@@ -205,7 +205,7 @@ ggsave(file = "figures/Tcells/normalized_cluster_counts.png", dpi=300, width=14,
 
 volcano plot
 --------------
-```{r}
+```{r fig.height=10}
 # DE_genes <- FindMarkers(T_cells, ident.1 = "Responder", ident.2 = "Non_Responder", group.by = "Treatment", assay = "RNA")
 # DE_genes <- rownames_to_column(DE_genes, var = "gene")
 # write_csv(DE_genes, "excels/DE_genes_res_nonRes_all.csv") 
@@ -248,10 +248,10 @@ ggsave(file = "figures/Tcells/volcano.png", dpi=300, width=15, height=10)
 Top DE genes between responders and non-responders
 --------------
 ```{r}
-Top50Markers <- read.delim("excels/DE_genes_res_nonRes_all.csv", sep = ",", header = T, quote="\"", check.names=FALSE)
-Top50Markers$avg_log2FC <- Top50Markers$avg_log2FC %>% round(2)
-Top50Markers <- Top50Markers[,c("cluster","gene", "avg_log2FC", "p_val")] 
-datatable(Top50Markers, rownames = FALSE, filter = 'top', colnames = c('Cluster #', 'Gene Name', "log2(FC)", 'P.value'))
+Top100Markers <- read.delim("excels/Top100Markers_per_treatment_tils_all.csv", sep = ",", header = T, quote="\"", check.names=FALSE)
+Top100Markers$avg_log2FC <- Top100Markers$avg_log2FC %>% round(2)
+Top100Markers <- Top100Markers[,c("gene", "avg_log2FC", "p_val")] 
+datatable(Top100Markers, rownames = FALSE, filter = 'top', colnames = c('Gene Name', "log2(FC)", 'P.value'))
 ```
 
 Markers
@@ -274,21 +274,21 @@ ggsave(file = "figures/Tcells/T_Cells_Markers.png", dpi=300, width=15, height=x1
 ```
 ### checking 
 ```{r cache=T, fig.height=x1*3, warning=FALSE}
-FeaturePlot(T_cells, features = c("CXCR5", "CXCL13", "BCL6", "ASCL2", "IL21", "PDCD1", "ICOS"), order=TRUE,pt.size=1, reduction="tsne", ncol=3)
+FeaturePlot(T_cells, features = c("CXCR5", "CXCL13", "BCL6", "ASCL2", "IL21", "PDCD1", "FOXP3"), order=TRUE,pt.size=1, reduction="tsne", ncol=3)
 ```
 
 ```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height=20}
-VlnPlot(T_cells, features = c("CXCR5", "CXCL13", "BCL6", "ASCL2", "IL21", "PDCD1", "ICOS"), assay = "RNA", stack=TRUE, flip= TRUE, split.by = "Treatment")+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) +
+VlnPlot(T_cells, features = c("CXCR5", "CXCL13", "BCL6", "ASCL2", "IL21", "PDCD1", "FOXP3"), assay = "RNA", stack=TRUE, flip= TRUE, split.by = "Treatment")+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) +
   theme(
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
     axis.ticks.y = element_line(size = 0.5))+
 geom_boxplot(alpha=0.3,show.legend = FALSE)
 
-VlnPlot(T_cells, features = c("CXCR5", "CXCL13", "BCL6", "ASCL2", "IL21", "PDCD1", "ICOS"), assay = "RNA", stack=TRUE, flip= TRUE, group.by = "Treatment", fill.by ="ident")+theme(axis.text.y =element_text(size=6))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
+VlnPlot(T_cells, features = c("CXCR5", "CXCL13", "BCL6", "ASCL2", "IL21", "PDCD1", "FOXP3"), assay = "RNA", stack=TRUE, flip= TRUE, group.by = "Treatment", fill.by ="ident")+theme(axis.text.y =element_text(size=6))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
 geom_boxplot(alpha=0.3,show.legend = FALSE)
 
-VlnPlot(T_cells, features = c("CXCR5", "CXCL13", "BCL6", "ASCL2", "IL21", "PDCD1", "ICOS"), assay = "RNA", stack=TRUE, flip= TRUE, fill.by = "ident")+theme(axis.text.y =element_text(size=6))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
+VlnPlot(T_cells, features = c("CXCR5", "CXCL13", "BCL6", "ASCL2", "IL21", "PDCD1", "FOXP3"), assay = "RNA", stack=TRUE, flip= TRUE, fill.by = "ident")+theme(axis.text.y =element_text(size=6))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
 geom_boxplot(alpha=0.3,show.legend = FALSE)
 ```
 
@@ -492,78 +492,6 @@ LabelClusters(p, id = "ident",  fontface = "bold",position = "median")
 #M# saveRDS(T_cells, file = "objects/tils_all_.45_integrgate_annotated.rds")
 ```
 
-## Barplots - Annotated
-```{r echo=FALSE, fig.height=4, fig.width=10, cache=F}
-frque <- table(Idents(T_cells), T_cells$Treatment)
-frque <- as.data.frame(frque)
-frque <- frque %>% dplyr::rename(Cluster = Var1, Treatment = Var2)
-frque$Treatment <- factor(frque$Treatment)
-
-frque <- ddply(frque, .(Treatment),  transform, percentperstatus   = Freq/sum(Freq))
-frque <- ddply(frque, .(Cluster), transform, percentpercluster  = Freq/sum(Freq))
-frque <- ddply(frque, .(Cluster), transform, normalizedppstatus = percentperstatus/sum(percentperstatus)*100)
-frque <- ddply(frque, .(Treatment),  transform, normalizedpcluster = percentpercluster/sum(percentpercluster))
-
-mfrque <- table(Idents(T_cells), T_cells$orig.ident)
-mfrque <- as.data.frame(mfrque)
-mfrque <- mfrque %>% dplyr::rename(Cluster = Var1, patient = Var2)
-
-mfrque <- ddply(mfrque, .(patient),  transform, percentperstatus   = Freq/sum(Freq))
-mfrque <- ddply(mfrque, .(Cluster), transform, percentpercluster  = Freq/sum(Freq))
-mfrque <- ddply(mfrque, .(Cluster), transform, normalizedppstatus = percentperstatus/sum(percentperstatus)*100)
-mfrque <- ddply(mfrque, .(patient),  transform, normalizedpcluster = percentpercluster/sum(percentpercluster))
-
-
-p3 <- ggplot(mfrque, aes(x = Cluster, y = normalizedppstatus, fill = patient)) +
- theme_minimal() +
- geom_bar(stat = "identity", width = 0.7,position="dodge") +
-   scale_fill_manual(values= c("#CFBAE1", "#A8A5CA", "#8291B3", "#5C7D9D", "#FF6F61", "#D78459", "#AF9A52", "#88B04B"))+
- ggtitle("Normalized Cluster Counts") +
- ylab("Normalized Proportions in %") +
- theme(
-   axis.text.x  = element_text(angle = 67, hjust = 1, size = 11, color = "black"),
-   axis.text.y  = element_text(size = 11, color = "black"),
-   axis.title.x = element_text(size = 13, color = "black"),
-   axis.title.y = element_text(size = 13, color = "black"),
-   title = element_text(size = 13),
-   legend.justification = "top",
-   panel.border = element_blank()) +
- geom_hline(yintercept = 20, linetype='dotted')
-  
-  
-p1 <- ggplot(frque, aes(x = Cluster, y = normalizedppstatus, fill = Treatment)) +
- theme_minimal() +
- geom_bar(stat = "identity", width = 0.7,position="dodge") +
- scale_fill_manual(values= c("#CFBAE1", "#5C7D9D"))+
- ggtitle("Normalized Cluster Counts") +
- ylab("Normalized Proportions in %") +
- theme(
-   axis.text.x  = element_text(angle = 67, hjust = 1, size = 11, color = "black"),
-   axis.text.y  = element_text(size = 11, color = "black"),
-   axis.title.x = element_text(size = 13, color = "black"),
-   axis.title.y = element_text(size = 13, color = "black"),
-   title = element_text(size = 13),
-   legend.justification = "top",
-   panel.border = element_blank()) +
- geom_hline(yintercept = 33.3, linetype='dotted') 
-
-p2<-ggplot(frque, aes(x= Cluster, y= Freq, fill = Treatment)) +
- theme_minimal() +
- geom_bar(stat = "identity", width = 0.7) +
- scale_fill_manual(values= c("#CFBAE1", "#5C7D9D"))+
- ggtitle("Cluster Counts") + ylab("Cell counts\n") +
- theme(
-   axis.text.x  = element_text(angle = 67, hjust = 1, size = 11, color = "black"),
-   axis.text.y  = element_text(size = 11, color = "black"),
-   axis.title.x = element_text(size = 13, color = "black"),
-   axis.title.y = element_text(size = 13, color = "black"),
-   title = element_text(size = 13),
-   legend.justification = "top",
-   panel.border = element_blank())
-
-p2+p1+plot_layout(guides = "collect")+plot_annotation(tag_levels = 'A') 
-p3
-```
 
 
 
