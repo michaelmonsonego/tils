@@ -73,14 +73,14 @@ table(T_cells_0$seurat_clusters)
 
 
 #M# all cells with CD4 > 0.5 and no CD8
-cd4_high_cells <- subset(T_cells, subset = CD4 > 0.5 & CD8A < 0.005 & CD8B < 0.005)
-expression_matrix <- GetAssayData(cd4_high_cells, assay = "RNA", slot = "data")
-average_cd4_expression_all_cells <- mean(expression_matrix["CD4", ])
+# cd4_high_cells <- subset(T_cells, subset = CD4 > 0.5 & CD8A < 0.005 & CD8B < 0.005)
+# expression_matrix <- GetAssayData(cd4_high_cells, assay = "RNA", slot = "data")
+# average_cd4_expression_all_cells <- mean(expression_matrix["CD4", ])
 # The average expression across all cells that express cd4 > 0.5
-print(average_cd4_expression_all_cells)
+# print(average_cd4_expression_all_cells)
 
-table(cd4_high_cells$orig.ident)
-table(cd4_high_cells$seurat_clusters)
+# table(cd4_high_cells$orig.ident)
+# table(cd4_high_cells$seurat_clusters)
 
 
 #M# all cells with CD4 > 1 
@@ -112,7 +112,6 @@ table(cd4_high_cells$seurat_clusters)
 
 
 #M# 23.6 after conversation with Ayelet we chose this option : all cd4 high cells, without taking all cells from cluster 0 first
-T_cells_0 <- cd4_high_cells
 T_cells_0 = NormalizeData(T_cells_0, assay = "RNA",normalization.method = "LogNormalize", scale.factor = 10000) 
 T_cells_0 = FindVariableFeatures(T_cells_0, assay = "RNA", selection.method = "vst", nfeatures = 2000) 
 

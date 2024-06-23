@@ -49,7 +49,7 @@ cd8s = ScaleData(cd8s, verbose = FALSE)
 cd8s = RunPCA(cd8s, npcs = 30, verbose = FALSE)
 DimPlot(cd8s, reduction = "pca", group.by="Treatment", cols = c("#FDCDAC", "#B3E2CD"), pt.size=1.1)
 ElbowPlot(cd8s, ndims = 30) + theme_classic()
-ggsave(file = "figures/data_prep_0/elbow_plot.png", dpi=300, width=10, height=10)
+ggsave(file = "figures/data_prep_cd8/elbow_plot.png", dpi=300, width=10, height=10)
 
 cd8s <- FindNeighbors(cd8s, reduction = "pca", dims = 1:14) #M# choose ?
 cd8s = RunTSNE(cd8s, dims = 1:14)
@@ -68,11 +68,11 @@ for(res in res_seq){
 
 tSNE_ls <- list(tSNE_0.05,tSNE_0.3,tSNE_0.35,tSNE_0.4,tSNE_0.45,tSNE_0.5)
 all_tSNE <- plot_grid(tSNE_0.05,tSNE_0.3,tSNE_0.35,tSNE_0.4,tSNE_0.45,tSNE_0.5, ncol = 3) 
-ggsave(all_tSNE,filename = 'figures/data_prep_0/tils_0_14_dim_res_test.png', dpi=300, height=10, width=16)
+ggsave(all_tSNE,filename = 'figures/data_prep_cd8/tils_0_14_dim_res_test.png', dpi=300, height=10, width=16)
 
 cd8s <- FindClusters(cd8s, resolution = 0.3)
-saveRDS(cd8s, file = "objects/tils_0_.3.rds") #M# change if adjusted
-cd8s <- readRDS("objects/tils_0_.3.rds")
+saveRDS(cd8s, file = "objects/cd8_.3.rds") #M# change if adjusted
+cd8s <- readRDS("objects/cd8_.3.rds")
 
 
 
@@ -82,7 +82,7 @@ cd8s <- readRDS("objects/tils_0_.3.rds")
 Ts <- c('Cd4', 'Cd8a', 'Cd8b', 'Cd3d','Cd3e','Cd3g',"FOXP3")
 Ts <- toupper(Ts)
 FeaturePlot(cd8s, features = Ts, order=TRUE,pt.size=1, reduction="tsne", ncol=3)
-ggsave(file = "figures/data_prep_0/features_T.png", dpi=300, width=30, height=20)
+ggsave(file = "figures/data_prep_cd8/features_T.png", dpi=300, width=30, height=20)
 
 
 cd8s.markers = FindAllMarkers(cd8s, only.pos = TRUE, min.pct = 0.25, logfc.threshold = 0.25, assay = "RNA")
@@ -93,13 +93,13 @@ Top50Markers_T =
   top_n(n = 50, wt = avg_log2FC) %>%
   as.data.frame %>% 
   arrange(cluster,-avg_log2FC)
-write_csv(Top50Markers_T, "Excels/cluster0_analysis_DE genes.csv")
+write_csv(Top50Markers_T, "Excels/cd8_analysis_DE genes.csv")
 
 cd8s.markers %>%
   group_by(cluster) %>%
   top_n(n = 10, wt = avg_log2FC) -> top10_T
 DoHeatmap(cd8s, features = top10_T$gene) + NoLegend() + scale_fill_gradientn(colors = c("blue", "white", "red"))
-ggsave(file = "figures/data_prep_0/T cells markers - heatmap.png", dpi=300, width=12, height=20)
+ggsave(file = "figures/data_prep_cd8/T cells markers - heatmap.png", dpi=300, width=12, height=20)
 
 
 
