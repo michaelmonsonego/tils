@@ -51,16 +51,49 @@ T_cells = readRDS("objects/tils_all_.45_integrgate_annotated.rds")
 DimPlot(T_cells, reduction = "tsne",repel = T, label = TRUE, label.size = 5)
 DefaultAssay(T_cells) <- "RNA" #M# important before subseting! otherwise doesnt find cd8
 T_cells_1 <- subset(T_cells, idents = c("1" = "1_cytotoxic_CD8")) #M# also subset out CD8 cells
-
 table(T_cells_1$orig.ident)
 table(T_cells_1$seurat_clusters)
-DefaultAssay(T_cells_1)
 
-#M# is it correct to put assay="RNA"?
-T_cells_1 = NormalizeData(T_cells_1,assay = "RNA",normalization.method = "LogNormalize", scale.factor = 10000) #M# not working. wonder why
-T_cells_1 = FindVariableFeatures(T_cells_1,,assay = "RNA", selection.method = "vst", nfeatures = 2000) 
+#M# save cd4 to move to cluster 0 cd4 analysis
+# cd4 <- subset(T_cells_1, subset = CD4 > 0.5)
+# table(cd4$orig.ident)
+# table(cd4$seurat_clusters)
+# saveRDS(cd4, "objects/cd4_from_clus_1.rds")
 
-DefaultAssay(T_cells_1) <- "integrated"
+#M# clean cd4 from this analysis
+T_cells_1 <- subset(T_cells_1, subset = CD4 < 0.5)###########
+table(T_cells_1$orig.ident)
+table(T_cells_1$seurat_clusters)
+DefaultAssay(T_cells_1) <- "RNA"
+#M# merge cd8 cells from cluster 0 to this analysis
+#cd8_from_0 <- readRDS("objects/cd8_from_clus_0.rds")
+#table(cd8_from_0$orig.ident)
+#table(cd8_from_0$seurat_clusters)
+#DefaultAssay(cd8_from_0) <- "RNA"
+
+# T_cells_1 = merge(T_cells_1, cd8_from_0) #M# this didnt work. 
+
+T_cells_1 = NormalizeData(T_cells_1, assay = "RNA",normalization.method = "LogNormalize", scale.factor = 10000) 
+T_cells_1 = FindVariableFeatures(T_cells_1, assay = "RNA", selection.method = "vst", nfeatures = 2000) 
+
+#cd8_from_0 = NormalizeData(cd8_from_0, assay = "RNA",normalization.method = "LogNormalize", scale.factor = 10000)  
+#cd8_from_0 = FindVariableFeatures(cd8_from_0, assay = "RNA", selection.method = "vst", nfeatures = 2000) 
+
+#features <- SelectIntegrationFeatures(object.list =list(T_cells_1, cd8_from_0))
+
+#anchors <- FindIntegrationAnchors(object.list = list(T_cells_1, cd8_from_0), anchor.features = features)
+#T_cells_1 <- IntegrateData(anchorset = anchors)
+
+#T_cells_1$Sample = factor(T_cells_1$Sample, levels = c("N1","N2","N3","N4","R1","R2","R3","R4"))
+#T_cells_1$orig.ident= factor(T_cells_1$orig.ident, levels=c("N1","N2","N3","N4","R1","R2","R3","R4"))
+
+#table(T_cells_1$orig.ident)
+#table(T_cells_1$seurat_clusters)
+#table(T_cells_1$Sample)
+#table(T_cells_1$Treatment)
+
+
+DefaultAssay(T_cells_1) <- "integrated" #M# is this needed here?
 
 T_cells_1 = ScaleData(T_cells_1, verbose = FALSE)
 T_cells_1 = RunPCA(T_cells_1, npcs = 30, verbose = FALSE)
