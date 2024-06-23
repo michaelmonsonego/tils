@@ -244,7 +244,7 @@ Markers
 
 ### Proliferation Markers
 
-```{r fig.height=x1*1, cache=TRUE}
+```{r fig.height=x1*1, cache=TRUE, fig.width = 10}
 Prolif <- c("TOP2A","MKI67")
 FeaturePlot(cd4_cells, features = Prolif, label.size = 8, pt.size = 1, label=T, ncol = 2, order = T,reduction = "tsne")
 ggsave(file = "figures/cd4_cells/Proliferation_Markers.png", dpi=300, width=20, height=x1*2)
@@ -481,7 +481,7 @@ geom_boxplot(alpha=0.3,show.legend = FALSE)
 FeaturePlot(cd4_cells, features = c("TCF7","BACH2","BCL16","CCR7","IL7R","CD27","CD44","SELL","ID3","KLF2","LCR7","LEF1","SLAMF6","STAT3","TFAP4"),order=TRUE,pt.size=1, reduction="tsne", ncol=3)
 ggsave(file = "figures/cd4_cells/features_T_central memory.png", dpi=300, width=30, height=50, limitsize=FALSE)
 ```
-```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height=20}
+```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height=30}
 VlnPlot(cd4_cells, features = c("TCF7","BACH2","BCL16","CCR7","IL7R","CD27","CD44","SELL","ID3","KLF2","LCR7","LEF1","SLAMF6","STAT3","TFAP4"), assay = "RNA", stack=TRUE, flip= TRUE, split.by = "Treatment")+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) +
   theme(
     axis.text.y = element_text(size = 24, face = "italic"),
@@ -499,11 +499,11 @@ geom_boxplot(alpha=0.3,show.legend = FALSE)
 
 
 ### f. resident memory markers
-```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height= x1*8}
+```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height= 30}
 FeaturePlot(cd4_cells, features = c("PRDM1","ITGAE","IL7R","CD44","ITGA1","CD69","CRTAM","DUSP6","EGR2","FOSB","FOXO3","GZMA","GZMB","ZNF683","ID3","IL2RA","IRF4","JUN","JUNB","MYC","NR4A1","RGS1"), order=TRUE, pt.size=1, reduction="tsne", ncol=3)
 ggsave(file = "figures/cd4_cells/features_T_resident memory.png", dpi=300, width=30, height=80, limitsize=FALSE)
 ```
-```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height=20}
+```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height=30}
 VlnPlot(cd4_cells, features = c("PRDM1","ITGAE","IL7R","CD44","ITGA1","CD69","CRTAM","DUSP6","EGR2","FOSB","FOXO3","GZMA","GZMB","ZNF683","ID3","IL2RA","IRF4","JUN","JUNB","MYC","NR4A1","RGS1"), assay = "RNA", stack=TRUE, flip= TRUE, split.by = "Treatment")+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) +
   theme(
     axis.text.y = element_text(size = 24, face = "italic"),
