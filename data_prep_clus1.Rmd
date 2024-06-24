@@ -61,7 +61,7 @@ table(T_cells_1$seurat_clusters)
 # saveRDS(cd4, "objects/cd4_from_clus_1.rds")
 
 #M# clean cd4 from this analysis
-T_cells_1 <- subset(T_cells_1, subset = CD4 < 0.5)###########
+T_cells_1 <- subset(T_cells_1, subset = CD4 < 0.05)###########
 table(T_cells_1$orig.ident)
 table(T_cells_1$seurat_clusters)
 DefaultAssay(T_cells_1) <- "RNA"
@@ -120,9 +120,9 @@ tSNE_ls <- list(tSNE_0.05,tSNE_0.3,tSNE_0.35,tSNE_0.4,tSNE_0.45,tSNE_0.5)
 all_tSNE <- plot_grid(tSNE_0.05,tSNE_0.3,tSNE_0.35,tSNE_0.4,tSNE_0.45,tSNE_0.5, ncol = 3) 
 ggsave(all_tSNE,filename = 'figures/data_prep_1/tils_0_14_dim_res_test.png', dpi=300, height=10, width=16)
 
-T_cells_1 <- FindClusters(T_cells_1, resolution = 0.3)
-saveRDS(T_cells_1, file = "objects/tils_1_.3.rds")
-T_cells_1 <- readRDS("objects/tils_1_.3.rds")
+T_cells_1 <- FindClusters(T_cells_1, resolution = 0.5)
+saveRDS(T_cells_1, file = "objects/tils_1_.5.rds")
+T_cells_1 <- readRDS("objects/tils_1_.5.rds")
 ```
 
 
@@ -147,6 +147,16 @@ Top50Markers_T =
   arrange(cluster,-avg_log2FC)
 write_csv(Top50Markers_T, "Excels/cluster1_analysis_DE genes.csv")
 
+DE_genes <- FindMarkers(T_cells_1, ident.1 = "Responder", ident.2 = "Non_Responder", group.by = "Treatment", assay = "RNA")
+DE_genes <- rownames_to_column(DE_genes, var = "gene")
+write_csv(DE_genes, "excels/DE_genes_res_nonRes_clus1.csv") 
+Top100Markers <- DE_genes %>% 
+top_n(n = 100, wt = avg_log2FC) %>% 
+as.data.frame
+write_csv(Top100Markers, "excels/Top100Markers_per_treatment_tils_1_.5.csv") 
+
+
+
 T_cells_1.markers %>%
     group_by(cluster) %>%
     top_n(n = 10, wt = avg_log2FC) -> top10_T
@@ -154,23 +164,6 @@ DoHeatmap(T_cells_1, features = top10_T$gene) + NoLegend() + scale_fill_gradient
 ggsave(file = "figures/data_prep_1/T cells markers - heatmap.png", dpi=300, width=12, height=20)
 ```
 
-
-
-```{r eval=FALSE, include=FALSE}
-#M# another oproach for subseting : all cells expressing CD4 above the average
-#M# average CD4 expression
-avg_CD4_expression <- mean(FetchData(T_cells, vars = "CD4")$CD4, na.rm = TRUE)
-#M# check cluster 0 expression of CD4
-cluster_0_cells <- WhichCells(T_cells, idents = 0)
-CD4_expression_cluster_0 <- FetchData(T_cells, vars = "CD4")[cluster_0_cells, "CD4"]
-num_cells_above_threshold <- sum(CD4_expression_cluster_0 > 0.1517108)
-total_cells_cluster_0 <- length(CD4_expression_cluster_0)
-percentage_above_threshold <- (num_cells_above_threshold / total_cells_cluster_0) * 100
-table(T_cells$seurat_clusters)
-table(CD4_cells$seurat_clusters)
-
-CD4_cells <- subset(T_cells, subset = CD4 > avg_CD4_expression)
-```
 
 
 &nbsp;

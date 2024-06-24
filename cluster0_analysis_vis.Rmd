@@ -46,7 +46,7 @@ library(ggrepel)
 setwd("D:/Michael/git_check/tils")
 # setwd("C:/Users/michael monsonego/Documents/tils") #M# update between computers(git)
 x1=4.6
-cd4_cells = readRDS("objects/tils_0_.3.rds")
+cd4_cells = readRDS("objects/tils_0_.35.rds")
 
 DimPlot(cd4_cells , reduction = "tsne", label= TRUE, pt.size=0.5, label.size = 6)
 ggsave(file = "figures/cd4_cells/tsne.png", dpi=300, width=6, height=4)
@@ -55,7 +55,7 @@ ggsave(file = "figures/cd4_cells/tsne.png", dpi=300, width=6, height=4)
 Top DE genes
 --------------
 ```{r echo=FALSE, cashe = TRUE}
-Top50Markers <- read.delim("excels/DE_genes_for_cd4_high_from_all_clusters.csv", sep = ",", header = T, quote="\"", check.names=FALSE)
+Top50Markers <- read.delim("excels/cluster0_analysis_DE genes.csv", sep = ",", header = T, quote="\"", check.names=FALSE)
 Top50Markers$avg_log2FC <- Top50Markers$avg_log2FC %>% round(2)
 Top50Markers <- Top50Markers[,c("cluster","gene", "avg_log2FC", "p_val")] 
 datatable(Top50Markers, rownames = FALSE, filter = 'top', colnames = c('Cluster #', 'Gene Name', "log2(FC)", 'P.value'))
@@ -191,13 +191,6 @@ ggsave(file = "figures/cd4_cells/normalized_cluster_counts.png", dpi=300, width=
 volcano plot
 --------------
 ```{r fig.height=10}
-# DE_genes <- FindMarkers(cd4_cells, ident.1 = "Responder", ident.2 = "Non_Responder", group.by = "Treatment", assay = "RNA")
-# DE_genes <- rownames_to_column(DE_genes, var = "gene")
-# write_csv(DE_genes, "excels/DE_genes_res_nonRes_CD4.csv") 
-# Top100Markers <- DE_genes %>% 
-#  top_n(n = 100, wt = avg_log2FC) %>% 
-#  as.data.frame
-# write_csv(Top100Markers, "excels/Top100Markers_per_treatment_tils_0_.4.csv") 
 
 DE_genes <- read.csv("excels/DE_genes_res_nonRes_CD4.csv")
 
@@ -244,7 +237,7 @@ Markers
 
 ### Proliferation Markers
 
-```{r fig.height=x1*1, cache=TRUE, fig.width = 10}
+```{r fig.height=x1*1, cache=TRUE}
 Prolif <- c("TOP2A","MKI67")
 FeaturePlot(cd4_cells, features = Prolif, label.size = 8, pt.size = 1, label=T, ncol = 2, order = T,reduction = "tsne")
 ggsave(file = "figures/cd4_cells/Proliferation_Markers.png", dpi=300, width=20, height=x1*2)
@@ -258,12 +251,12 @@ FeaturePlot(cd4_cells, features = Ts, label.size = 8, pt.size = 1, label=T, ncol
 ggsave(file = "figures/cd4_cells/T_Cells_Markers.png", dpi=300, width=15, height=x1*2)
 ```
 ### checking 
-```{r cache=T, fig.height=x1*3, warning=FALSE}
+```{r cache=T, fig.height=x1*2, warning=FALSE}
 FeaturePlot(cd4_cells, features = c("ENTPD1", "GZMB", "FOXP3", "CD40LG","CD8A","CD8B"), order=TRUE,pt.size=1, reduction="tsne", ncol=3)
 ggsave(file = "figures/cd4_cells/checking.png", dpi=300, width=15, height=x1*2)
 ```
 
-```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height=20}
+```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height=15}
 VlnPlot(cd4_cells, features = c("ENTPD1", "GZMB", "FOXP3", "CD40LG"), assay = "RNA", stack=TRUE, flip= TRUE, split.by = "Treatment")+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) +
   theme(
     axis.text.y = element_text(size = 24, face = "italic"),
@@ -481,7 +474,7 @@ geom_boxplot(alpha=0.3,show.legend = FALSE)
 FeaturePlot(cd4_cells, features = c("TCF7","BACH2","BCL16","CCR7","IL7R","CD27","CD44","SELL","ID3","KLF2","LCR7","LEF1","SLAMF6","STAT3","TFAP4"),order=TRUE,pt.size=1, reduction="tsne", ncol=3)
 ggsave(file = "figures/cd4_cells/features_T_central memory.png", dpi=300, width=30, height=50, limitsize=FALSE)
 ```
-```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height=30}
+```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height=20}
 VlnPlot(cd4_cells, features = c("TCF7","BACH2","BCL16","CCR7","IL7R","CD27","CD44","SELL","ID3","KLF2","LCR7","LEF1","SLAMF6","STAT3","TFAP4"), assay = "RNA", stack=TRUE, flip= TRUE, split.by = "Treatment")+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) +
   theme(
     axis.text.y = element_text(size = 24, face = "italic"),
@@ -499,11 +492,11 @@ geom_boxplot(alpha=0.3,show.legend = FALSE)
 
 
 ### f. resident memory markers
-```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height= 30}
+```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height= x1*8}
 FeaturePlot(cd4_cells, features = c("PRDM1","ITGAE","IL7R","CD44","ITGA1","CD69","CRTAM","DUSP6","EGR2","FOSB","FOXO3","GZMA","GZMB","ZNF683","ID3","IL2RA","IRF4","JUN","JUNB","MYC","NR4A1","RGS1"), order=TRUE, pt.size=1, reduction="tsne", ncol=3)
 ggsave(file = "figures/cd4_cells/features_T_resident memory.png", dpi=300, width=30, height=80, limitsize=FALSE)
 ```
-```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height=30}
+```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height=20}
 VlnPlot(cd4_cells, features = c("PRDM1","ITGAE","IL7R","CD44","ITGA1","CD69","CRTAM","DUSP6","EGR2","FOSB","FOXO3","GZMA","GZMB","ZNF683","ID3","IL2RA","IRF4","JUN","JUNB","MYC","NR4A1","RGS1"), assay = "RNA", stack=TRUE, flip= TRUE, split.by = "Treatment")+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) +
   theme(
     axis.text.y = element_text(size = 24, face = "italic"),
