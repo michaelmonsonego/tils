@@ -17,9 +17,11 @@ editor_options:
 knitr::opts_chunk$set(echo = FALSE)
 knitr::opts_chunk$set(fig.width=17) 
 knitr::opts_chunk$set(cache = TRUE) 
+knitr::opts_chunk$set(warning = FALSE)
+knitr::opts_chunk$set(message = FALSE)
 ```
 ## 1. tSNE plot
-```{r message=FALSE, warning=FALSE, fig.height= 6, fig.width=8}
+```{r fig.height= 4, fig.width=6}
 library(dplyr)
 library(Seurat)
 library(patchwork)
@@ -54,7 +56,7 @@ ggsave(file = "figures/clus1/tsne.png", dpi=300, width=6, height=4)
 
 Top DE genes
 --------------
-```{r echo=FALSE, cashe = TRUE}
+```{r}
 Top50Markers <- read.delim("excels/cluster2_analysis_DE genes.csv", sep = ",", header = T, quote="\"", check.names=FALSE)
 Top50Markers$avg_log2FC <- Top50Markers$avg_log2FC %>% round(2)
 Top50Markers <- Top50Markers[,c("cluster","gene", "avg_log2FC", "p_val")] 

@@ -15,8 +15,11 @@ editor_options:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
-knitr::opts_chunk$set(fig.width=17) 
+knitr::opts_chunk$set(fig.width = 17) 
 knitr::opts_chunk$set(cache = TRUE) 
+knitr::opts_chunk$set(warning = FALSE)
+knitr::opts_chunk$set(message = FALSE)
+
 ```
 ## 1. tSNE plot
 ```{r message=FALSE, warning=FALSE, fig.height= 6, fig.width=8}
@@ -573,79 +576,6 @@ T_cells <- RenameIdents(cd4_cells, "0" =...)
 p <- DimPlot(cd4_cells, reduction = "tsne", label = F, label.size = 3.5)
 LabelClusters(p, id = "ident",  fontface = "bold",position = "median")
 #M# saveRDS(cd4_cells, file = "objects/tils_all_.45_integrgate_annotated.rds")
-```
-
-## Barplots - Annotated
-```{r eval=FALSE, fig.height=4, fig.width=10, cache=FALSE, include=FALSE}
-frque <- table(Idents(cd4_cells), cd4_cells$Treatment)
-frque <- as.data.frame(frque)
-frque <- frque %>% dplyr::rename(Cluster = Var1, Treatment = Var2)
-frque$Treatment <- factor(frque$Treatment)
-
-frque <- ddply(frque, .(Treatment),  transform, percentperstatus   = Freq/sum(Freq))
-frque <- ddply(frque, .(Cluster), transform, percentpercluster  = Freq/sum(Freq))
-frque <- ddply(frque, .(Cluster), transform, normalizedppstatus = percentperstatus/sum(percentperstatus)*100)
-frque <- ddply(frque, .(Treatment),  transform, normalizedpcluster = percentpercluster/sum(percentpercluster))
-
-mfrque <- table(Idents(cd4_cells), cd4_cells$orig.ident)
-mfrque <- as.data.frame(mfrque)
-mfrque <- mfrque %>% dplyr::rename(Cluster = Var1, patient = Var2)
-
-mfrque <- ddply(mfrque, .(patient),  transform, percentperstatus   = Freq/sum(Freq))
-mfrque <- ddply(mfrque, .(Cluster), transform, percentpercluster  = Freq/sum(Freq))
-mfrque <- ddply(mfrque, .(Cluster), transform, normalizedppstatus = percentperstatus/sum(percentperstatus)*100)
-mfrque <- ddply(mfrque, .(patient),  transform, normalizedpcluster = percentpercluster/sum(percentpercluster))
-
-
-p3 <- ggplot(mfrque, aes(x = Cluster, y = normalizedppstatus, fill = patient)) +
- theme_minimal() +
- geom_bar(stat = "identity", width = 0.7,position="dodge") +
-   scale_fill_manual(values= c("#CFBAE1", "#A8A5CA", "#8291B3", "#5C7D9D", "#FF6F61", "#D78459", "#AF9A52", "#88B04B"))+
- ggtitle("Normalized Cluster Counts") +
- ylab("Normalized Proportions in %") +
- theme(
-   axis.text.x  = element_text(angle = 67, hjust = 1, size = 11, color = "black"),
-   axis.text.y  = element_text(size = 11, color = "black"),
-   axis.title.x = element_text(size = 13, color = "black"),
-   axis.title.y = element_text(size = 13, color = "black"),
-   title = element_text(size = 13),
-   legend.justification = "top",
-   panel.border = element_blank()) +
- geom_hline(yintercept = 20, linetype='dotted')
-  
-  
-p1 <- ggplot(frque, aes(x = Cluster, y = normalizedppstatus, fill = Treatment)) +
- theme_minimal() +
- geom_bar(stat = "identity", width = 0.7,position="dodge") +
- scale_fill_manual(values= c("#CFBAE1", "#5C7D9D"))+
- ggtitle("Normalized Cluster Counts") +
- ylab("Normalized Proportions in %") +
- theme(
-   axis.text.x  = element_text(angle = 67, hjust = 1, size = 11, color = "black"),
-   axis.text.y  = element_text(size = 11, color = "black"),
-   axis.title.x = element_text(size = 13, color = "black"),
-   axis.title.y = element_text(size = 13, color = "black"),
-   title = element_text(size = 13),
-   legend.justification = "top",
-   panel.border = element_blank()) +
- geom_hline(yintercept = 33.3, linetype='dotted') 
-
-p2<-ggplot(frque, aes(x= Cluster, y= Freq, fill = Treatment)) +
- theme_minimal() +
- geom_bar(stat = "identity", width = 0.7) +
- scale_fill_manual(values= c("#CFBAE1", "#5C7D9D"))+
- ggtitle("Cluster Counts") + ylab("Cell counts\n") +
- theme(
-   axis.text.x  = element_text(angle = 67, hjust = 1, size = 11, color = "black"),
-   axis.text.y  = element_text(size = 11, color = "black"),
-   axis.title.x = element_text(size = 13, color = "black"),
-   axis.title.y = element_text(size = 13, color = "black"),
-   title = element_text(size = 13),
-   legend.justification = "top",
-   panel.border = element_blank())
-
-p2+p1+plot_layout(guides = "collect")+plot_annotation(tag_levels = 'A') 
-p3
 ```
 
 
