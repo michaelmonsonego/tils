@@ -371,17 +371,19 @@ ggsave(file = "figures/Tcells/Vln_T_effector_by_cluster_2.png", dpi=300, width=6
 ### CD69 + CD39
 ```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height= x1, fig.width=8}
 # naive
-FeaturePlot(T_cells, features = c("CD69","CD39"),order=TRUE,pt.size=1, reduction="tsne", ncol=2)
+FeaturePlot(T_cells, features = c("CD69","ENTPD1"),order=TRUE,pt.size=1, reduction="tsne", ncol=2)
 ggsave(file = "figures/Tcells/CD69.png", dpi=300, width=8, height=10)
 ```
 ```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height= x1}
-VlnPlot(T_cells, features = c("CD69", fill.by = "ident"), assay = "RNA", stack=TRUE, flip= TRUE)+theme(axis.text.y =element_text(size=6))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
+VlnPlot(T_cells, features = c("CD69","ENTPD1"), fill.by = "ident", assay = "RNA", stack=TRUE, flip= TRUE)+theme(axis.text.y =element_text(size=6))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
 geom_boxplot(alpha=0.3,show.legend = FALSE)
 ggsave(file = "figures/Tcells/Vln_CD69.png", dpi=300, width=6, height=10, limitsize=FALSE)
 
 VlnPlot(T_cells, features = c("CD69"), assay = "RNA", flip= TRUE, split.by = "Treatment", pt.size = 0)+theme(axis.text.y =element_text(size=6))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
 geom_boxplot(alpha=0.3,show.legend = FALSE)
-ggsave(file = "figures/Tcells/Vln_by_clust_by_treat_CD69.png", dpi=300, width=18, height=10, limitsize=FALSE)
+
+VlnPlot(T_cells, features = c("ENTPD1"), assay = "RNA", flip= TRUE, split.by = "Treatment", pt.size = 0)+theme(axis.text.y =element_text(size=6))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
+geom_boxplot(alpha=0.3,show.legend = FALSE)
 ```
 
 
