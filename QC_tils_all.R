@@ -97,7 +97,6 @@ for (sample in Sample_Names_vec){
   seurat_object_sub_list[[sample]][["percent.mt"]] <- PercentageFeatureSet(seurat_object_sub_list[[sample]], pattern = "^MT-")
   seurat_object_sub_list[[sample]][["percent.ribo"]] <- PercentageFeatureSet(seurat_object_sub_list[[sample]], pattern =  "^RP[SL]")
 }
-
 # Visualize QC metrics as a violin plot
 for (sample in Sample_Names_vec){
   VlnPlot(seurat_object_sub_list[[sample]], features = c("nFeature_RNA", "nCount_RNA", "percent.mt", "percent.ribo") ,ncol = 4)
