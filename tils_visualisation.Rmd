@@ -17,6 +17,8 @@ editor_options:
 knitr::opts_chunk$set(echo = FALSE)
 knitr::opts_chunk$set(fig.width=17) 
 knitr::opts_chunk$set(cache = TRUE) 
+knitr::opts_chunk$set(warning = FALSE)
+knitr::opts_chunk$set(message = FALSE)
 ```
 ## 1. number of cells per patient + tSNE plot
 ```{r message=FALSE, warning=FALSE, fig.height= 12, cache=F}
