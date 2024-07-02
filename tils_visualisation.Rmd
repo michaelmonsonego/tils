@@ -66,6 +66,10 @@ table(T_cells$Treatment)
 T_cells  = RunTSNE(T_cells , dims = 1:15, verbose = F)
 DimPlot(T_cells , reduction = "tsne", label= TRUE, pt.size=0.5, label.size = 10)
 ggsave(file = "figures/Tcells/tsne.png", dpi=300, width=15, height=10)
+
+TSNEPlot(T_cells, group.by ="Treatment", cols= c("#CFBAE1","#A4DEF9"), pt.size=0.5)+
+  theme(legend.text=element_text(size=20))
+ggsave(file = "figures/Tcells/tsne_by_treatment.png", dpi=300, width=15, height=10)
 ```
 
 Top DE genes
@@ -263,7 +267,7 @@ Markers
 
 ```{r fig.height=x1*1, cache=TRUE}
 Prolif <- c("TOP2A","MKI67")
-FeaturePlot(T_cells, features = Prolif, label.size = 8, pt.size = 1, label=F, ncol = 2, order = T,reduction = "tsne")
+FeaturePlot(T_cells, features = Prolif, label.size = 8, pt.size = 1, label=F, ncol = 3, order = T,reduction = "tsne")
 ggsave(file = "figures/Tcells/Proliferation_Markers.png", dpi=300, width=20, height=x1*2)
 ```
 

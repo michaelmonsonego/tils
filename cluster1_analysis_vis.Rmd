@@ -52,6 +52,9 @@ clus1 = readRDS("objects/tils_1_.5.rds")
 
 DimPlot(clus1 , reduction = "tsne", label= TRUE, pt.size=0.5, label.size = 6)
 ggsave(file = "figures/clus1/tsne.png", dpi=300, width=6, height=4)
+TSNEPlot(clus1, group.by ="Treatment", cols= c("#CFBAE1","#A4DEF9"), pt.size=0.5)+
+  theme(legend.text=element_text(size=20))
+ggsave(file = "figures/Tcells/tsne_by_treatment.png", dpi=300, width=15, height=10)
 ```
 
 Top DE genes
@@ -483,9 +486,17 @@ geom_boxplot(alpha=0.3,show.legend = FALSE)
 
 ### h. T cells features signatures 
 ```{r fig.height=4, fig.width=4, message=FALSE, warning=FALSE}
+persistance_up <- c('KLRB1','ZNF683','ITGB1','IL7R','LIME1', "S1PR1", "TIMP1", "TBXAS1", "KLF2", "LTB", "UBXN11", "CD40LG", "VCL", "RASA3", "SCML4", "MYC", "P2RY8")
+clus1 = AddModuleScore(object = clus1, features = persistance_up, name = "persistance_up", assay = "RNA")
+a <- FeaturePlot(object = clus1, features = "persistance_up1", reduction = "tsne", cols=c("grey","grey","#e46467", "#b33336", "#A73033"))+labs(title = "persistance_up", subtitle = "KLRB1, ZNF683, ITGB1..")+ theme(plot.subtitle = element_text(hjust = 0.5))
+a
+ggsave(file = "figures/clus1/persistance_up.png", dpi=300, width=5, height=5)
+
+
+
 CD8_memory_list = list(c("IL7R","CD44","CXCR6"))
 clus1 = AddModuleScore(object = clus1, features = CD8_memory_list, name = "CD8_memory", assay = "RNA")
-a <- FeaturePlot(object = clus1, features = "CD8_memory1", reduction = "tsne", cols=c("grey","grey","#e46467", "#b33336", "#A73033"))+labs(title = "0_ CD8+ memory", subtitle = "(IL7R,CD44,CXCR6)")+ theme(plot.subtitle = element_text(hjust = 0.5))
+a <- FeaturePlot(object = clus1, features = "CD8_memory1", reduction = "tsne", cols=c("grey","grey","#e46467", "#b33336", "#A73033"))+labs(title = "CD8+ memory", subtitle = "(IL7R,CD44,CXCR6)")+ theme(plot.subtitle = element_text(hjust = 0.5))
 a
 ggsave(file = "figures/clus1/CD8_memory_Cxcl10.png", dpi=300, width=5, height=5)
 
@@ -497,39 +508,39 @@ ggsave(file = "figures/clus1/activated.png", dpi=300, width=5, height=5)
 
 effector_memory_list = list(c("ID2","STAT3","GZMB","PRF1","IL7R"))
 clus1 = AddModuleScore(object = clus1, features = effector_memory_list, name = "effector_memory", assay = "RNA")
-c <- FeaturePlot(object = clus1, features = "effector_memory1", reduction = "tsne", cols=c("grey","grey","#e46467", "#b33336", "#A73033"))+labs(title = "2_ CD8+ effector memory", subtitle = "(ID2,STAT3,GZMB,PRF1,IL7R)")+ theme(plot.subtitle = element_text(hjust =0.5))
+c <- FeaturePlot(object = clus1, features = "effector_memory1", reduction = "tsne", cols=c("grey","grey","#e46467", "#b33336", "#A73033"))+labs(title = "CD8+ effector memory", subtitle = "(ID2,STAT3,GZMB,PRF1,IL7R)")+ theme(plot.subtitle = element_text(hjust =0.5))
 c
 ggsave(file = "figures/clus1/effector_memory_Tregs.png", dpi=300, width=5, height=5)
 
 cytotoxic_list = list(c("GZMB","GZMC","GRZMF"))
 clus1 = AddModuleScore(object = clus1, features = cytotoxic_list, name = "cytotoxic", assay = "RNA")
-d <- FeaturePlot(object = clus1, features = "cytotoxic1", reduction = "tsne", cols=c("grey","grey","#e46467", "#b33336", "#A73033"))+labs(title = "3_ CD8+ cytotoxic", subtitle = "(GZMB,GZMC,GRZMF)")+ theme(plot.subtitle = element_text(hjust =0.5))
+d <- FeaturePlot(object = clus1, features = "cytotoxic1", reduction = "tsne", cols=c("grey","grey","#e46467", "#b33336", "#A73033"))+labs(title = "CD8+ cytotoxic", subtitle = "(GZMB,GZMC,GRZMF)")+ theme(plot.subtitle = element_text(hjust =0.5))
 d
 ggsave(file = "figures/clus1/cytotoxic_Tregs.png", dpi=300, width=5, height=5)
 
 
 CD8_naive_memory_list = list(c("CD8A","CD4","SELL","CCR7","TCF7","LEF1","CD8","ITGAE","CXCR3","GZMA","SELL","CCR7"))
 clus1 = AddModuleScore(object = clus1, features = CD8_naive_memory_list, name = "CD8_naive_memory", assay = "RNA")
-e <- FeaturePlot(object = clus1, features = "CD8_naive_memory1", reduction = "tsne", cols=c("grey","grey","#e46467", "#b33336", "#A73033"))+labs(title = "4_ CD8+ naive/memory", subtitle = "(CD8A,CD4,SELL,CCR7,TCF7,LEF1,CD8,ITGAE,CXCR3,GZMA,SELL,CCR7)")+ theme(plot.subtitle = element_text(hjust =0.5))
+e <- FeaturePlot(object = clus1, features = "CD8_naive_memory1", reduction = "tsne", cols=c("grey","grey","#e46467", "#b33336", "#A73033"))+labs(title = "CD8+ naive/memory", subtitle = "(CD8A,CD4,SELL,CCR7,TCF7,LEF1,CD8,ITGAE,CXCR3,GZMA,SELL,CCR7)")+ theme(plot.subtitle = element_text(hjust =0.5))
 e
 ggsave(file = "figures/clus1/CD8_naive_memory_Tregs.png", dpi=300, width=5, height=5)
 
 
 CD4_CD8_naive_memory_list = list(c("CD8A","CD4","SELL","CCR7","TCF7","LEF1"))
 clus1 = AddModuleScore(object = clus1, features = CD4_CD8_naive_memory_list, name = "CD4_CD8_naive_memory", assay = "RNA")
-f <- FeaturePlot(object = clus1, features = "CD4_CD8_naive_memory1", reduction = "tsne", cols=c("grey","grey","#e46467", "#b33336", "#A73033"))+labs(title = "5_ CD4+ CD8+ naive/memory", subtitle = "(CD8A,CD4,SELL,CCR7,TCF7,LEF1)")+ theme(plot.subtitle = element_text(hjust =0.5))
+f <- FeaturePlot(object = clus1, features = "CD4_CD8_naive_memory1", reduction = "tsne", cols=c("grey","grey","#e46467", "#b33336", "#A73033"))+labs(title = "CD4+ CD8+ naive/memory", subtitle = "(CD8A,CD4,SELL,CCR7,TCF7,LEF1)")+ theme(plot.subtitle = element_text(hjust =0.5))
 f
 ggsave(file = "figures/clus1/CD4_CD8_naive_memory_CD4_CD8_naive_memory.png", dpi=300, width=5, height=5)
 
 proliferating_list = list(c("CD8","MKI67"))
 clus1 = AddModuleScore(object = clus1, features = proliferating_list, name = "proliferating", assay = "RNA")
-g <- FeaturePlot(object = clus1, features = "proliferating1", reduction = "tsne", cols=c("grey","grey","#e46467", "#b33336", "#A73033"))+labs(title = "6_ CD8+ proliferating", subtitle = "(Cd8, Mki67)")+ theme(plot.subtitle = element_text(hjust =0.5))
+g <- FeaturePlot(object = clus1, features = "proliferating1", reduction = "tsne", cols=c("grey","grey","#e46467", "#b33336", "#A73033"))+labs(title = "CD8+ proliferating", subtitle = "(Cd8, Mki67)")+ theme(plot.subtitle = element_text(hjust =0.5))
 g
 ggsave(file = "figures/clus1/proliferating_CD8+proliferating.png", dpi=300, width=5, height=5)
 
 Tregs_list = list(c("CD4","FOXP3","IL2RA","ICOS","TNFRSF4"))
 clus1 = AddModuleScore(object = clus1, features = Tregs_list, name = "Tregs", assay = "RNA")
-h <- FeaturePlot(object = clus1, features = "Tregs1", reduction = "tsne", cols=c("grey","grey","#e46467", "#b33336", "#A73033"))+labs(title = "7_ Tregs", subtitle = "(Cd4, Foxp3,Il2ra, Icos, Tnfrsf4)")+ theme(plot.subtitle = element_text(hjust =0.5))
+h <- FeaturePlot(object = clus1, features = "Tregs1", reduction = "tsne", cols=c("grey","grey","#e46467", "#b33336", "#A73033"))+labs(title = "Tregs", subtitle = "(Cd4, Foxp3,Il2ra, Icos, Tnfrsf4)")+ theme(plot.subtitle = element_text(hjust =0.5))
 h
 ggsave(file = "figures/clus1/Tregs_Tregs.png", dpi=300, width=5, height=5)
 ```
