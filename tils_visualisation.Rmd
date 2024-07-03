@@ -69,7 +69,7 @@ ggsave(file = "figures/Tcells/tsne.png", dpi=300, width=15, height=10)
 
 TSNEPlot(T_cells, group.by ="Treatment", cols= c("#CFBAE1","#A4DEF9"), pt.size=0.5)+
   theme(legend.text=element_text(size=20))
-ggsave(file = "figures/Tcells/tsne_by_treatment.png", dpi=300, width=15, height=10)
+ggsave(file = "figures/Tcells/tsne_by_treatment.png", dpi=300, width=10, height=7)
 ```
 
 Top DE genes
