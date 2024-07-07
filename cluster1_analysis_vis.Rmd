@@ -549,8 +549,13 @@ ggsave(file = "figures/clus1/Tregs_Tregs.png", dpi=300, width=5, height=5)
 ## Annotation
 
 Idents(clus1) <- 'seurat_clusters'
-T_cells <- RenameIdents(clus1, "0" =...)
-
+clus1 <- RenameIdents(clus1, "0" = "0_stem like/memory",
+                                 "1" = "1_exhausted",
+                                 "2" = "2_Teff",
+                                 "3" = "3_proliferation",
+                                 "4" = "4_progenitors_exhausted",
+                                 "5" = "5_CD4(memory)")
+                        
 p <- DimPlot(clus1, reduction = "tsne", label = F, label.size = 3.5)
 LabelClusters(p, id = "ident",  fontface = "bold",position = "median")
 #M# saveRDS(clus1, file = "objects/tils_1_.5.rds")
