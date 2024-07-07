@@ -4,9 +4,9 @@ author: "Michael Monsonego"
 date:  "`r format(Sys.time(), '%d %B, %Y')`"
 output:
   html_document: 
-    fig_crop: no
-    toc: yes
-    toc_float: yes
+    fig_crop: false
+    toc: true
+    toc_float: true
   pdf_document:
     toc: yes
 editor_options: 
@@ -63,7 +63,6 @@ table(T_cells$orig.ident)["N3"] #
 table(T_cells$orig.ident)["N4"] #  
 table(T_cells$Treatment)
 
-T_cells  = RunTSNE(T_cells , dims = 1:15, verbose = F)
 DimPlot(T_cells , reduction = "tsne", label= TRUE, pt.size=0.5, label.size = 10)
 ggsave(file = "figures/Tcells/tsne.png", dpi=300, width=15, height=10)
 

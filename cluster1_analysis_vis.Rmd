@@ -486,7 +486,7 @@ geom_boxplot(alpha=0.3,show.legend = FALSE)
 
 ### h. T cells features signatures 
 ```{r fig.height=3, fig.width=3, message=FALSE, warning=FALSE}
-persistance_up <- c('KLRB1','ZNF683','ITGB1','IL7R','LIME1', "S1PR1", "TIMP1", "TBXAS1", "KLF2", "LTB", "UBXN11", "CD40LG", "VCL", "RASA3", "SCML4", "MYC", "P2RY8")
+persistance_up <- list(c('KLRB1','ZNF683','ITGB1','IL7R','LIME1', "S1PR1", "TIMP1", "TBXAS1", "KLF2", "LTB", "UBXN11", "CD40LG", "VCL", "RASA3", "SCML4", "MYC", "P2RY8"))
 clus1 = AddModuleScore(object = clus1, features = persistance_up, name = "persistance_up", assay = "RNA")
 a <- FeaturePlot(object = clus1, features = "persistance_up1", reduction = "tsne", cols=c("grey","grey","#e46467", "#b33336", "#A73033"))+labs(title = "persistance_up", subtitle = "KLRB1, ZNF683, ITGB1..")+ theme(plot.subtitle = element_text(hjust = 0.5))
 a
@@ -553,7 +553,7 @@ T_cells <- RenameIdents(clus1, "0" =...)
 
 p <- DimPlot(clus1, reduction = "tsne", label = F, label.size = 3.5)
 LabelClusters(p, id = "ident",  fontface = "bold",position = "median")
-#M# saveRDS(clus1, file = "objects/tils_all_.45_integrgate_annotated.rds")
+#M# saveRDS(clus1, file = "objects/tils_1_.5.rds")
 ```
 
 
