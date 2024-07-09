@@ -21,7 +21,7 @@ knitr::opts_chunk$set(warning = FALSE)
 knitr::opts_chunk$set(message = FALSE)
 ```
 ## 1. tSNE plot
-```{r message=FALSE, warning=FALSE, fig.height= 4, fig.width=6}
+```{r message=FALSE, warning=FALSE, fig.height= 5, fig.width=7}
 library(dplyr)
 library(Seurat)
 library(patchwork)
@@ -48,19 +48,25 @@ library(ggrepel)
 setwd("D:/Michael/git_check/tils")
 # setwd("C:/Users/michael monsonego/Documents/tils") #M# update between computers(git)
 x1=4.6
-clus1 = readRDS("objects/tils_1_.5.rds")
+clus1 = readRDS("objects/clus1_no_cd4_14_0.5.rds")
 
 DimPlot(clus1 , reduction = "tsne", label= TRUE, pt.size=0.5, label.size = 6)
 ggsave(file = "figures/clus1/tsne.png", dpi=300, width=6, height=4)
-TSNEPlot(clus1, group.by ="Treatment", cols= c("#CFBAE1","#A4DEF9"), pt.size=0.5)+
+TSNEPlot(clus1, group.by ="Treatment", cols= c("#1f77b4","#ff7f0e"), pt.size=0.5)+
   theme(legend.text=element_text(size=20))
 ggsave(file = "figures/Tcells/tsne_by_treatment.png", dpi=300, width=15, height=10)
+
+c("#17becf","#bcbd22")
+c("#2ca02c","#d62728")
+c("#9467bd","#8c564b")
+c("#e377c2","#7f7f7f")
+
 ```
 
 Top DE genes
 --------------
 ```{r echo=FALSE, cashe = TRUE}
-Top50Markers <- read.delim("excels/cluster1_analysis_DE genes.csv", sep = ",", header = T, quote="\"", check.names=FALSE)
+Top50Markers <- read.delim("excels/cluster1_analysis_DE genes_no_5.csv", sep = ",", header = T, quote="\"", check.names=FALSE)
 Top50Markers$avg_log2FC <- Top50Markers$avg_log2FC %>% round(2)
 Top50Markers <- Top50Markers[,c("cluster","gene", "avg_log2FC", "p_val")] 
 datatable(Top50Markers, rownames = FALSE, filter = 'top', colnames = c('Cluster #', 'Gene Name', "log2(FC)", 'P.value'))
@@ -118,7 +124,7 @@ for (sample in Sample_Names_vec) {
 }
 ```
 ## normalized contribution per patient 
-```{r echo=FALSE, fig.height=4, fig.width=10}
+```{r echo=FALSE, fig.height=6, fig.width=10}
 frque <- table(Idents(clus1), clus1$Treatment)
 frque <- as.data.frame(frque)
 frque <- frque %>% dplyr::rename(Cluster = Var1, Treatment = Var2)
@@ -159,7 +165,7 @@ p3 <- ggplot(mfrque, aes(x = Cluster, y = normalizedppstatus, fill = patient)) +
 p1 <- ggplot(frque, aes(x = Cluster, y = normalizedppstatus, fill = Treatment)) +
  theme_minimal() +
  geom_bar(stat = "identity", width = 0.7,position="dodge") +
- scale_fill_manual(values= c("#CFBAE1", "#5C7D9D"))+
+ scale_fill_manual(values= c("#1f77b4","#ff7f0e"))+
  ggtitle("Normalized Cluster Counts") +
  ylab("Normalized Proportions in %") +
  theme(
@@ -175,7 +181,7 @@ p1 <- ggplot(frque, aes(x = Cluster, y = normalizedppstatus, fill = Treatment)) 
 p2<-ggplot(frque, aes(x= Cluster, y= Freq, fill = Treatment)) +
  theme_minimal() +
  geom_bar(stat = "identity", width = 0.7) +
- scale_fill_manual(values= c("#CFBAE1", "#5C7D9D"))+
+ scale_fill_manual(values= c("#1f77b4","#ff7f0e"))+
  ggtitle("Cluster Counts") + ylab("Cell counts\n") +
  theme(
    axis.text.x  = element_text(angle = 67, hjust = 1, size = 11, color = "black"),
@@ -196,7 +202,7 @@ ggsave(file = "figures/clus1/normalized_cluster_counts.png", dpi=300, width=14, 
 volcano plot
 --------------
 ```{r fig.height=10}
-DE_genes <- read.csv("excels/DE_genes_res_nonRes_clus1.csv")
+DE_genes <- read.csv("excels/DE_genes_res_nonRes_clus1_no_5.csv")
 
 DE_genes$Significance <- "Not Significant"
 DE_genes$Significance[DE_genes$p_val_adj < 0.05 & DE_genes$avg_log2FC > 0] <- "Upregulated"
@@ -230,7 +236,7 @@ ggsave(file = "figures/clus1/volcano.png", dpi=300, width=15, height=10)
 Top DE genes between responders and non-responders
 --------------
 ```{r}
-Top100Markers <- read.delim("excels/Top100Markers_per_treatment_tils_1_.5.csv", sep = ",", header = T, quote="\"", check.names=FALSE)
+Top100Markers <- read.delim("excels/Top100Markers_per_treatment_tils_1_.5_no_5.csv", sep = ",", header = T, quote="\"", check.names=FALSE)
 Top100Markers$avg_log2FC <- Top100Markers$avg_log2FC %>% round(2)
 Top100Markers <- Top100Markers[,c("gene", "avg_log2FC", "p_val")] 
 datatable(Top100Markers, rownames = FALSE, filter = 'top', colnames = c('Gene Name', "log2(FC)", 'P.value'))

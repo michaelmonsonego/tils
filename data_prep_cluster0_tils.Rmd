@@ -47,7 +47,9 @@ setwd("D:/Michael/git_check/tils")
 #  setwd("C:/Users/michael monsonego/Documents/tils") #M# update between computers(git)
 
 x1=4.6
-T_cells = readRDS("objects/tils_all_.45_integrgate_annotated.rds")
+# T_cells = readRDS("objects/tils_all_.45_integrgate_annotated.rds")
+T_cells = readRDS("objects/tils_all_.45_integrgate_annotated (2).rds")
+
 DimPlot(T_cells, reduction = "tsne",repel = T, label = TRUE, label.size = 5)
 DefaultAssay(T_cells) <- "RNA" #M# important before subseting! otherwise doesnt find cd8
 T_cells_0 <- subset(T_cells, idents = c("0" = "0_activated_memory_CD4")) #M# also subset out CD8 cells
@@ -169,7 +171,7 @@ all_tSNE <- plot_grid(tSNE_0.05,tSNE_0.3,tSNE_0.35,tSNE_0.4,tSNE_0.45,tSNE_0.5, 
 ggsave(all_tSNE,filename = 'figures/data_prep_0/tils_0_14_dim_res_test.png', dpi=300, height=10, width=16)
 
 T_cells_0 <- FindClusters(T_cells_0, resolution = 0.35)
-saveRDS(T_cells_0, file = "objects/tils_0_.35.rds") #M# change if adjusted
+# saveRDS(T_cells_0, file = "objects/tils_0_.35.rds") #M# change if adjusted
 T_cells_0 <- readRDS("objects/tils_0_.35.rds")
 ```
 

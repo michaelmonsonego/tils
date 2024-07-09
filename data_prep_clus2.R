@@ -26,7 +26,7 @@ setwd("D:/Michael/git_check/tils")
 # setwd("C:/Users/michael monsonego/Documents/tils") #M# update between computers(git)
 
 x1=4.6
-T_cells = readRDS("objects/tils_all_.45_integrgate_annotated.rds")
+T_cells = readRDS("objects/tils_all_.45_integrgate_annotated (2).rds")
 DimPlot(T_cells, reduction = "tsne",repel = T, label = TRUE, label.size = 5)
 DefaultAssay(T_cells) <- "RNA" #M# important before subseting! otherwise doesnt find cd8
 T_cells_2 <- subset(T_cells, idents = c("2" = "2_cytotoxic_CD8")) #M# also subset out CD8 cells

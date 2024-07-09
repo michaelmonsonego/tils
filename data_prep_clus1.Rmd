@@ -47,7 +47,7 @@ setwd("D:/Michael/git_check/tils")
 # setwd("C:/Users/michael monsonego/Documents/tils") #M# update between computers(git)
 
 x1=4.6
-T_cells = readRDS("objects/tils_all_.45_integrgate_annotated.rds")
+T_cells = readRDS("objects/tils_all_.45_integrgate_annotated (2).rds")
 DimPlot(T_cells, reduction = "tsne",repel = T, label = TRUE, label.size = 5)
 DefaultAssay(T_cells) <- "RNA" #M# important before subseting! otherwise doesnt find cd8
 T_cells_1 <- subset(T_cells, idents = c("1" = "1_cytotoxic_CD8")) #M# also subset out CD8 cells
@@ -121,11 +121,10 @@ all_tSNE <- plot_grid(tSNE_0.05,tSNE_0.3,tSNE_0.35,tSNE_0.4,tSNE_0.45,tSNE_0.5, 
 ggsave(all_tSNE,filename = 'figures/data_prep_1/tils_0_14_dim_res_test.png', dpi=300, height=10, width=16)
 
 T_cells_1 <- FindClusters(T_cells_1, resolution = 0.5)
-saveRDS(T_cells_1, file = "objects/tils_1_.5.rds")
+#M# annotation happens in vis on same object
+# saveRDS(T_cells_1, file = "objects/tils_1_.5.rds")
 T_cells_1 <- readRDS("objects/tils_1_.5.rds")
 ```
-
-
 
 Lineage identification
 ### a. T cells
@@ -162,6 +161,91 @@ T_cells_1.markers %>%
     top_n(n = 10, wt = avg_log2FC) -> top10_T
 DoHeatmap(T_cells_1, features = top10_T$gene) + NoLegend() + scale_fill_gradientn(colors = c("blue", "white", "red"))
 ggsave(file = "figures/data_prep_1/T cells markers - heatmap.png", dpi=300, width=12, height=20)
+```
+
+
+
+```{r}
+DefaultAssay(T_cells_1) <- "RNA"
+#M# take cd4 cells cluster(5) out
+clusters_to_keep <- setdiff(levels(Idents(T_cells_1)), "5")
+T_cells_1_excluded_5 <- subset(T_cells_1, idents = clusters_to_keep)
+# Check the clusters in the new subset
+table(Idents(T_cells_1_excluded_5))
+
+T_cells_1_excluded_5 = NormalizeData(T_cells_1_excluded_5, assay = "RNA",normalization.method = "LogNormalize", scale.factor = 10000) 
+T_cells_1_excluded_5 = FindVariableFeatures(T_cells_1_excluded_5, assay = "RNA", selection.method = "vst", nfeatures = 2000) 
+
+DefaultAssay(T_cells_1_excluded_5) <- "integrated" #M# is this needed here?
+
+T_cells_1_excluded_5 = ScaleData(T_cells_1_excluded_5, verbose = FALSE)
+T_cells_1_excluded_5 = RunPCA(T_cells_1_excluded_5, npcs = 30, verbose = FALSE)
+DimPlot(T_cells_1_excluded_5, reduction = "pca", group.by="Treatment", cols = c("#FDCDAC", "#B3E2CD"), pt.size=1.1)
+ElbowPlot(T_cells_1_excluded_5, ndims = 30) + theme_classic()
+ggsave(file = "figures/data_prep_1/elbow_plot_no_5.png", dpi=300, width=10, height=10)
+
+T_cells_1_excluded_5 <- FindNeighbors(T_cells_1_excluded_5, reduction = "pca", dims = 1:14) #M# choose ?
+T_cells_1_excluded_5 = RunTSNE(T_cells_1_excluded_5, dims = 1:14)
+#M# T_cells_1_excluded_5 = RunUMAP(T_cells_1_excluded_5, dims = 1:18)
+
+res_seq <- c(.05,.3, .35, .4, .45, .5)
+for(res in res_seq){
+  T_cells_1_excluded_5.res_test <- FindClusters(T_cells_1_excluded_5, resolution = res)
+  
+  res_tSNE  <- DimPlot(T_cells_1_excluded_5.res_test, reduction = "tsne",
+                       repel = T, label = TRUE, label.size = 5) +
+    theme(legend.position = "none") + 
+    plot_annotation(title = paste("Res of", res))
+  assign(paste0("tSNE_",res), res_tSNE)
+}
+
+tSNE_ls <- list(tSNE_0.05,tSNE_0.3,tSNE_0.35,tSNE_0.4,tSNE_0.45,tSNE_0.5)
+all_tSNE <- plot_grid(tSNE_0.05,tSNE_0.3,tSNE_0.35,tSNE_0.4,tSNE_0.45,tSNE_0.5, ncol = 3) 
+ggsave(all_tSNE,filename = 'figures/data_prep_1/tils_0_14_dim_res_test_no_5.png', dpi=300, height=10, width=16)
+
+T_cells_1_excluded_5 <- FindClusters(T_cells_1_excluded_5, resolution = 0.5)
+#M# annotation happens in vis on same object
+# saveRDS(T_cells_1_excluded_5, file = "objects/clus1_no_cd4_14_0.5.rds")
+T_cells_1_excluded_5 <- readRDS("objects/.rds")
+
+```
+
+
+Lineage identification
+### a. T cells
+```{r message=FALSE, warning=FALSE, cache= TRUE, fig.width=24, fig.height= 16}
+Ts <- c('Cd4', 'Cd8a', 'Cd3d','Cd3e','Cd3g',"PTPRC")
+Ts <- toupper(Ts)
+FeaturePlot(T_cells_1_excluded_5, features = Ts, order=TRUE,pt.size=1, reduction="tsne", ncol=3)
+ggsave(file = "figures/data_prep_1/features_T_no5.png", dpi=300, width=30, height=20)
+```
+ Finding differentially expressed features (cluster biomarkers)
+```{r message=FALSE, warning=FALSE, cache= TRUE, fig.width=12, fig.height= 28}
+T_cells_1_excluded_5.markers = FindAllMarkers(T_cells_1_excluded_5, only.pos = TRUE, min.pct = 0.25, logfc.threshold = 0.25, assay = "RNA")
+                    
+Top50Markers_T =
+  T_cells_1_excluded_5.markers %>%
+  group_by(cluster) %>%
+  top_n(n = 50, wt = avg_log2FC) %>%
+  as.data.frame %>% 
+  arrange(cluster,-avg_log2FC)
+write_csv(Top50Markers_T, "Excels/cluster1_analysis_DE genes_no_5.csv")
+
+DE_genes <- FindMarkers(T_cells_1_excluded_5, ident.1 = "Responder", ident.2 = "Non_Responder", group.by = "Treatment", assay = "RNA")
+DE_genes <- rownames_to_column(DE_genes, var = "gene")
+write_csv(DE_genes, "excels/DE_genes_res_nonRes_clus1_no_5.csv") 
+Top100Markers <- DE_genes %>% 
+top_n(n = 100, wt = avg_log2FC) %>% 
+as.data.frame
+write_csv(Top100Markers, "excels/Top100Markers_per_treatment_tils_1_.5_no_5.csv") 
+
+
+
+T_cells_1_excluded_5.markers %>%
+    group_by(cluster) %>%
+    top_n(n = 10, wt = avg_log2FC) -> top10_T
+DoHeatmap(T_cells_1_excluded_5, features = top10_T$gene) + NoLegend() + scale_fill_gradientn(colors = c("blue", "white", "red"))
+ggsave(file = "figures/data_prep_1/T cells markers - heatmap_no_5.png", dpi=300, width=12, height=20)
 ```
 
 
