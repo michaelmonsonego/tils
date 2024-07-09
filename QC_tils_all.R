@@ -132,9 +132,13 @@ features <- SelectIntegrationFeatures(object.list =seurat_object_sub_list)
 
 #integration
 immune.anchors <- FindIntegrationAnchors(object.list = seurat_object_sub_list, anchor.features = features)
+
+
+
 #======from this part the analysis was done on the server===== 
 # saveRDS(immune.anchors, file = "objects/immune.anchors.tils_all.rds") 
-immune.anchors <- readRDS("objects/immune.anchors.tils_all.rds")
+saveRDS(immune.anchors, file = "objects/immune.anchors.tils_all_1.rds") #M# 8.7.24 rerun
+immune.anchors <- readRDS("objects/immune.anchors.tils_all_1.rds")
 immune.combined <- IntegrateData(anchorset = immune.anchors)
 
 # specify that we will perform downstream analysis on the corrected data note that the
@@ -148,7 +152,7 @@ ep <- ElbowPlot(immune.combined, ndims = 30)
 ggsave(ep, filename = 'figures/integration/Elbow.integrate.jpg', dpi=300, height=7, width=12)
 immune.combined <- FindNeighbors(immune.combined, reduction = "pca", dims = 1:15) #M# 15 works for me
 immune.combined = RunTSNE(immune.combined, dims = 1:15)
-merged = RunUMAP(immune.combined, dims = 1:15)
+# immune.combined = RunUMAP(immune.combined, dims = 1:15)
 
 res_seq <- c(.25,.3, .35, .4, .45, .5)
 for(res in res_seq){
