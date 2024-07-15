@@ -206,7 +206,7 @@ ggsave(all_tSNE,filename = 'figures/data_prep_1/tils_0_14_dim_res_test_no_5.png'
 T_cells_1_excluded_5 <- FindClusters(T_cells_1_excluded_5, resolution = 0.5)
 #M# annotation happens in vis on same object
 # saveRDS(T_cells_1_excluded_5, file = "objects/clus1_no_cd4_14_0.5.rds")
-T_cells_1_excluded_5 <- readRDS("objects/.rds")
+T_cells_1_excluded_5 <- readRDS("objects/clus1_no_cd4_14_0.5.rds")
 
 ```
 

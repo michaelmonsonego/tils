@@ -33,53 +33,6 @@ use_python((r"(C:\Users\user\AppData\Local\Programs\Python\Python311)"), require
 source("//asafmadilabfs/asafmadilab$/michael/Madi lab/Signature_propo/signature_utils.R")
 source('D:/Michael/git_check/3-groups/sig_genes.R')
 
-
-#M# clus 1 sigs
-clus1 = readRDS("objects/tils_1_.5.rds")
-
-#M# sig up genes from paper
-persistance_up <- c('KLRB1','ZNF683','ITGB1','C1orf162','IL7R','LIME1', "S1PR1", "TIMP1", "C10orf54", "TBXAS1", "KLF2", "LTB", "UBXN11", "CD40LG", "AMICA1", "FAM65B", "VCL", "RASA3", "SCML4", "MYC", "P2RY8")
-persistance_up_sig <- make_signature(clus1, persistance_up,idents = c("Responder","Non_Responder"), format_flag = FALSE)
-persistance_up_sig_obj <- persistance_up_sig[[1]]
-persistance_up_sig[[3]]
-ggsave("figures/clus1/co_stim_sig_box.png", width = 20, height = 20, units = "cm")
-persistance_up_sig[[2]]
-ggsave("figures/clus1/co_stim_sig_tsne.png", width = 20, height = 20, units = "cm")
-
-
-#M# test dor addmodulescore() function from vis.rmd
-# violin plot per treatment
-VlnPlot(clus1, features = "Tregs1", group.by = "Treatment", pt.size = 0)+theme_classic()+theme(axis.text.x = element_text(angle = 45, hjust=1), axis.title.x = element_blank())+
-  geom_boxplot(alpha=0.3,show.legend = FALSE)
-ggsave("figures/clus1/violin_sig_co_stimulatory_by_treatment.png", width = 20, height = 20, units = "cm")
-
-# violin plot per treatment per cluster
-gglist <-  list()
-name <- "persistance up regulated"
-
-DefaultAssay(clus1) <- "RNA" 
-
-for(clus in levels(clus1$seurat_clusters)){
-  print(clus)
-  obj <- subset(clus1, subset = seurat_clusters == clus)
-  p <- SignatureScore(obj, 'Tregs1') + ggtitle(obj@active.ident)
-  gglist[[(as.numeric(clus)+1)]] <- p
-}
-cowplot::plot_grid(plotlist = gglist, ncol = 4, nrow = 2) + 
-  ggtitle(name)
-ggsave(file = "figures/clus1/persistance_up_sig_per_cluster_treatment.png", dpi=300, width=16, height=10)
-
-DefaultAssay(clus1) <- "integrated"
-
-
-
-
-
-
-
-
-
-
 # Signature score function
 SignatureScore <- function(object, name){
   merged_responder <- subset(object, subset = Treatment == "Responder")
@@ -115,6 +68,222 @@ SignatureScore <- function(object, name){
   return (p)
   
 }
+
+#M# clus 1 sigs
+clus1_with_sigs = readRDS("objects/clus1_with_sigs.rds")
+clus_2_with_sigs <- readRDS("objects/tils_2_with_sigs.rds")
+
+#M# sig up genes from paper
+persistance_up <- c('KLRB1','ZNF683','ITGB1','C1orf162','IL7R','LIME1', "S1PR1", "TIMP1", "C10orf54", "TBXAS1", "KLF2", "LTB", "UBXN11", "CD40LG", "AMICA1", "FAM65B", "VCL", "RASA3", "SCML4", "MYC", "P2RY8")
+persistance_up_sig <- make_signature(clus1_with_sigs, persistance_up,idents = c("Responder","Non_Responder"), format_flag = FALSE)
+persistance_up_sig_obj <- persistance_up_sig[[1]]
+persistance_up_sig[[3]]
+ggsave("figures/clus1_with_sigs/co_stim_sig_box.png", width = 20, height = 20, units = "cm")
+persistance_up_sig[[2]]
+ggsave("figures/clus1_with_sigs/co_stim_sig_tsne.png", width = 20, height = 20, units = "cm")
+
+
+#M# test dor addmodulescore() function from vis.rmd
+# violin plot per treatment
+VlnPlot(clus1_with_sigs, features = "Tregs1", group.by = "Treatment", pt.size = 0)+theme_classic()+theme(axis.text.x = element_text(angle = 45, hjust=1), axis.title.x = element_blank())+
+  geom_boxplot(alpha=0.3,show.legend = FALSE)
+ggsave("figures/clus1_with_sigs/violin_sig_co_stimulatory_by_treatment.png", width = 20, height = 20, units = "cm")
+
+# violin plot per treatment per cluster
+gglist <-  list()
+name <- "il21"
+
+DefaultAssay(clus1_with_sigs) <- "RNA" 
+
+for(clus in levels(clus1_with_sigs$seurat_clusters)){
+  print(clus)
+  obj <- subset(clus1_with_sigs, subset = seurat_clusters == clus)
+  p <- SignatureScore(obj, 'il21') + ggtitle(obj@active.ident)
+  gglist[[(as.numeric(clus)+1)]] <- p
+}
+cowplot::plot_grid(plotlist = gglist, ncol = 4, nrow = 2) + 
+  ggtitle(name)
+ggsave(file = "figures/clus1/il2_sig_per_cluster_treatment.png", dpi=300, width=16, height=10)
+
+DefaultAssay(clus1_with_sigs) <- "integrated"
+
+# violin plot per treatment per cluster
+gglist <-  list()
+name <- "il2_r1"
+
+DefaultAssay(clus1_with_sigs) <- "RNA" 
+
+for(clus in levels(clus1_with_sigs$seurat_clusters)){
+  print(clus)
+  obj <- subset(clus1_with_sigs, subset = seurat_clusters == clus)
+  p <- SignatureScore(obj, 'il2_r1') + ggtitle(obj@active.ident)
+  gglist[[(as.numeric(clus)+1)]] <- p
+}
+cowplot::plot_grid(plotlist = gglist, ncol = 4, nrow = 2) + 
+  ggtitle(name)
+ggsave(file = "figures/clus1/il2r_sig_per_cluster_treatment.png", dpi=300, width=16, height=10)
+
+
+# ____
+
+# violin plot per treatment per cluster
+gglist <-  list()
+name <- "persistance_up1"
+
+DefaultAssay(clus1_with_sigs) <- "RNA" 
+
+for(clus in levels(clus1_with_sigs$seurat_clusters)){
+  print(clus)
+  obj <- subset(clus1_with_sigs, subset = seurat_clusters == clus)
+  p <- SignatureScore(obj, 'persistance_up1') + ggtitle(obj@active.ident)
+  gglist[[(as.numeric(clus)+1)]] <- p
+}
+cowplot::plot_grid(plotlist = gglist, ncol = 4, nrow = 2) + 
+  ggtitle(name)
+ggsave(file = "figures/clus1/persistance_up_sig_per_cluster_treatment.png", dpi=300, width=16, height=10)
+
+
+# ____
+
+# violin plot per treatment per cluster
+gglist <-  list()
+name <- "CD8_memory1"
+
+DefaultAssay(clus1_with_sigs) <- "RNA" 
+
+for(clus in levels(clus1_with_sigs$seurat_clusters)){
+  print(clus)
+  obj <- subset(clus1_with_sigs, subset = seurat_clusters == clus)
+  p <- SignatureScore(obj, 'CD8_memory1') + ggtitle(obj@active.ident)
+  gglist[[(as.numeric(clus)+1)]] <- p
+}
+cowplot::plot_grid(plotlist = gglist, ncol = 4, nrow = 2) + 
+  ggtitle(name)
+ggsave(file = "figures/clus1/CD8_memory_sig_per_cluster_treatment.png", dpi=300, width=16, height=10)
+
+
+# ___
+
+# violin plot per treatment per cluster
+gglist <-  list()
+name <- "effector_memory1"
+
+DefaultAssay(clus1_with_sigs) <- "RNA" 
+
+for(clus in levels(clus1_with_sigs$seurat_clusters)){
+  print(clus)
+  obj <- subset(clus1_with_sigs, subset = seurat_clusters == clus)
+  p <- SignatureScore(obj, 'effector_memory1') + ggtitle(obj@active.ident)
+  gglist[[(as.numeric(clus)+1)]] <- p
+}
+cowplot::plot_grid(plotlist = gglist, ncol = 4, nrow = 2) + 
+  ggtitle(name)
+ggsave(file = "figures/clus1/effector_memory_sig_per_cluster_treatment.png", dpi=300, width=16, height=10)
+
+
+
+DefaultAssay(clus1_with_sigs) <- "integrated"
+
+
+# ____
+
+#M# same for cluster 2 : 
+
+# violin plot per treatment per cluster
+gglist <-  list()
+name <- "il21"
+
+DefaultAssay(clus_2_with_sigs) <- "RNA" 
+
+for(clus in levels(clus_2_with_sigs$seurat_clusters)){
+  print(clus)
+  obj <- subset(clus_2_with_sigs, subset = seurat_clusters == clus)
+  p <- SignatureScore(obj, 'il21') + ggtitle(obj@active.ident)
+  gglist[[(as.numeric(clus)+1)]] <- p
+}
+cowplot::plot_grid(plotlist = gglist, ncol = 4, nrow = 2) + 
+  ggtitle(name)
+ggsave(file = "figures/clus2/il2_sig_per_cluster_treatment.png", dpi=300, width=16, height=10)
+
+DefaultAssay(clus_2_with_sigs) <- "integrated"
+
+# violin plot per treatment per cluster
+gglist <-  list()
+name <- "il2_r1"
+
+DefaultAssay(clus_2_with_sigs) <- "RNA" 
+
+for(clus in levels(clus_2_with_sigs$seurat_clusters)){
+  print(clus)
+  obj <- subset(clus_2_with_sigs, subset = seurat_clusters == clus)
+  p <- SignatureScore(obj, 'il2_r1') + ggtitle(obj@active.ident)
+  gglist[[(as.numeric(clus)+1)]] <- p
+}
+cowplot::plot_grid(plotlist = gglist, ncol = 4, nrow = 2) + 
+  ggtitle(name)
+ggsave(file = "figures/clus2/il2r_sig_per_cluster_treatment.png", dpi=300, width=16, height=10)
+
+
+# ____
+
+# violin plot per treatment per cluster
+gglist <-  list()
+name <- "persistance_up1"
+
+DefaultAssay(clus_2_with_sigs) <- "RNA" 
+
+for(clus in levels(clus_2_with_sigs$seurat_clusters)){
+  print(clus)
+  obj <- subset(clus_2_with_sigs, subset = seurat_clusters == clus)
+  p <- SignatureScore(obj, 'persistance_up1') + ggtitle(obj@active.ident)
+  gglist[[(as.numeric(clus)+1)]] <- p
+}
+cowplot::plot_grid(plotlist = gglist, ncol = 4, nrow = 2) + 
+  ggtitle(name)
+ggsave(file = "figures/clus2/persistance_up_sig_per_cluster_treatment.png", dpi=300, width=16, height=10)
+
+
+# ____
+
+# violin plot per treatment per cluster
+gglist <-  list()
+name <- "CD8_memory1"
+
+DefaultAssay(clus_2_with_sigs) <- "RNA" 
+
+for(clus in levels(clus_2_with_sigs$seurat_clusters)){
+  print(clus)
+  obj <- subset(clus_2_with_sigs, subset = seurat_clusters == clus)
+  p <- SignatureScore(obj, 'CD8_memory1') + ggtitle(obj@active.ident)
+  gglist[[(as.numeric(clus)+1)]] <- p
+}
+cowplot::plot_grid(plotlist = gglist, ncol = 4, nrow = 2) + 
+  ggtitle(name)
+ggsave(file = "figures/clus2/CD8_memory_sig_per_cluster_treatment.png", dpi=300, width=16, height=10)
+
+
+# ___
+
+# violin plot per treatment per cluster
+gglist <-  list()
+name <- "effector_memory1"
+
+DefaultAssay(clus_2_with_sigs) <- "RNA" 
+
+for(clus in levels(clus_2_with_sigs$seurat_clusters)){
+  print(clus)
+  obj <- subset(clus_2_with_sigs, subset = seurat_clusters == clus)
+  p <- SignatureScore(obj, 'effector_memory1') + ggtitle(obj@active.ident)
+  gglist[[(as.numeric(clus)+1)]] <- p
+}
+cowplot::plot_grid(plotlist = gglist, ncol = 4, nrow = 2) + 
+  ggtitle(name)
+ggsave(file = "figures/clus2/effector_memory_sig_per_cluster_treatment.png", dpi=300, width=16, height=10)
+
+
+
+
+
 
 
 
