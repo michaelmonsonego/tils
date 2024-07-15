@@ -492,6 +492,21 @@ geom_boxplot(alpha=0.3,show.legend = FALSE)
 
 ### h. T cells features signatures 
 ```{r fig.height=3, fig.width=3, message=FALSE, warning=FALSE}
+il2 <- list(c("Shc1","Stat5b","Lck","Stat5a","Jak3","Syk","Csnk2a1","Elk1","Grb2","Hras","Il2","Il2ra","Il2rb","Map2k1","Sos1","Csnk2a2","Fos","Jun","Mapk3","Il2rg","Mapk8","Raf1","Jak1"))
+clus1 = AddModuleScore(object = clus1, features = il2, name = "il2", assay = "RNA")
+a <- FeaturePlot(object = clus1, features = "il21", reduction = "tsne", cols=c("grey","grey","#e46467", "#b33336", "#A73033"))+labs(title = "il2", subtitle = "Il2,Il2ra,Il2rb..")+ theme(plot.subtitle = element_text(hjust = 0.5))
+a
+ggsave(file = "figures/clus1/il2.png", dpi=300, width=5, height=5)
+
+
+il2_r <- list(c("Bad", "Bcl2", "Cbl", "Cflar", "Crkl", "E2f1", "Fas", "Fasl",	"Fos", "Grb2", "Hras", "Ikzf3", "Il2ra", "Il2rb", "Il2rg", "Irs1", "Jak1", "Jak3", "Mapk1", "Mapk3", "Myc", "Nmi", "Pik3ca", "Pik3cg", "Pik3r1", "Ptpn6", "Raf1", "Rps6kb1", "Shc1", "Socs1", "Socs3", "Sos1", "Stat5a", "Stat5b", "Syk"))
+clus1 = AddModuleScore(object = clus1, features = il2_r, name = "il_R_2", assay = "RNA")
+a <- FeaturePlot(object = clus1, features = "il2_R_1", reduction = "tsne", cols=c("grey","grey","#e46467", "#b33336", "#A73033"))+labs(title = "il2_R", subtitle = "Il2ra, Il2rb, Il2rg...")+ theme(plot.subtitle = element_text(hjust = 0.5))
+a
+ggsave(file = "figures/clus1/il2_R_.png", dpi=300, width=5, height=5)
+
+
+
 persistance_up <- list(c('KLRB1','ZNF683','ITGB1','IL7R','LIME1', "S1PR1", "TIMP1", "TBXAS1", "KLF2", "LTB", "UBXN11", "CD40LG", "VCL", "RASA3", "SCML4", "MYC", "P2RY8"))
 clus1 = AddModuleScore(object = clus1, features = persistance_up, name = "persistance_up", assay = "RNA")
 a <- FeaturePlot(object = clus1, features = "persistance_up1", reduction = "tsne", cols=c("grey","grey","#e46467", "#b33336", "#A73033"))+labs(title = "persistance_up", subtitle = "KLRB1, ZNF683, ITGB1..")+ theme(plot.subtitle = element_text(hjust = 0.5))
