@@ -29,9 +29,9 @@ library(glue)
 setwd("D:/Michael/git_check/tils")
 # setwd("C:/Users/michael monsonego/Documents/tils") #M# update between computers(git)
 
-use_python((r"(C:\Users\user\AppData\Local\Programs\Python\Python311)"), required = TRUE)
-source("//asafmadilabfs/asafmadilab$/michael/Madi lab/Signature_propo/signature_utils.R")
-source('D:/Michael/git_check/3-groups/sig_genes.R')
+# use_python((r"(C:\Users\user\AppData\Local\Programs\Python\Python311)"), required = TRUE)
+# source("//asafmadilabfs/asafmadilab$/michael/Madi lab/Signature_propo/signature_utils.R")
+# source('D:/Michael/git_check/3-groups/sig_genes.R')
 
 # Signature score function
 SignatureScore <- function(object, name){

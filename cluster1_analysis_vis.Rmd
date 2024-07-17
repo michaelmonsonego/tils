@@ -487,6 +487,7 @@ geom_boxplot(alpha=0.3,show.legend = FALSE)
 
 ### h. T cells features signatures 
 ```{r fig.height=3, fig.width=3, message=FALSE, warning=FALSE}
+
 il2 <- list(c("Shc1","Stat5b","Lck","Stat5a","Jak3","Syk","Csnk2a1","Elk1","Grb2","Hras","Il2","Il2ra","Il2rb","Map2k1","Sos1","Csnk2a2","Fos","Jun","Mapk3","Il2rg","Mapk8","Raf1","Jak1"))
 clus1 = AddModuleScore(object = clus1, features = il2, name = "il2", assay = "RNA")
 a <- FeaturePlot(object = clus1, features = "il21", reduction = "tsne", cols=c("grey","grey","#e46467", "#b33336", "#A73033"))+labs(title = "il2", subtitle = "Il2,Il2ra,Il2rb..")+ theme(plot.subtitle = element_text(hjust = 0.5))
