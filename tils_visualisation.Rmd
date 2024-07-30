@@ -22,6 +22,8 @@ knitr::opts_chunk$set(message = FALSE)
 ```
 ## 1. number of cells per patient + tSNE plot
 ```{r message=FALSE, warning=FALSE, fig.height= 12, cache=F}
+
+
 library(dplyr)
 library(Seurat)
 library(patchwork)
@@ -63,7 +65,7 @@ table(T_cells$orig.ident)["N3"] #
 table(T_cells$orig.ident)["N4"] #  
 table(T_cells$Treatment)
 
-DimPlot(T_cells , reduction = "tsne", label= F, pt.size=0.5, label.size = 10)
+DimPlot(T_cells , reduction = "tsne", label= T, pt.size=0.5, label.size = 10)
 ggsave(file = "figures/Tcells/tsne.png", dpi=300, width=15, height=10)
 
 TSNEPlot(T_cells, group.by ="Treatment", cols= c("#1f77b4","#ff7f0e"), pt.size=0.5)+
@@ -345,15 +347,15 @@ FeaturePlot(T_cells, features = c("GZMB","PRF1","IFNG","MKI67","GZMC","GZMA","KL
 ggsave(file = "figures/Tcells/features_T_effector.png", dpi=300, width=8, height=10)
 ```
 ```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height=20}
-VlnPlot(T_cells, features = c("GZMB","PRF1","IFNG","IL7R"), assay = "RNA", stack=TRUE, flip= TRUE, split.by = "Treatment")+theme(axis.text.y =element_text(size=6))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12)) +
+VlnPlot(T_cells, features = c("GZMB","PRF1","IFNG","TNF"), assay = "RNA", stack=TRUE, flip= TRUE, split.by = "Treatment")+theme(axis.text.y =element_text(size=6))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12)) +
 geom_boxplot(alpha=0.3,show.legend = FALSE)
 ggsave(file = "figures/Tcells/Vln_T_effector_cluster_by_treatment_1.png", dpi=300, width=12, height=10, limitsize=FALSE)
 
-VlnPlot(T_cells, features = c("GZMB","PRF1","IFNG","IL7R"), assay = "RNA", stack=TRUE, flip= TRUE, group.by = "Treatment", fill.by ="ident")+theme(axis.text.y =element_text(size=6))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12)) +
+VlnPlot(T_cells, features = c("GZMB","PRF1","IFNG","TNF"), assay = "RNA", stack=TRUE, flip= TRUE, group.by = "Treatment", fill.by ="ident")+theme(axis.text.y =element_text(size=6))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12)) +
 geom_boxplot(alpha=0.3,show.legend = FALSE)
 ggsave(file = "figures/Tcells/Vln_T_effector_by_treatment_1.png", dpi=300, width=6, height=10, limitsize=FALSE)
 
-VlnPlot(T_cells, features = c("GZMB","PRF1","IFNG","IL7R"), assay = "RNA", stack=TRUE, flip= TRUE, fill.by = "ident")+theme(axis.text.y =element_text(size=6))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12)) +
+VlnPlot(T_cells, features = c("GZMB","PRF1","IFNG","TNF"), assay = "RNA", stack=TRUE, flip= TRUE, fill.by = "ident")+theme(axis.text.y =element_text(size=6))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12)) +
 geom_boxplot(alpha=0.3,show.legend = FALSE)
 ggsave(file = "figures/Tcells/Vln_T_effector_by_cluster_1.png", dpi=300, width=6, height=10, limitsize=FALSE)
 
