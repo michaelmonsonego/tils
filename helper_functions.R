@@ -191,3 +191,38 @@ PRF1
 capitalized_genes <- capitalize_genes(genes)
 cat(capitalized_genes)
 
+
+# make list of genes into vector ------------------------------------------
+#M# make list of genes into vector
+gene_list <- "CD3G
+CLN8
+CRIP1
+CXCR4
+GAPDH
+GNLY
+ISG15
+LBH
+LSP1
+MT-CO1
+MYL12A
+RASGEF1B
+SRGN
+TNFAIP3
+TSC22D3
+VPS37B
+YPEL5
+TMSB10
+AIMP1
+IL2RB
+PIM1
+SSH2
+IFRD1
+MIER1
+"
+gene_list <- strsplit(gene_list, "\n")[[1]]
+gene_list <- trimws(gene_list)
+gene_list[2]
+
+
+
+

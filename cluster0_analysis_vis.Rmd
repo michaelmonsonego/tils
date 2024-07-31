@@ -23,6 +23,8 @@ knitr::opts_chunk$set(message = FALSE)
 ```
 ## 1. tSNE plot
 ```{r message=FALSE, warning=FALSE, fig.height= 6, fig.width=8}
+
+
 library(dplyr)
 library(Seurat)
 library(patchwork)
@@ -354,6 +356,14 @@ VlnPlot(cd4_cells, features = c("PDCD1","HAVCR2","LAG3","TIGIT","TNFRSF4","TNFRS
 geom_boxplot(alpha=0.3,show.legend = FALSE)
  ggsave(filename = "vln_activation_exhastion_cluster_by_treatment_1.png" , path = "figures/cd4_cells/", dpi=300, width=12, height=10)
 
+ #M# trying to fix plot visualise
+ VlnPlot(cd4_cells, features = c("HAVCR2"), assay = "RNA", flip= TRUE, split.by = "Treatment")+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) +
+  theme(
+    axis.text.y = element_text(size = 24, face = "italic"),
+    axis.title.y = element_text(size = 20, face = "bold"),
+    axis.ticks.y = element_line(size = 0.5))+
+geom_boxplot(alpha=0.3,show.legend = FALSE)
+ 
 VlnPlot(cd4_cells, features = c("PDCD1","HAVCR2","LAG3","TIGIT","TNFRSF4","TNFRSF9"), assay = "RNA", stack=TRUE, flip= TRUE, group.by = "Treatment", fill.by ="ident")+theme(axis.text.y =element_text(size=6))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
 geom_boxplot(alpha=0.3,show.legend = FALSE)
 ggsave(file = "figures/cd4_cells/vln_activation_exhastion_by_treatment_1.png", dpi=300, width=4, height=10)

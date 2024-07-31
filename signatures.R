@@ -33,6 +33,262 @@ setwd("D:/Michael/git_check/tils")
 # source("//asafmadilabfs/asafmadilab$/michael/Madi lab/Signature_propo/signature_utils.R")
 # source('D:/Michael/git_check/3-groups/sig_genes.R')
 
+
+
+
+
+# telomere signature ------------------------------------------------------
+clus1 = readRDS("objects/clus1_no_cd4_14_0.5.rds")
+clus2 = readRDS("objects/tils_2.rds")
+
+#M# downregulated in cd8-------------
+down_cd8 <- "ADTRP
+AIM1
+BIRC3
+CCNG1
+DUSP4
+EEF1A1
+EIF1
+FTH1
+GIMAP5
+HINT1
+KLF6
+LINC00152
+PDCD4
+PIM3
+PPP6C
+RASA3
+RPL12
+RPL13
+RPL29
+RPL39
+RPS18
+RPS8
+SESN3
+SMS
+TMEM66
+ZFP36
+"
+
+down_cd8 <- strsplit(down_cd8, "\n")[[1]]
+down_cd8 <- trimws(down_cd8)
+
+stem_cd8 <- list(down_cd8)
+clus2 = AddModuleScore(object = clus2, features = stem_cd8, name = "stem_cd8", assay = "RNA")
+a <- FeaturePlot(object = clus2, features = "stem_cd81", reduction = "tsne", cols=c("grey","grey","#e46467", "#b33336", "#A73033"))+labs(title = "stem_cd8", subtitle = "stem_cd8")+ theme(plot.subtitle = element_text(hjust = 0.5))
+a
+ggsave(file = "figures/signatures/clus_2_down_stem_cd8.png", dpi=300, width=5, height=5)
+
+stem_cd8 <- list(down_cd8)
+clus1 = AddModuleScore(object = clus1, features = stem_cd8, name = "stem_cd8", assay = "RNA")
+a <- FeaturePlot(object = clus1, features = "stem_cd81", reduction = "tsne", cols=c("grey","grey","#e46467", "#b33336", "#A73033"))+labs(title = "stem_cd8", subtitle = "stem_cd8")+ theme(plot.subtitle = element_text(hjust = 0.5))
+a
+ggsave(file = "figures/signatures/clus_1_down_stem_cd8.png", dpi=300, width=5, height=5)
+
+
+gglist <-  list()
+name <- "stem_cd81"
+DefaultAssay(clus1) <- "RNA" 
+for(clus in levels(clus1$seurat_clusters)){
+  print(clus)
+  obj <- subset(clus1, subset = seurat_clusters == clus)
+  p <- SignatureScore(obj, 'stem_cd81') + ggtitle(obj@active.ident)
+  gglist[[(as.numeric(clus)+1)]] <- p
+}
+cowplot::plot_grid(plotlist = gglist, ncol = 4, nrow = 2) + 
+  ggtitle(name)
+ggsave(file = "figures/signatures/stem_cd8_clus_1_down_vln.png", dpi=300, width=16, height=10)
+
+gglist <-  list()
+name <- "stem_cd81"
+DefaultAssay(clus2) <- "RNA" 
+for(clus in levels(clus2$seurat_clusters)){
+  print(clus)
+  obj <- subset(clus2, subset = seurat_clusters == clus)
+  p <- SignatureScore(obj, 'stem_cd81') + ggtitle(obj@active.ident)
+  gglist[[(as.numeric(clus)+1)]] <- p
+}
+cowplot::plot_grid(plotlist = gglist, ncol = 4, nrow = 2) + 
+  ggtitle(name)
+ggsave(file = "figures/signatures/stem_cd8_clus_2_down_vln.png", dpi=300, width=16, height=10)
+
+
+
+
+
+#M# upregulated in cd8 ---------
+DNAJA1 #M# memory cd8 DE gene for telomere legth
+
+up_cd8 <- "CORO1A
+DBI
+DNAJA1
+FGFBP2
+GADD45B
+HSPH1
+IFITM2
+ITGB1BP1
+ITGB2
+NDUFA12
+NDUFB7
+NR4A2
+PAIP2
+PTP4A1
+RANBP2
+RPS26
+RSRC2
+SKAP1
+SRP14
+SSBP4
+TBC1D10C
+TMBIM1
+TMEM59
+TMSB4X
+TRA2B
+VAMP2
+ZNF331
+"
+up_cd8 <- strsplit(up_cd8, "\n")[[1]]
+up_cd8 <- trimws(up_cd8)
+
+stem_cd8 <- list(up_cd8)
+clus2 = AddModuleScore(object = clus2, features = stem_cd8, name = "stem_cd8", assay = "RNA")
+a <- FeaturePlot(object = clus2, features = "stem_cd81", reduction = "tsne", cols=c("grey","grey","#e46467", "#b33336", "#A73033"))+labs(title = "stem_cd8", subtitle = "stem_cd8")+ theme(plot.subtitle = element_text(hjust = 0.5))
+a
+ggsave(file = "figures/signatures/clus_2_up_stem_cd8.png", dpi=300, width=5, height=5)
+
+stem_cd8 <- list(up_cd8)
+clus1 = AddModuleScore(object = clus1, features = stem_cd8, name = "stem_cd8", assay = "RNA")
+a <- FeaturePlot(object = clus1, features = "stem_cd81", reduction = "tsne", cols=c("grey","grey","#e46467", "#b33336", "#A73033"))+labs(title = "stem_cd8", subtitle = "stem_cd8")+ theme(plot.subtitle = element_text(hjust = 0.5))
+a
+ggsave(file = "figures/signatures/clus_1_up_stem_cd8.png", dpi=300, width=5, height=5)
+
+gglist <-  list()
+name <- "stem_cd81"
+DefaultAssay(clus2) <- "RNA" 
+for(clus in levels(clus2$seurat_clusters)){
+  print(clus)
+  obj <- subset(clus2, subset = seurat_clusters == clus)
+  p <- SignatureScore(obj, 'stem_cd81') + ggtitle(obj@active.ident)
+  gglist[[(as.numeric(clus)+1)]] <- p
+}
+cowplot::plot_grid(plotlist = gglist, ncol = 4, nrow = 2) + 
+  ggtitle(name)
+ggsave(file = "figures/signatures/stem_cd8_clus_2_up_vln.png", dpi=300, width=16, height=10)
+
+gglist <-  list()
+name <- "stem_cd81"
+DefaultAssay(clus1) <- "RNA" 
+for(clus in levels(clus1$seurat_clusters)){
+  print(clus)
+  obj <- subset(clus1, subset = seurat_clusters == clus)
+  p <- SignatureScore(obj, 'stem_cd81') + ggtitle(obj@active.ident)
+  gglist[[(as.numeric(clus)+1)]] <- p
+}
+cowplot::plot_grid(plotlist = gglist, ncol = 4, nrow = 2) + 
+  ggtitle(name)
+ggsave(file = "figures/signatures/stem_cd8_clus_1_up_vln.png", dpi=300, width=16, height=10)
+
+
+
+#M# cd4 upregulated genes ---------
+cd4_cells = readRDS("objects/tils_0_.35.rds")
+
+up_cd4_gene_list <- "CD3G
+CLN8
+CRIP1
+CXCR4
+GAPDH
+GNLY
+ISG15
+LBH
+LSP1
+MT-CO1
+MYL12A
+RASGEF1B
+SRGN
+TNFAIP3
+TSC22D3
+VPS37B
+YPEL5
+TMSB10
+IFRD1
+MIER1
+"
+up_cd4_gene_list <- strsplit(up_cd4_gene_list, "\n")[[1]]
+up_cd4_gene_list <- trimws(up_cd4_gene_list)
+
+
+stem_cd4 <- list(up_cd4_gene_list)
+cd4_cells = AddModuleScore(object = cd4_cells, features = stem_cd4, name = "stem_cd4", assay = "RNA")
+a <- FeaturePlot(object = cd4_cells, features = "stem_cd41", reduction = "tsne", cols=c("grey","grey","#e46467", "#b33336", "#A73033"))+labs(title = "stem_cd4", subtitle = "stem_cd4")+ theme(plot.subtitle = element_text(hjust = 0.5))
+a
+ggsave(file = "figures/signatures/cd4_stem_up.png", dpi=300, width=5, height=5)
+
+
+gglist <-  list()
+name <- "stem_cd41"
+DefaultAssay(cd4_cells) <- "RNA" 
+for(clus in levels(cd4_cells$seurat_clusters)){
+  print(clus)
+  obj <- subset(cd4_cells, subset = seurat_clusters == clus)
+  p <- SignatureScore(obj, 'stem_cd41') + ggtitle(obj@active.ident)
+  gglist[[(as.numeric(clus)+1)]] <- p
+}
+cowplot::plot_grid(plotlist = gglist, ncol = 4, nrow = 2) + 
+  ggtitle(name)
+ggsave(file = "figures/signatures/stem_cd4_up_vln.png", dpi=300, width=16, height=10)
+
+
+#down cd4 -----------
+down_cd4 <- "ARID5A
+BATF
+BAZ1A
+CCR7
+CMSS1
+DDX21
+GIMAP4
+GIMAP7
+IL7R
+MTHFD2
+MYC
+NAP1L1
+PABPC1
+PIM2
+PSMC3
+RPL36
+RPS29
+SELL
+SOCS3
+AIMP1
+IL2RB
+PIM1
+SSH2
+"
+down_cd4 <- strsplit(down_cd4, "\n")[[1]]
+down_cd4 <- trimws(down_cd4)
+
+
+stem_cd4 <- list(down_cd4)
+cd4_cells = AddModuleScore(object = cd4_cells, features = stem_cd4, name = "stem_cd4", assay = "RNA")
+a <- FeaturePlot(object = cd4_cells, features = "stem_cd41", reduction = "tsne", cols=c("grey","grey","#e46467", "#b33336", "#A73033"))+labs(title = "stem_cd4", subtitle = "stem_cd4")+ theme(plot.subtitle = element_text(hjust = 0.5))
+a
+ggsave(file = "figures/signatures/cd4_stem_down.png", dpi=300, width=5, height=5)
+
+gglist <-  list()
+name <- "stem_cd41"
+DefaultAssay(cd4_cells) <- "RNA" 
+for(clus in levels(cd4_cells$seurat_clusters)){
+  print(clus)
+  obj <- subset(cd4_cells, subset = seurat_clusters == clus)
+  p <- SignatureScore(obj, 'stem_cd41') + ggtitle(obj@active.ident)
+  gglist[[(as.numeric(clus)+1)]] <- p
+}
+cowplot::plot_grid(plotlist = gglist, ncol = 4, nrow = 2) + 
+  ggtitle(name)
+ggsave(file = "figures/signatures/stem_cd4_down_vln.png", dpi=300, width=16, height=10)
+
+
+# signature score function ------------------------------------------------
 # Signature score function
 SignatureScore <- function(object, name){
   merged_responder <- subset(object, subset = Treatment == "Responder")
@@ -69,6 +325,42 @@ SignatureScore <- function(object, name){
   
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# section -----------------------------------------------------------------
 #M# clus 1 sigs
 clus1_with_sigs = readRDS("objects/clus1_with_sigs.rds")
 clus_2_with_sigs <- readRDS("objects/tils_2_with_sigs.rds")
@@ -279,6 +571,9 @@ for(clus in levels(clus_2_with_sigs$seurat_clusters)){
 cowplot::plot_grid(plotlist = gglist, ncol = 4, nrow = 2) + 
   ggtitle(name)
 ggsave(file = "figures/clus2/effector_memory_sig_per_cluster_treatment.png", dpi=300, width=16, height=10)
+
+
+# another section ---------------------------------------------------------
 
 
 
