@@ -224,5 +224,42 @@ gene_list <- trimws(gene_list)
 gene_list[2]
 
 
+# figures for presentation ------------------------------------------------
+
+
+
+
+VlnPlot(
+  T_cells, 
+  features = c("HAVCR2", "LAG3", "TIGIT", "TOX"), 
+  assay = "RNA", 
+  stack = TRUE, 
+  flip = TRUE, 
+  split.by = "Treatment"
+) + 
+  theme_classic() +
+  theme(
+    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.title.x = element_blank(),
+    axis.text.y = element_text(size = 24, face = "italic"),
+    axis.title.y = element_text(size = 20, face = "bold"),
+    axis.ticks.y = element_line(size = 0.5),
+    strip.text.y = element_text(angle = 0, size = 16, face = "bold")
+    ) +
+  geom_boxplot(alpha = 0.3, show.legend = FALSE)
+ggsave(filename = "vln_activation_exhastion_cluster_by_treatment_1.png" , path = "figures/Tcells/", dpi=300, width=12, height=10)
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
