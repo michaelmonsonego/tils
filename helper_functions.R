@@ -332,7 +332,7 @@ ggsave(file = "figures/Tcells/Vln_T_effector_by_treatment_1.png", dpi=300, width
 # naive markers
 VlnPlot(
   T_cells, 
-  features = c("IL7R","CD44"), 
+  features = c("IL7R","CD44","CD69","ENTPD1"), 
   assay = "RNA", 
   stack = TRUE, 
   flip = TRUE, 
@@ -353,7 +353,7 @@ ggsave(file = "figures/Tcells/Vln_T_naive_cluster_by_treatment_1.png", dpi=300, 
 
 VlnPlot(
   T_cells,
-  features = c("IL7R","CD44"),
+  features = c("IL7R","CD44","CD69","ENTPD1"),
   assay = "RNA",
   stack=TRUE,
   flip= TRUE,
@@ -467,7 +467,7 @@ ggsave(file = "figures/cd4_cells/Vln_T_effector_by_treatment_1.png", dpi=300, wi
 # naive markers
 VlnPlot(
   cd4_cells, 
-  features = c("IL7R","CD44"), 
+  features = c("IL7R","CD44","CD69","ENTPD1"), 
   assay = "RNA", 
   stack = TRUE, 
   flip = TRUE, 
@@ -488,7 +488,7 @@ ggsave(file = "figures/cd4_cells/Vln_T_naive_cluster_by_treatment_1.png", dpi=30
 
 VlnPlot(
   cd4_cells,
-  features = c("IL7R","CD44"),
+  features = c("IL7R","CD44","CD69","ENTPD1"),
   assay = "RNA",
   stack=TRUE,
   flip= TRUE,
@@ -602,7 +602,7 @@ ggsave(file = "figures/clus1/Vln_T_effector_by_treatment_1.png", dpi=300, width=
 # naive markers
 VlnPlot(
   clus1, 
-  features = c("IL7R","CD44"), 
+  features = c("IL7R","CD44","CD69","ENTPD1"), 
   assay = "RNA", 
   stack = TRUE, 
   flip = TRUE, 
@@ -623,7 +623,7 @@ ggsave(file = "figures/clus1/Vln_T_naive_cluster_by_treatment_1.png", dpi=300, w
 
 VlnPlot(
   clus1,
-  features = c("IL7R","CD44"),
+  features = c("IL7R","CD44","CD69","ENTPD1"),
   assay = "RNA",
   stack=TRUE,
   flip= TRUE,
@@ -649,7 +649,7 @@ ggsave(file = "figures/clus1/Vln_T_naive_by_treatment_1.png", dpi=300, width=6, 
 # exhaustion
 VlnPlot(
   clus2, 
-  features = c("HAVCR2", "LAG3", "TIGIT", "TOX"), 
+  features = c("HAVCR2", "TIGIT"), 
   assay = "RNA", 
   stack = TRUE, 
   flip = TRUE, 
@@ -670,7 +670,7 @@ ggsave(filename = "vln_activation_exhastion_cluster_by_treatment_1.png" , path =
 
 VlnPlot(
   clus2,
-  features = c("HAVCR2","LAG3","TIGIT","TOX"),
+  features = c("HAVCR2", "TIGIT"),
   assay = "RNA",
   stack=TRUE,
   flip= TRUE,
@@ -737,7 +737,7 @@ ggsave(file = "figures/clus2/Vln_T_effector_by_treatment_1.png", dpi=300, width=
 # naive markers
 VlnPlot(
   clus2, 
-  features = c("IL7R","CD44"), 
+  features = c("IL7R","CD44","CD69","ENTPD1"), 
   assay = "RNA", 
   stack = TRUE, 
   flip = TRUE, 
@@ -758,7 +758,7 @@ ggsave(file = "figures/clus2/Vln_T_naive_cluster_by_treatment_1.png", dpi=300, w
 
 VlnPlot(
   clus2,
-  features = c("IL7R","CD44"),
+  features = c("IL7R","CD44","CD69","ENTPD1"),
   assay = "RNA",
   stack=TRUE,
   flip= TRUE,
@@ -862,6 +862,49 @@ ggsave(file = "figures/clus2/tsne_by_treatment_together.png", dpi=300, width=14,
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# calculate cd8/cd4 ratio in responders and non ---------
+
+# add cell type for ratio calculation
+T_cells$cell_type <- ifelse(T_cells@assays$RNA@data["CD8A", ] > 0.2 | T_cells@assays$RNA@data["CD8B", ] > 0.2, 
+                            "CD8", 
+                            ifelse(T_cells@assays$RNA@data["CD4", ] > 0.2, 
+                                   "CD4", 
+                                   "Other"))
+table(T_cells$cell_type)
+
+
+responders <- subset(T_cells, subset = Treatment == "Responder")
+non_responders <- subset(T_cells, subset = Treatment == "Non_Responder")
+cd8_count_responders <- sum(responders$cell_type == "CD8")
+cd4_count_responders <- sum(responders$cell_type == "CD4")
+cd8_count_non_responders <- sum(non_responders$cell_type == "CD8")
+cd4_count_non_responders <- sum(non_responders$cell_type == "CD4")
+cd8_cd4_ratio_responders <- cd8_count_responders / cd4_count_responders
+cd8_cd4_ratio_non_responders <- cd8_count_non_responders / cd4_count_non_responders
+cat("CD8/CD4 ratio in responders:", cd8_cd4_ratio_responders, "\n")
+cat("CD8/CD4 ratio in non-responders:", cd8_cd4_ratio_non_responders, "\n")
 
 
 

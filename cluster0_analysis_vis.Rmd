@@ -190,7 +190,7 @@ p2<-ggplot(frque, aes(x= Cluster, y= Freq, fill = Treatment)) +
    panel.border = element_blank())
 
 p2+p1+plot_layout(guides = "collect")+plot_annotation(tag_levels = 'A') 
-ggsave(file = "figures/cd4_cells/unnormalized_and_normalized_contribution_per_patient.png", dpi=300, width=10, height=10)
+ggsave(file = "figures/cd4_cells/unnormalized_and_normalized_contribution_per_patient.png", dpi=300, width=14, height=10)
 
 p3
 ggsave(file = "figures/cd4_cells/normalized_cluster_counts.png", dpi=300, width=14, height=10)
