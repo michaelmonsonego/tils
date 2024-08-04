@@ -56,7 +56,7 @@ DimPlot(clus2 , reduction = "tsne", label= TRUE, pt.size=0.5, label.size = 6)
 ggsave(file = "figures/clus2/tsne.png", dpi=300, width=6, height=4)
 TSNEPlot(clus2, group.by ="Treatment", cols= c("#1f77b4","#ff7f0e"), pt.size=0.5)+
   theme(legend.text=element_text(size=20))
-ggsave(file = "figures/Tcells/tsne_by_treatment.png", dpi=300, width=15, height=10)
+ggsave(file = "figures/clus2/tsne_by_treatment.png", dpi=300, width=7, height=4)
 ```
 
 Top DE genes

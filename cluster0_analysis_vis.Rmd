@@ -54,7 +54,7 @@ x1=4.6
 cd4_cells = readRDS("objects/tils_0_.35.rds")
 
 DimPlot(cd4_cells , reduction = "tsne", label= TRUE, pt.size=0.5, label.size = 6)
-ggsave(file = "figures/cd4_cells/tsne.png", dpi=300, width=12, height=10)
+ggsave(file = "figures/cd4_cells/tsne.png", dpi=300, width=10, height=8)
 TSNEPlot(cd4_cells, group.by ="Treatment", cols= c("#1f77b4","#ff7f0e"), pt.size=0.5)+
   theme(legend.text=element_text(size=20))
 ggsave(file = "figures/cd4_cells/tsne_by_treatment.png", dpi=300, width=10, height=7)
