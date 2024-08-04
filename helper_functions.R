@@ -44,18 +44,25 @@ long_data <- merged_data %>%
  #  rownames_to_column(var = "Gene")
 # write_csv(merged_data_with_genes, "excels/cyto_by_clusteR_enrich.csv") 
 
+long_data <- read_csv("excels/long_cyto_enrich.csv")
+merged_data <- read_csv("excels/cyto_by_clusteR_enrich.csv")
+
 clus2_top_10 <- merged_data %>% 
   top_n(n=10, wt=Cluster_2) %>% 
-  rownames()
+  pull(Gene)
 
 clus_2_lowest_10 <- merged_data %>% 
   top_n(n=-10, wt=Cluster_2) %>% 
-  rownames()
+  pull(Gene)
 
 selected_genes <- c(clus_2_lowest_10, clus2_top_10)
 
 filtered_data <- long_data %>%
   filter(Gene %in% selected_genes)
+
+#M# control gene order in plot : have to put all genes in list
+gene_order <- c(clus2_top_10, clus_2_lowest_10)
+filtered_data$Gene <- factor(filtered_data$Gene, levels = gene_order)
 
 # Create the bar plot
 ggplot(filtered_data, aes(x = Gene, y = Score, fill = Cluster)) +
@@ -72,16 +79,20 @@ ggsave(file = "figures/cytokine tool/clus_2.png", dpi=300, width=5, height=5)
 #M# cluster 0 10 highest and lowest scored cytokines
 clus0_top_10 <- merged_data %>% 
   top_n(n=10, wt=Cluster_0) %>% 
-  rownames()
+  pull(Gene)
 
 clus_0_lowest_10 <- merged_data %>% 
   top_n(n=-10, wt=Cluster_0) %>% 
-  rownames()
+  pull(Gene)
 
 selected_genes <- c(clus_0_lowest_10, clus0_top_10)
 
 filtered_data <- long_data %>%
   filter(Gene %in% selected_genes)
+
+#M# control gene order in plot : have to put all genes in list
+gene_order <- c(clus0_top_10, clus_0_lowest_10)
+filtered_data$Gene <- factor(filtered_data$Gene, levels = gene_order)
 
 # Create the bar plot
 ggplot(filtered_data, aes(x = Gene, y = Score, fill = Cluster)) +
@@ -98,16 +109,20 @@ ggsave(file = "figures/cytokine tool/clus_0.png", dpi=300, width=5, height=5)
 #M# cluster 1 10 highest and lowest scored cytokines
 clus_1_top_10 <- merged_data %>% 
   top_n(n=10, wt=Cluster_1) %>% 
-  rownames()
+  pull(Gene)
 
 clus_1_lowest_10 <- merged_data %>% 
   top_n(n=-10, wt=Cluster_1) %>% 
-  rownames()
+  pull(Gene)
 
 selected_genes <- c(clus_1_lowest_10, clus_1_top_10)
 
 filtered_data <- long_data %>%
   filter(Gene %in% selected_genes)
+
+#M# control gene order in plot : have to put all genes in list
+gene_order <- c(clus_1_top_10, clus_1_lowest_10)
+filtered_data$Gene <- factor(filtered_data$Gene, levels = gene_order)
 
 # Create the bar plot
 ggplot(filtered_data, aes(x = Gene, y = Score, fill = Cluster)) +

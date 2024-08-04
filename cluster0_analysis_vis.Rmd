@@ -594,7 +594,7 @@ ggsave(file = "figures/cd4_cells/Tregs_Tregs.png", dpi=300, width=5, height=5)
 
 Idents(cd4_cells) <- 'seurat_clusters'
 cd4_cells <- RenameIdents(cd4_cells, "0" = "0_Tefm",
-                                 "1" = "1_Cytotoxic?exhausted?Th17?",
+                                 "1" = "1_Cytotoxic/exhausted/Th17",
                                  "2" = "2_HSPhi_T",
                                  "3" = "3_initiation_DNA_replication",
                                  "4" = "4_S_phase_of_mitosis",
