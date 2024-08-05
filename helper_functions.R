@@ -906,6 +906,70 @@ cd8_cd4_ratio_non_responders <- cd8_count_non_responders / cd4_count_non_respond
 cat("CD8/CD4 ratio in responders:", cd8_cd4_ratio_responders, "\n")
 cat("CD8/CD4 ratio in non-responders:", cd8_cd4_ratio_non_responders, "\n")
 
+#M# calculate ratio per patient
+table(T_cells$cell_type)
+table(T_cells$Sample)
+df <- data.frame(table(T_cells$Sample, T_cells$cell_type))
+df <- df %>%
+  pivot_wider(names_from = Var2, values_from = Freq)
+df[df$Var1==sample_id, "CD4"]
+
+calculate_ratio <- function(sample_id) {
+  cd4_count <- df[df$Var1==sample_id, "CD4"]
+  cd8_count <- df[df$Var1==sample_id, "CD8"]
+  if (cd4_count > 0) {
+    ratio <- cd8_count / cd4_count
+  } else {
+    ratio <- NA
+  }
+  return(list(cd4_count = cd4_count, cd8_count = cd8_count, ratio = ratio))
+}
+
+patients <- unique(T_cells$Sample)
+treatments <- sapply(patients, function(p) unique(subset(T_cells, Sample == p)$Treatment))
+
+# Calculate the ratios
+ratios_list <- lapply(patients, calculate_ratio)
+ratios_df <- do.call(rbind, ratios_list)
+ratios_df <- data.frame(Sample = patients, Treatment = treatments, ratios_df)
+
+
+# Calculate summary statistics
+summary_stats <- ratios_df %>%
+  group_by(Treatment) %>%
+  summarize(
+    Mean_Ratio = mean(ratio, na.rm = TRUE),
+    SD_Ratio = sd(ratio, na.rm = TRUE)
+  )
+
+# Print summary statistics
+print(summary_stats)
+
+
+
+
+ratios <- data.frame(
+  Sample = patients,
+  Treatment = sapply(patients, function(p) unique(subset(cd4_cells, Sample == p)$Treatment)),
+  Ratio = sapply(patients, function(p) calculate_ratio(cd4_cells, cd8_cells, p))
+)
+print(ratios)
+
+summary_stats <- ratios %>%
+  group_by(Treatment) %>%
+  summarize(
+    Mean_Ratio = mean(Ratio, na.rm = TRUE),
+    SD_Ratio = sd(Ratio, na.rm = TRUE)
+  )
+
+
+
+
+
+
+
+
+
 
 
 
