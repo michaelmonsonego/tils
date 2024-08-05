@@ -907,71 +907,58 @@ cat("CD8/CD4 ratio in responders:", cd8_cd4_ratio_responders, "\n")
 cat("CD8/CD4 ratio in non-responders:", cd8_cd4_ratio_non_responders, "\n")
 
 #M# calculate ratio per patient
-table(T_cells$cell_type)
-table(T_cells$Sample)
-df <- data.frame(table(T_cells$Sample, T_cells$cell_type))
-df <- df %>%
+df_wide <- df %>%
   pivot_wider(names_from = Var2, values_from = Freq)
-df[df$Var1==sample_id, "CD4"]
-
 calculate_ratio <- function(sample_id) {
-  cd4_count <- df[df$Var1==sample_id, "CD4"]
-  cd8_count <- df[df$Var1==sample_id, "CD8"]
+  cd4_count <- df_wide[df_wide$Var1 == sample_id, "CD4"]
+  cd8_count <- df_wide[df_wide$Var1 == sample_id, "CD8"]
   if (cd4_count > 0) {
     ratio <- cd8_count / cd4_count
   } else {
     ratio <- NA
   }
-  return(list(cd4_count = cd4_count, cd8_count = cd8_count, ratio = ratio))
+  return(c(cd4_count = cd4_count, cd8_count = cd8_count, ratio = ratio))
 }
-
 patients <- unique(T_cells$Sample)
 treatments <- sapply(patients, function(p) unique(subset(T_cells, Sample == p)$Treatment))
-
-# Calculate the ratios
 ratios_list <- lapply(patients, calculate_ratio)
 ratios_df <- do.call(rbind, ratios_list)
 ratios_df <- data.frame(Sample = patients, Treatment = treatments, ratios_df)
+ratios_df$ratio <- as.numeric(ratios_df$ratio)
+print(ratios_df)
 
-
-# Calculate summary statistics
-summary_stats <- ratios_df %>%
-  group_by(Treatment) %>%
+summary_stats_responders <- ratios_df %>%
+  filter(Treatment == "Responder") %>%
   summarize(
     Mean_Ratio = mean(ratio, na.rm = TRUE),
     SD_Ratio = sd(ratio, na.rm = TRUE)
   )
-
-# Print summary statistics
-print(summary_stats)
-
-
-
-
-ratios <- data.frame(
-  Sample = patients,
-  Treatment = sapply(patients, function(p) unique(subset(cd4_cells, Sample == p)$Treatment)),
-  Ratio = sapply(patients, function(p) calculate_ratio(cd4_cells, cd8_cells, p))
-)
-print(ratios)
-
-summary_stats <- ratios %>%
-  group_by(Treatment) %>%
+print(summary_stats_responders)
+summary_stats_non_responders <- ratios_df %>%
+  filter(Treatment == "Non_Responder") %>%
   summarize(
-    Mean_Ratio = mean(Ratio, na.rm = TRUE),
-    SD_Ratio = sd(Ratio, na.rm = TRUE)
+    Mean_Ratio = mean(ratio, na.rm = TRUE),
+    SD_Ratio = sd(ratio, na.rm = TRUE)
   )
-
-
-
-
-
-
-
-
-
-
-
+print(summary_stats_non_responders)
+summary_stats <- data.frame(
+  Treatment = c("Responder", "Non_Responder"),
+  Mean_Ratio = c(summary_stats_responders$Mean_Ratio, summary_stats_non_responders$Mean_Ratio),
+  SD_Ratio = c(summary_stats_responders$SD_Ratio, summary_stats_non_responders$SD_Ratio)
+)
+ggplot(summary_stats, aes(x = Treatment, y = Mean_Ratio, fill = Treatment)) +
+  geom_bar(stat = "identity", position = position_dodge(), width = 0.6) +
+  geom_errorbar(aes(ymin = Mean_Ratio - SD_Ratio, ymax = Mean_Ratio + SD_Ratio),
+                width = 0.2, position = position_dodge(0.6)) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+    axis.title.x = element_text(size = 14, face = "bold"),
+    axis.title.y = element_text(size = 14, face = "bold"),
+    axis.text.x = element_text(size = 12, angle = 40),
+    axis.text.y = element_text(size = 12)
+  )
+ggsave(file = "figures/Tcells/cd8_cd4_ratio.png", dpi=300, width=4, height=6)
 
 
 
