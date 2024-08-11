@@ -2137,7 +2137,7 @@ VlnPlot(clus2, features = c("IL1A"),
 ggsave(file = "figures/clus2/IL1_cluster_2.png", dpi=300, width=10, height=6)
 # checking ------------
 
-VlnPlot(cd4_cells, features = c("ZNF831", "HIVEP1"),
+VlnPlot(cd4_cells, features = c("TGFBR3", "HIVEP1"),
         assay = "RNA", 
         flip = TRUE, 
         split.by = "Treatment"
@@ -2154,7 +2154,7 @@ VlnPlot(cd4_cells, features = c("ZNF831", "HIVEP1"),
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
 ggsave(file = "figures/cd4_cells/0.png", dpi=300, width=10, height=6)
 
-VlnPlot(clus1, features = c("ZNF831", "HIVEP1"),
+VlnPlot(clus1, features = c("TGFBR3", "HIVEP1"),
         assay = "RNA", 
         flip = TRUE, 
         split.by = "Treatment"
@@ -2171,7 +2171,7 @@ VlnPlot(clus1, features = c("ZNF831", "HIVEP1"),
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
 ggsave(file = "figures/clus1/1.png", dpi=300, width=10, height=6)
 
-VlnPlot(clus2, features = c("ZNF831", "HIVEP1"),
+VlnPlot(clus2, features = c("TGFBR3", "HIVEP1"),
         assay = "RNA", 
         flip = TRUE, 
         split.by = "Treatment"
