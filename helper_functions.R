@@ -19,6 +19,8 @@ library(Cairo)
 library(snakecase)
 library(glue)
 library(ggrepel)
+library(fgsea)
+
 
 setwd("D:/Michael/git_check/tils")
 
@@ -2233,5 +2235,32 @@ df = read.csv("D:/Michael/git_check/tils/excels/DE_genes_res_nonRes_Clus2.csv")
 filtered_df <- df[df$gene %in% gene_list, ]
 filtered_df <- filtered_df[filtered_df$p_val_adj <= 0.0011, ]
 write_csv(filtered_df, "excels/filtered_DE_genes_res_nonRes_Clus2.csv")
+
+
+
+# genesets --------------
+# install.packages("BiocManager")
+# BiocManager::install("fgsea")
+
+il2_biocarta <- gmtPathways("geneSets/BIOCARTA_IL2_PATHWAY.v2023.2.Hs.gmt")[[1]]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
