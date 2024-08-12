@@ -2244,7 +2244,7 @@ write_csv(filtered_df, "excels/filtered_DE_genes_res_nonRes_Clus2.csv")
 
 il2_biocarta <- gmtPathways("geneSets/BIOCARTA_IL2_PATHWAY.v2023.2.Hs.gmt")[[1]]
 
-# search of interesting DE genes between responders & non-responders ---------
+# search of interesting DE genes between responders & non-responders in cd4 cluster---------
 cd4_cells = readRDS("objects/tils_0_.35.rds")
 filtered_DE_genes_res_nonRes_CD4 <- read.csv("excels/filtered_DE_genes_res_nonRes_CD4.csv")
 
@@ -2300,11 +2300,115 @@ i <- 1
 
 
 
+# search of interesting DE genes between responders & non-responders in cluster 1---------
+clus1 = readRDS("objects/clus1_no_cd4_14_0.5.rds")
+filtered_DE_genes_res_nonRes_Clus1 <- read.csv("excels/filtered_DE_genes_res_nonRes_Clus1.csv")
+
+genes <- filtered_DE_genes_res_nonRes_Clus1 %>% 
+  pull(gene)
+
+#M# or same but more efficient for large scale picture
+i <- 1
+while(i<length(genes)){
+  VlnPlot(
+    clus1, 
+    features = c(genes[i], genes[i+1], genes[i+2], genes[i+3], genes[i+4], genes[i+5], genes[i+6], genes[i+7]), 
+    assay = "RNA", 
+    stack = TRUE, 
+    flip = TRUE, 
+    split.by = "Treatment"
+  ) + 
+    theme_classic() +
+    theme(
+      axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+      axis.title.x = element_blank(),
+      axis.text.y = element_text(size = 24, face = "italic"),
+      axis.title.y = element_text(size = 20, face = "bold"),
+      axis.ticks.y = element_line(size = 0.5),
+      strip.text.y = element_text(angle = 0, size = 16, face = "bold")
+    ) +
+    geom_boxplot(alpha = 0.3, show.legend = FALSE)
+  ggsave(file = paste0("figures/clus1/de_gene_search/","run_", i,  ".png"), dpi=300, width=16, height=12)
+  i <- i+8
+}
+i <- 1
 
 
+# #M# one-by-one gene violin plot
+# for (gene in genes) {
+#   VlnPlot(clus1, features = c(gene),
+#           assay = "RNA", 
+#           flip = TRUE, 
+#           split.by = "Treatment"
+#   ) + 
+#     theme_classic() +
+#     theme(
+#       axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+#       axis.title.x = element_blank(),
+#       axis.text.y = element_text(size = 24, face = "italic"),
+#       axis.title.y = element_text(size = 20, face = "bold"),
+#       axis.ticks.y = element_line(size = 0.5),
+#       strip.text.y = element_text(angle = 0, size = 16, face = "bold")
+#     ) + 
+#     geom_boxplot(alpha = 0.3, show.legend = FALSE)
+#   ggsave(file = paste0("figures/clus1/de_gene_search/",gene, ".png"), dpi=300, width=10, height=6)
+#   
+# }
 
+# search of interesting DE genes between responders & non-responders in cluster 1---------
+clus2 = readRDS("objects/tils_2.rds")
+filtered_DE_genes_res_nonRes_Clus2 <- read.csv("excels/filtered_DE_genes_res_nonRes_Clus2.csv")
 
+genes <- filtered_DE_genes_res_nonRes_Clus2 %>% 
+  pull(gene)
 
+#M# or same but more efficient for large scale picture
+i <- 1
+while(i<length(genes)){
+  VlnPlot(
+    clus2, 
+    features = c(genes[i], genes[i+1], genes[i+2], genes[i+3], genes[i+4], genes[i+5], genes[i+6], genes[i+7]), 
+    assay = "RNA", 
+    stack = TRUE, 
+    flip = TRUE, 
+    split.by = "Treatment"
+  ) + 
+    theme_classic() +
+    theme(
+      axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+      axis.title.x = element_blank(),
+      axis.text.y = element_text(size = 24, face = "italic"),
+      axis.title.y = element_text(size = 20, face = "bold"),
+      axis.ticks.y = element_line(size = 0.5),
+      strip.text.y = element_text(angle = 0, size = 16, face = "bold")
+    ) +
+    geom_boxplot(alpha = 0.3, show.legend = FALSE)
+  ggsave(file = paste0("figures/clus2/de_gene_search/","run_", i,  ".png"), dpi=300, width=16, height=12)
+  i <- i+8
+}
+i <- 1
+
+# 
+# #M# one-by-one gene violin plot
+# for (gene in genes) {
+#   VlnPlot(clus2, features = c(gene),
+#           assay = "RNA", 
+#           flip = TRUE, 
+#           split.by = "Treatment"
+#   ) + 
+#     theme_classic() +
+#     theme(
+#       axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+#       axis.title.x = element_blank(),
+#       axis.text.y = element_text(size = 24, face = "italic"),
+#       axis.title.y = element_text(size = 20, face = "bold"),
+#       axis.ticks.y = element_line(size = 0.5),
+#       strip.text.y = element_text(angle = 0, size = 16, face = "bold")
+#     ) + 
+#     geom_boxplot(alpha = 0.3, show.legend = FALSE)
+#   ggsave(file = paste0("figures/clus2/de_gene_search/",gene, ".png"), dpi=300, width=10, height=6)
+#   
+# }
 
 
 
