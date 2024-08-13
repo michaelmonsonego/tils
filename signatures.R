@@ -24,6 +24,7 @@ library(DT)
 library(Cairo)
 library(snakecase)
 library(glue)
+library(scales)
 
 
 setwd("D:/Michael/git_check/tils")
@@ -314,7 +315,7 @@ SignatureScore <- function(object, name){
   
   p <- VlnPlot(object, features='normalized', group.by = "Treatment",
                y.max = y.max, pt.size = 0,
-               cols= c("#1f77b4","#ff7f0e")) +  theme_classic(base_size = 14) +
+               cols= c("#ff7f0e", "#1f77b4")) +  theme_classic(base_size = 14) +
     theme(text = element_text(size=18, colour = "black")) + RotatedAxis() +
     theme(axis.title.x=element_blank(), axis.text.x=element_blank(),axis.ticks.x=element_blank())+
     labs(title = "", y = name,  x="") + theme(legend.position="right") +
@@ -360,26 +361,26 @@ SignatureScore <- function(object, name){
 
 
 
-# section -----------------------------------------------------------------
+# signatures(effector, il2..) -----------------------------------------------------------------
 #M# clus 1 sigs
 clus1_with_sigs = readRDS("objects/clus1_with_sigs.rds")
 clus_2_with_sigs <- readRDS("objects/tils_2_with_sigs.rds")
 
 #M# sig up genes from paper
-persistance_up <- c('KLRB1','ZNF683','ITGB1','C1orf162','IL7R','LIME1', "S1PR1", "TIMP1", "C10orf54", "TBXAS1", "KLF2", "LTB", "UBXN11", "CD40LG", "AMICA1", "FAM65B", "VCL", "RASA3", "SCML4", "MYC", "P2RY8")
-persistance_up_sig <- make_signature(clus1_with_sigs, persistance_up,idents = c("Responder","Non_Responder"), format_flag = FALSE)
-persistance_up_sig_obj <- persistance_up_sig[[1]]
-persistance_up_sig[[3]]
-ggsave("figures/clus1_with_sigs/co_stim_sig_box.png", width = 20, height = 20, units = "cm")
-persistance_up_sig[[2]]
-ggsave("figures/clus1_with_sigs/co_stim_sig_tsne.png", width = 20, height = 20, units = "cm")
+# persistance_up <- c('KLRB1','ZNF683','ITGB1','C1orf162','IL7R','LIME1', "S1PR1", "TIMP1", "C10orf54", "TBXAS1", "KLF2", "LTB", "UBXN11", "CD40LG", "AMICA1", "FAM65B", "VCL", "RASA3", "SCML4", "MYC", "P2RY8")
+# persistance_up_sig <- make_signature(clus1_with_sigs, persistance_up,idents = c("Responder","Non_Responder"), format_flag = FALSE)
+# persistance_up_sig_obj <- persistance_up_sig[[1]]
+# persistance_up_sig[[3]]
+# ggsave("figures/clus1_with_sigs/co_stim_sig_box.png", width = 20, height = 20, units = "cm")
+# persistance_up_sig[[2]]
+# ggsave("figures/clus1_with_sigs/co_stim_sig_tsne.png", width = 20, height = 20, units = "cm")
 
 
 #M# test dor addmodulescore() function from vis.rmd
 # violin plot per treatment
-VlnPlot(clus1_with_sigs, features = "Tregs1", group.by = "Treatment", pt.size = 0)+theme_classic()+theme(axis.text.x = element_text(angle = 45, hjust=1), axis.title.x = element_blank())+
-  geom_boxplot(alpha=0.3,show.legend = FALSE)
-ggsave("figures/clus1_with_sigs/violin_sig_co_stimulatory_by_treatment.png", width = 20, height = 20, units = "cm")
+# VlnPlot(clus1_with_sigs, features = "Tregs1", group.by = "Treatment", pt.size = 0)+theme_classic()+theme(axis.text.x = element_text(angle = 45, hjust=1), axis.title.x = element_blank())+
+#   geom_boxplot(alpha=0.3,show.legend = FALSE)
+# ggsave("figures/clus1_with_sigs/violin_sig_co_stimulatory_by_treatment.png", width = 20, height = 20, units = "cm")
 
 # violin plot per treatment per cluster
 gglist <-  list()
