@@ -1,3 +1,5 @@
+
+
 library(dplyr)
 library(Seurat)
 library(patchwork)
@@ -2355,7 +2357,7 @@ i <- 1
 #   
 # }
 
-# search of interesting DE genes between responders & non-responders in cluster 1---------
+# search of interesting DE genes between responders & non-responders in cluster 2---------
 clus2 = readRDS("objects/tils_2.rds")
 filtered_DE_genes_res_nonRes_Clus2 <- read.csv("excels/filtered_DE_genes_res_nonRes_Clus2.csv")
 
@@ -2417,3 +2419,128 @@ i <- 1
 
 
 
+
+# cluster 0 of cd4 cluster (Tefm) annotation -------------------
+
+cd4_cells = readRDS("objects/tils_0_.35.rds")
+x1=4.6
+
+Tefm_markers <- c("GPR183", "AQP3", "TNFRSF4", "LTB", "KLF2", "RASA3")
+
+DefaultAssay(cd4_cells) <- "RNA"
+
+FeaturePlot(cd4_cells, features = Tefm_markers, label.size = 8, pt.size = 1, label=F, ncol = 3, order = T,reduction = "tsne") + 
+  scale_color_gradient(low = "grey", high = "blue")
+ggsave(file = "figures/cd4_cells/Tefm_markers.png", dpi=300, width=14, height=x1*2)
+
+
+# FeaturePlot(cd4_cells, features = "RASA3", label.size = 8, pt.size = 0.2, label=F, order = T,reduction = "tsne") + 
+#   scale_color_gradientn(colors = c("grey", "blue"), 
+#                         limits = c(0, 3),
+#                         na.value = "grey")
+# ggsave(file = "figures/cd4_cells/rasa.png", dpi=300, width=4, height=3)
+# 
+# 
+FeaturePlot(cd4_cells, features = "LTB", label.size = 8, pt.size = 1, label=F, reduction = "tsne") +
+  scale_color_gradient(low = "grey", high = "blue")
+ggsave(file = "figures/cd4_cells/LTB.png", dpi=300, width=4, height=3)
+
+
+
+# TNF family research cd4 cluster -------------
+
+tnf_family <- read_csv("excels/TNF_family_18.8.24.csv") %>% 
+  pull("Gene")
+
+cd4_cells = readRDS("objects/tils_0_.35.rds")
+#M# cd4 cluster : 
+i <- 1
+while(i<length(tnf_family)){
+  VlnPlot(
+    cd4_cells, 
+    features = c(tnf_family[i], tnf_family[i+1], tnf_family[i+2], tnf_family[i+3], tnf_family[i+4], tnf_family[i+5], tnf_family[i+6], tnf_family[i+7]), 
+    assay = "RNA", 
+    stack = TRUE, 
+    flip = TRUE, 
+    split.by = "Treatment"
+  ) + 
+    theme_classic() +
+    theme(
+      axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+      axis.title.x = element_blank(),
+      axis.text.y = element_text(size = 24, face = "italic"),
+      axis.title.y = element_text(size = 20, face = "bold"),
+      axis.ticks.y = element_line(size = 0.5),
+      strip.text.y = element_text(angle = 0, size = 16, face = "bold")
+    ) +
+    geom_boxplot(alpha = 0.3, show.legend = FALSE)
+  ggsave(file = paste0("figures/cd4_cells/de_gene_search/","tnf_search_run_", i,  ".png"), dpi=300, width=16, height=12)
+  i <- i+8
+}
+i <- 1
+
+
+# TNF family research cluster 1-------------
+tnf_family <- read_csv("excels/TNF_family_18.8.24.csv") %>% 
+  pull("Gene")
+
+clus1 = readRDS("objects/clus1_no_cd4_14_0.5.rds")
+
+i <- 1
+while(i<length(tnf_family)){
+  VlnPlot(
+    clus1, 
+    features = c(tnf_family[i], tnf_family[i+1], tnf_family[i+2], tnf_family[i+3], tnf_family[i+4], tnf_family[i+5], tnf_family[i+6], tnf_family[i+7]), 
+    assay = "RNA", 
+    stack = TRUE, 
+    flip = TRUE, 
+    split.by = "Treatment"
+  ) + 
+    theme_classic() +
+    theme(
+      axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+      axis.title.x = element_blank(),
+      axis.text.y = element_text(size = 24, face = "italic"),
+      axis.title.y = element_text(size = 20, face = "bold"),
+      axis.ticks.y = element_line(size = 0.5),
+      strip.text.y = element_text(angle = 0, size = 16, face = "bold")
+    ) +
+    geom_boxplot(alpha = 0.3, show.legend = FALSE)
+  ggsave(file = paste0("figures/clus1/de_gene_search/","tnf_search_run_", i,  ".png"), dpi=300, width=16, height=12)
+  i <- i+8
+}
+i <- 1
+
+
+
+
+# TNF family research cluster 2-------------
+tnf_family <- read_csv("excels/TNF_family_18.8.24.csv") %>% 
+  pull("Gene")
+
+clus2 = readRDS("objects/tils_2.rds")
+
+i <- 1
+while(i<length(tnf_family)){
+  VlnPlot(
+    clus2, 
+    features = c(tnf_family[i], tnf_family[i+1], tnf_family[i+2], tnf_family[i+3], tnf_family[i+4], tnf_family[i+5], tnf_family[i+6], tnf_family[i+7]), 
+    assay = "RNA", 
+    stack = TRUE, 
+    flip = TRUE, 
+    split.by = "Treatment"
+  ) + 
+    theme_classic() +
+    theme(
+      axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+      axis.title.x = element_blank(),
+      axis.text.y = element_text(size = 24, face = "italic"),
+      axis.title.y = element_text(size = 20, face = "bold"),
+      axis.ticks.y = element_line(size = 0.5),
+      strip.text.y = element_text(angle = 0, size = 16, face = "bold")
+    ) +
+    geom_boxplot(alpha = 0.3, show.legend = FALSE)
+  ggsave(file = paste0("figures/clus2/de_gene_search/","tnf_search_run_", i,  ".png"), dpi=300, width=16, height=12)
+  i <- i+8
+}
+i <- 1
