@@ -22,6 +22,8 @@ knitr::opts_chunk$set(cache = TRUE)
 
 ## 1. Selection of cluster 0
 ```{r message=FALSE, warning=FALSE, cache=FALSE}
+
+
 library(dplyr)
 library(Seurat)
 library(patchwork)
@@ -61,7 +63,7 @@ table(T_cells_1$seurat_clusters)
 # saveRDS(cd4, "objects/cd4_from_clus_1.rds")
 
 #M# clean cd4 from this analysis
-T_cells_1 <- subset(T_cells_1, subset = CD4 < 0.05)###########
+T_cells_1 <- subset(T_cells_1, subset = CD4 < 0.0000000005)###########
 table(T_cells_1$orig.ident)
 table(T_cells_1$seurat_clusters)
 DefaultAssay(T_cells_1) <- "RNA"
@@ -129,6 +131,7 @@ T_cells_1 <- readRDS("objects/tils_1_.5.rds")
 Lineage identification
 ### a. T cells
 ```{r message=FALSE, warning=FALSE, cache= TRUE, fig.width=24, fig.height= 16}
+DefaultAssay(T_cells_1) <- "RNA"
 Ts <- c('Cd4', 'Cd8a', 'Cd3d','Cd3e','Cd3g',"PTPRC")
 Ts <- toupper(Ts)
 FeaturePlot(T_cells_1, features = Ts, order=TRUE,pt.size=1, reduction="tsne", ncol=3)
@@ -168,7 +171,7 @@ ggsave(file = "figures/data_prep_1/T cells markers - heatmap.png", dpi=300, widt
 ```{r}
 DefaultAssay(T_cells_1) <- "RNA"
 #M# take cd4 cells cluster(5) out
-clusters_to_keep <- setdiff(levels(Idents(T_cells_1)), "5")
+clusters_to_keep <- setdiff(levels(Idents(T_cells_1)), "5_CD4(memory)")
 T_cells_1_excluded_5 <- subset(T_cells_1, idents = clusters_to_keep)
 # Check the clusters in the new subset
 table(Idents(T_cells_1_excluded_5))
@@ -214,11 +217,16 @@ T_cells_1_excluded_5 <- readRDS("objects/clus1_no_cd4_14_0.5.rds")
 Lineage identification
 ### a. T cells
 ```{r message=FALSE, warning=FALSE, cache= TRUE, fig.width=24, fig.height= 16}
+DefaultAssay(T_cells_1_excluded_5) <- "RNA"
 Ts <- c('Cd4', 'Cd8a', 'Cd3d','Cd3e','Cd3g',"PTPRC")
 Ts <- toupper(Ts)
-FeaturePlot(T_cells_1_excluded_5, features = Ts, order=TRUE,pt.size=1, reduction="tsne", ncol=3)
+FeaturePlot(T_cells_1_excluded_5, features = Ts, order=TRUE,pt.size=0.7, reduction="tsne", ncol=3)+
+  scale_colour_gradientn(colors = c("grey", "blue"), limits = c(0, max(T_cells_1_excluded_5@assays$RNA@data["LTB", ])), oob = scales::squish) +
+  theme_minimal()
+
 ggsave(file = "figures/data_prep_1/features_T_no5.png", dpi=300, width=30, height=20)
 ```
+
  Finding differentially expressed features (cluster biomarkers)
 ```{r message=FALSE, warning=FALSE, cache= TRUE, fig.width=12, fig.height= 28}
 T_cells_1_excluded_5.markers = FindAllMarkers(T_cells_1_excluded_5, only.pos = TRUE, min.pct = 0.25, logfc.threshold = 0.25, assay = "RNA")
@@ -248,7 +256,86 @@ DoHeatmap(T_cells_1_excluded_5, features = top10_T$gene) + NoLegend() + scale_fi
 ggsave(file = "figures/data_prep_1/T cells markers - heatmap_no_5.png", dpi=300, width=12, height=20)
 ```
 
+trying to get rid of five(cd4 memory)
+```{r}
+T_cells_1_excluded_5 = readRDS("objects/clus1_no_cd4_14_0.5.rds")
+table(T_cells_1_excluded_5$seurat_clusters)
 
+DefaultAssay(T_cells_1_excluded_5) <- "RNA"
+#M# take cd4 cells cluster(5) out
+clusters_to_keep <- setdiff(levels(Idents(T_cells_1_excluded_5)), "5_CD4(memory)")
+try <- subset(T_cells_1_excluded_5, idents = clusters_to_keep)
+# Check the clusters in the new subset
+table(Idents(try))
+DimPlot(try , reduction = "tsne", label= TRUE, pt.size=0.5, label.size = 6)
+
+try = NormalizeData(try, assay = "RNA",normalization.method = "LogNormalize", scale.factor = 10000) 
+try = FindVariableFeatures(try, assay = "RNA", selection.method = "vst", nfeatures = 2000) 
+
+DefaultAssay(try) <- "integrated" #M# is this needed here?
+
+try = ScaleData(try, verbose = FALSE)
+try = RunPCA(try, npcs = 30, verbose = FALSE)
+DimPlot(try, reduction = "pca", group.by="Treatment", cols = c("#FDCDAC", "#B3E2CD"), pt.size=1.1)
+ElbowPlot(try, ndims = 30) + theme_classic()
+ggsave(file = "figures/data_prep_1/elbow_plot_no_5.png", dpi=300, width=10, height=10)
+
+try <- FindNeighbors(try, reduction = "pca", dims = 1:14) #M# choose ?
+try = RunTSNE(try, dims = 1:14)
+#M# try = RunUMAP(try, dims = 1:18)
+
+res_seq <- c(.05,.3, .35, .4, .45, .5)
+for(res in res_seq){
+  try.res_test <- FindClusters(try, resolution = res)
+  
+  res_tSNE  <- DimPlot(try.res_test, reduction = "tsne",
+                       repel = T, label = TRUE, label.size = 5) +
+    theme(legend.position = "none") + 
+    plot_annotation(title = paste("Res of", res))
+  assign(paste0("tSNE_",res), res_tSNE)
+}
+
+tSNE_ls <- list(tSNE_0.05,tSNE_0.3,tSNE_0.35,tSNE_0.4,tSNE_0.45,tSNE_0.5)
+all_tSNE <- plot_grid(tSNE_0.05,tSNE_0.3,tSNE_0.35,tSNE_0.4,tSNE_0.45,tSNE_0.5, ncol = 3) 
+ggsave(all_tSNE,filename = 'figures/data_prep_1/tils_0_14_dim_res_test_no_5_second_time.png', dpi=300, height=10, width=16)
+
+try <- FindClusters(try, resolution = 0.45)
+#M# annotation happens in vis on same object
+# saveRDS(try, file = "objects/clus1_no_cd4_second_sub_14_0.5.rds")
+clus1_no_cd4_second_sub_14_0.5 <- readRDS("objects/clus1_no_cd4_second_sub_14_0.5.rds")
+
+
+
+DimPlot(clus1_no_cd4_second_sub_14_0.5, reduction = "tsne")
+table(clus1_no_cd4_second_sub_14_0.5$seurat_clusters)
+DefaultAssay(clus1_no_cd4_second_sub_14_0.5) <- "RNA"
+Ts <- c('Cd4', 'Cd8a', 'Cd3d','Cd3e','Cd3g',"PTPRC")
+Ts <- toupper(Ts)
+FeaturePlot(clus1_no_cd4_second_sub_14_0.5, features = Ts, order=TRUE,pt.size=0.7, reduction="tsne", ncol=3)+
+  scale_colour_gradientn(colors = c("grey", "blue"), oob = scales::squish) +
+  theme_minimal()
+
+clus1_no_cd4_second_sub_14_0.5.markers = FindAllMarkers(clus1_no_cd4_second_sub_14_0.5, only.pos = TRUE, min.pct = 0.25, logfc.threshold = 0.25, assay = "RNA")
+                    
+Top50Markers_T =
+  clus1_no_cd4_second_sub_14_0.5.markers %>%
+  group_by(cluster) %>%
+  top_n(n = 50, wt = avg_log2FC) %>%
+  as.data.frame %>% 
+  arrange(cluster,-avg_log2FC)
+write_csv(Top50Markers_T, "excels/cluster_1_DE_genes_19_8_24.csv")
+
+
+DE_genes <- FindMarkers(clus1_no_cd4_second_sub_14_0.5, ident.1 = "Responder", ident.2 = "Non_Responder", group.by = "Treatment", assay = "RNA")
+DE_genes <- rownames_to_column(DE_genes, var = "gene")
+write_csv(DE_genes, "excels/DE_genes_res_nonRes_clus1_no_5_second.csv") 
+Top100Markers <- DE_genes %>% 
+top_n(n = 100, wt = avg_log2FC) %>% 
+as.data.frame
+write_csv(Top100Markers, "excels/Top100Markers_per_treatment_tils_1_.5_no_5_second.csv") 
+
+
+```
 
 &nbsp;
 <hr />
