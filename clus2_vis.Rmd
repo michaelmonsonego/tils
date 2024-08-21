@@ -259,12 +259,13 @@ ggsave(file = "figures/clus2/T_Cells_Markers.png", dpi=300, width=15, height=x1*
 ```
 ### checking 
 ```{r cache=T, fig.height=x1*2, warning=FALSE}
-FeaturePlot(clus2, features = c("ENTPD1", "GZMB", "PRF1", "CD40LG","CD8A","CD8B"), order=TRUE,pt.size=1, reduction="tsne", ncol=3)
-ggsave(file = "figures/clus2/checking.png", dpi=300, width=15, height=x1*2)
+DefaultAssay(clus2) <- "RNA"
+FeaturePlot(clus2, features = c("ZNF831", "HIVEP1"), order=TRUE,pt.size=1, reduction="tsne", ncol=3)
+ggsave(file = "figures/clus2/checking.png", dpi=300, width=15, height=6)
 ```
 
 ```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height=16}
-VlnPlot(clus2, features = c("ENTPD1", "GZMB", "PRF1", "CD40LG","CD8A","CD8B"), 
+VlnPlot(clus2, features = c("ZNF831", "HIVEP1"), 
   assay = "RNA", 
   stack = TRUE, 
   flip = TRUE, 
@@ -282,7 +283,7 @@ VlnPlot(clus2, features = c("ENTPD1", "GZMB", "PRF1", "CD40LG","CD8A","CD8B"),
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
 ggsave(file = "figures/clus2/checking1.png", dpi=300, width=15, height=x1*2)
 
-VlnPlot(clus2, features = c("ENTPD1", "GZMB", "PRF1", "CD40LG","CD8A","CD8B"),
+VlnPlot(clus2, features = c("ZNF831", "HIVEP1"),
   assay = "RNA",
   stack=TRUE,
   flip= TRUE,
@@ -299,7 +300,7 @@ VlnPlot(clus2, features = c("ENTPD1", "GZMB", "PRF1", "CD40LG","CD8A","CD8B"),
     strip.text.y = element_text(angle = 0, size = 16, face = "bold")
   ) +
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
-ggsave(file = "figures/clus2/checking2.png", dpi=300, width=4, height=x1*2)
+ggsave(file = "figures/clus2/checking2.png", dpi=300, width=4, height=x1)
 
 VlnPlot(clus2, features = c("ENTPD1", "GZMB", "PRF1", "CD40LG","CD8A","CD8B"),
   assay = "RNA",
