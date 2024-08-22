@@ -1,5 +1,5 @@
 ---
-title: "Cluster1_analysis_visualisation"
+title: "proliferation_analysis_visualisation"
 author: "Michael Monsonego"
 date:  "`r format(Sys.time(), '%d %B, %Y')`"
 output:
@@ -55,9 +55,6 @@ prolif = readRDS("objects/prolif.rds")
 
 DimPlot(prolif , reduction = "tsne", label= TRUE, pt.size=0.5, label.size = 6)
 ggsave(file = "figures/prolif/tsne.png", dpi=300, width=8, height=6)
-TSNEPlot(prolif, group.by ="Treatment", cols= c("#ff7f0e", "#1f77b4"), pt.size=0.5)+
-  theme(legend.text=element_text(size=20))
-ggsave(file = "figures/prolif/tsne_by_treatment.png", dpi=300, width=8, height=6)
 
 responders <- subset(prolif, subset = Treatment == "Responder")
 non_responders <- subset(prolif, subset = Treatment == "Non_Responder")
@@ -69,6 +66,10 @@ p2 <- DimPlot(non_responders, reduction = "tsne", label = TRUE, pt.size = 0.5, l
 plot_grid(p1, p2, ncol = 2)
 ggsave(file = "figures/prolif/tsne_by_treatment_together.png", dpi=300, width=18, height=8)
 
+
+TSNEPlot(prolif, group.by ="Treatment", cols= c("#ff7f0e", "#1f77b4"), pt.size=0.5)+
+  theme(legend.text=element_text(size=20))
+ggsave(file = "figures/prolif/tsne_by_treatment.png", dpi=300, width=8, height=6)
 ```
 Top DE genes
 --------------
@@ -271,6 +272,31 @@ Ts <- toupper(Ts)
 FeaturePlot(prolif, features = Ts, label.size = 8, pt.size = 1, label=T, ncol = 3, order = T,reduction = "tsne")
 ggsave(file = "figures/prolif/T_Cells_Markers.png", dpi=300, width=15, height=x1*2)
 ```
+### proliferation signature between response groups
+```{r}
+proliferation_sig <- c("MKI67", "STMN1","TOP2A","Nolc1", "Npm1","Ccne2")
+proliferation_sig <- toupper(proliferation_sig)
+proliferation_sig <- list(proliferation_sig)
+prolif = AddModuleScore(object = prolif, features = proliferation_sig, name = "proliferation", assay = "RNA")
+a <- FeaturePlot(object = prolif, features = "proliferation1", reduction = "tsne", cols=c("grey","grey","#e46467", "#b33336", "#A73033"))+labs(title = "proliferation_sig", subtitle = "MKI67, STMN1, TOP2A, Nolc1, Npm1,Ccne2..")+ theme(plot.subtitle = element_text(hjust = 0.5))
+a
+ggsave(file = "figures/prolif/il2.png", dpi=300, width=5, height=5)
+
+
+gglist <-  list()
+name <- "proliferation1"
+DefaultAssay(prolif) <- "RNA" 
+for(clus in levels(prolif$seurat_clusters)){
+  print(clus)
+  obj <- subset(prolif, subset = seurat_clusters == clus)
+  p <- SignatureScore(obj, 'proliferation1') + ggtitle(obj@active.ident)
+  gglist[[(as.numeric(clus)+1)]] <- p
+}
+cowplot::plot_grid(plotlist = gglist, ncol = 4, nrow = 2) + 
+  ggtitle(name)
+ggsave(file = "figures/prolif/proliferation1_vln_signature.png", dpi=300, width=16, height=10)
+```
+
 ### checking 
 ```{r cache=T, fig.height=x1*2, warning=FALSE}
 FeaturePlot(prolif, features = c("ENTPD1", "GZMB", "FOXP3", "CD40LG","CD8A","CD8B"), order=TRUE,pt.size=1, reduction="tsne", ncol=3)
