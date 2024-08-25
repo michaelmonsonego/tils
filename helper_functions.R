@@ -1640,3 +1640,68 @@ i <- 1
 
 
 
+
+# cd40 visualisation : (cd40lg receptor)--------
+VlnPlot(cd4_cells, features = c("CD40"),
+        assay = "RNA", 
+        flip = TRUE, 
+        split.by = "Treatment"
+) + 
+  theme_classic() +
+  theme(
+    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.title.x = element_blank(),
+    axis.text.y = element_text(size = 24, face = "italic"),
+    axis.title.y = element_text(size = 20, face = "bold"),
+    axis.ticks.y = element_line(size = 0.5),
+    strip.text.y = element_text(angle = 0, size = 16, face = "bold")
+  ) + 
+  geom_boxplot(alpha = 0.3, show.legend = FALSE)
+ggsave(file = "figures/cd4_cells/CD40_0.png", dpi=300, width=10, height=6)
+
+VlnPlot(clus1, features = c("CD40"),
+        assay = "RNA", 
+        flip = TRUE, 
+        split.by = "Treatment"
+) + 
+  theme_classic() +
+  theme(
+    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.title.x = element_blank(),
+    axis.text.y = element_text(size = 24, face = "italic"),
+    axis.title.y = element_text(size = 20, face = "bold"),
+    axis.ticks.y = element_line(size = 0.5),
+    strip.text.y = element_text(angle = 0, size = 16, face = "bold")
+  ) + 
+  geom_boxplot(alpha = 0.3, show.legend = FALSE)
+ggsave(file = "figures/clus1/CD40_1.png", dpi=300, width=10, height=6)
+
+VlnPlot(clus2, features = c("CD40"),
+        assay = "RNA", 
+        flip = TRUE, 
+        split.by = "Treatment"
+) + 
+  theme_classic() +
+  theme(
+    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.title.x = element_blank(),
+    axis.text.y = element_text(size = 24, face = "italic"),
+    axis.title.y = element_text(size = 20, face = "bold"),
+    axis.ticks.y = element_line(size = 0.5),
+    strip.text.y = element_text(angle = 0, size = 16, face = "bold")
+  ) + 
+  geom_boxplot(alpha = 0.3, show.legend = FALSE)
+ggsave(file = "figures/clus2/CD40_2.png", dpi=300, width=10, height=6)
+
+
+
+
+
+
+
+
+
+
+
+
+
