@@ -804,7 +804,7 @@ ggsave(file = "figures/clus2/Vln_T_effector_by_treatment_1.png", dpi=300, width=
 # naive markers
 VlnPlot(
   clus2, 
-  features = c("IL7R","CD44","CD69","ENTPD1"), 
+  features = c("IL7R","CD44","CD69","ENTPD1", "CD40LG"), 
   assay = "RNA", 
   stack = TRUE, 
   flip = TRUE, 
@@ -825,7 +825,7 @@ ggsave(file = "figures/clus2/Vln_T_naive_cluster_by_treatment_1.png", dpi=300, w
 
 VlnPlot(
   clus2,
-  features = c("IL7R","CD44","CD69","ENTPD1"),
+  features = c("IL7R","CD44","CD69","ENTPD1", "CD40LG"),
   assay = "RNA",
   stack=TRUE,
   flip= TRUE,
@@ -1752,34 +1752,34 @@ FeaturePlot(T_cells, features = Activated_memory_CD4, label.size = 8, pt.size = 
 ggsave(file = "figures/Tcells/Activated_memory_CD4_Markers.png", dpi=300, width=20, height=x1*2)
 
 #cluster 1
-Cytotoxic_CD8 <- c("NKG7", "GZMB", "CD8B", "CCL4", "GNLY", "PRF1", "CCL5", "CD8A", "JUNB")
+Cytotoxic_CD8 <- c("NKG7", "GZMB", "GNLY", "PRF1", "CD8A", "JUNB")
 FeaturePlot(T_cells, features = Cytotoxic_CD8, label.size = 8, pt.size = 1, label=F, ncol = 3, order = T,reduction = "tsne")
-ggsave(file = "figures/Tcells/Cytotoxic_CD8_Markers.png", dpi=300, width=20, height=x1*3)
+ggsave(file = "figures/Tcells/Cytotoxic_CD8_Markers.png", dpi=300, width=20, height=x1*2)
 
 #cluster 2
-Cytotoxic_CD8_early <- c("NELL2", "CD27", "TXK", "CCL5")
-FeaturePlot(T_cells, features = Cytotoxic_CD8_early, label.size = 8, pt.size = 1, label=F, ncol = 3, order = T,reduction = "tsne")
-ggsave(file = "figures/Tcells/Cytotoxic_CD8_early_Markers.png", dpi=300, width=20, height=x1*2)
+Cytotoxic_CD8_early <- c("CD27", "CCL5")
+FeaturePlot(T_cells, features = Cytotoxic_CD8_early, label.size = 8, pt.size = 1, label=F, ncol = 2, order = T,reduction = "tsne")
+ggsave(file = "figures/Tcells/Cytotoxic_CD8_early_Markers.png", dpi=300, width=10, height=x1)
 
 #cluster 3
-CD8_DNA_replication <- c("GINS2", "MCM2", "CDC6", "MCM5", "CDC45", "MCM7", "MCM4", "MCM10", "E2F1", "CHEK1")
+CD8_DNA_replication <- c("GINS2", "MCM7", "CHEK1")
 FeaturePlot(T_cells, features = CD8_DNA_replication, label.size = 8, pt.size = 1, label=F, ncol = 3, order = T,reduction = "tsne")
-ggsave(file = "figures/Tcells/CD8_DNA_replication_Markers.png", dpi=300, width=20, height=x1*4)
+ggsave(file = "figures/Tcells/CD8_DNA_replication_Markers.png", dpi=300, width=20, height=x1)
 
-#cluster 4
-CD8_Heat_Shock_Proteins <- c("HSPA6", "BAG3", "HSPA1B", "HSPA1A", "HSPH1", "CHORDC1", "HSPD1")
+#cluster 4 
+CD8_Heat_Shock_Proteins <- c("HSPA6", "HSPA1A", "CHORDC1", "HSPD1")
 FeaturePlot(T_cells, features = CD8_Heat_Shock_Proteins, label.size = 8, pt.size = 1, label=F, ncol = 3, order = T,reduction = "tsne")
 ggsave(file = "figures/Tcells/CD8_Heat_Shock_Proteins_Markers.png", dpi=300, width=20, height=x1*3)
 
-#cluster 5
-CD8_Cell_cycle <- c("TOP2A", "HIST1H3B", "HIST1H3G", "HIST1H3F", "HIST1H3C", "HIST1H1B", "HIST1H2AH", "HIST1H4C", "ESCO2")
-FeaturePlot(T_cells, features = CD8_Cell_cycle, label.size = 8, pt.size = 1, label=F, ncol = 3, order = T,reduction = "tsne")
-ggsave(file = "figures/Tcells/CD8_Cell_cycle_Markers.png", dpi=300, width=20, height=x1*3)
+#cluster 5 HIST1H1B, HIST1H4C
+CD8_Cell_cycle <- c("HIST1H1B", "HIST1H4C")
+FeaturePlot(T_cells, features = CD8_Cell_cycle, label.size = 8, pt.size = 1, label=F, ncol = 2, order = T,reduction = "tsne")
+ggsave(file = "figures/Tcells/CD8_Cell_cycle_Markers.png", dpi=300, width=10, height=x1)
 
 #cluster 6
-CD8_CD4_exhausted <- c("CD4", "CD8", "MIAT", "SETBP1")
-FeaturePlot(T_cells, features = CD8_CD4_exhausted, label.size = 8, pt.size = 1, label=F, ncol = 3, order = T,reduction = "tsne")
-ggsave(file = "figures/Tcells/CD8_CD4_exhausted_Markers.png", dpi=300, width=20, height=x1)
+CD8_CD4_exhausted <- c("MIAT", "SETBP1")
+FeaturePlot(T_cells, features = CD8_CD4_exhausted, label.size = 8, pt.size = 1, label=F, ncol = 2, order = T,reduction = "tsne")
+ggsave(file = "figures/Tcells/CD8_CD4_exhausted_Markers.png", dpi=300, width=10, height=x1)
 
 #cluster 7
 CD8_Proliferating_7 <- c("CCNB1", "CCNB2", "TUBB4B", "TOP2A", "MKI67")
