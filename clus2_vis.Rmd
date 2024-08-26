@@ -1020,7 +1020,11 @@ ggsave(file = "figures/clus2/Tregs_Tregs.png", dpi=300, width=5, height=5)
 ## Annotation
 
 Idents(clus2) <- 'seurat_clusters'
-T_cells <- RenameIdents(clus2, "0" =...)
+clus2 <- RenameIdents(clus2, "0" = "0_cytotoxic_CD8",
+                                 "1" = "1_Tefm",
+                                 "2" = "2_activated",
+                                 "3" = "3_stem_like(?)",
+                                 "4" = "4_proliferation")
 
 p <- DimPlot(clus2, reduction = "tsne", label = F, label.size = 3.5)
 LabelClusters(p, id = "ident",  fontface = "bold",position = "median")

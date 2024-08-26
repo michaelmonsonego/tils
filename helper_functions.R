@@ -25,7 +25,42 @@ library(fgsea)
 
 
 setwd("D:/Michael/git_check/tils")
+x1=4.6
 
+SignatureScore <- function(object, name){
+  merged_responder <- subset(object, subset = Treatment == "Responder")
+  merged_NON_responder <- subset(object, subset = Treatment == "Non_Responder")
+  
+  
+  pval <- unlist(wilcox.test(unlist(merged_NON_responder[[paste0(name)]]), 
+                             unlist(merged_responder[[paste0(name)]]), 
+                             alternative = "two.sided"))[2]
+  
+  object$normalized = (object[[name]]-min(object[[name]]))/(max(object[[name]])-min(object[[name]]))
+  
+  # print(pval)
+  # y.max <-  1.14*max(ggplot_build(p)$layout$panel_scales_y[[1]]$range$range)
+  y.max <- max(object[['normalized']])
+  annot.max.y <- y.max*0.98
+  
+  label <- as.character(symnum(as.numeric(pval), corr = FALSE, na = FALSE,
+                               cutpoints = c(0,0.0001, 0.001, 0.01, 0.05,1),
+                               symbols = c('****',"***", "**", "*", "ns")))
+  # print(label)
+  print(paste0("Pvalue = ",pval, " == ", label))
+  
+  p <- VlnPlot(object, features='normalized', group.by = "Treatment",
+               y.max = y.max, pt.size = 0,
+               cols= c("#ff7f0e", "#1f77b4")) +  theme_classic(base_size = 14) +
+    theme(text = element_text(size=18, colour = "black")) + RotatedAxis() +
+    theme(axis.title.x=element_blank(), axis.text.x=element_blank(),axis.ticks.x=element_blank())+
+    labs(title = "", y = name,  x="") + theme(legend.position="right") +
+    stat_summary(fun.data = "mean_sdl",  fun.args = list(mult = 1),  geom = "pointrange", color = "black") +
+    annotate("text", x = 1.5, y=annot.max.y, label = label, size = 6) +
+    scale_y_continuous(labels = comma)
+  return (p)
+  
+}
 # cytokine tool ------------------------------------------------------------
 cyto_df <- read_csv("excels/df_irea_clus_0.csv")
 cy <- cyto_df %>% select(c("Enrichment Score", "Cytokine")) %>% rename('Cluster_0' = 'Enrichment Score')
@@ -1384,7 +1419,7 @@ i <- 1
 
 
 # search of interesting DE genes between responders & non-responders in cluster 1---------
-clus1 = readRDS("objects/clus1_no_cd4_14_0.5.rds")
+clus1 = readRDS("objects/clus1_no_cd4_second_sub_14_0.5.rds")
 filtered_DE_genes_res_nonRes_Clus1 <- read.csv("excels/filtered_DE_genes_res_nonRes_Clus1.csv")
 
 genes <- filtered_DE_genes_res_nonRes_Clus1 %>% 
@@ -1411,7 +1446,7 @@ while(i<length(genes)){
       strip.text.y = element_text(angle = 0, size = 16, face = "bold")
     ) +
     geom_boxplot(alpha = 0.3, show.legend = FALSE)
-  ggsave(file = paste0("figures/clus1/de_gene_search/","run_", i,  ".png"), dpi=300, width=16, height=12)
+  ggsave(file = paste0("figures/clus1/de_gene_search/","interesting_DE_genes_run_", i,  ".png"), dpi=300, width=16, height=12)
   i <- i+8
 }
 i <- 1
@@ -1466,7 +1501,7 @@ while(i<length(genes)){
       strip.text.y = element_text(angle = 0, size = 16, face = "bold")
     ) +
     geom_boxplot(alpha = 0.3, show.legend = FALSE)
-  ggsave(file = paste0("figures/clus2/de_gene_search/","run_", i,  ".png"), dpi=300, width=16, height=12)
+  ggsave(file = paste0("figures/clus2/de_gene_search/","interesting_DE_genes_run_", i,  ".png"), dpi=300, width=16, height=12)
   i <- i+8
 }
 i <- 1
@@ -1692,6 +1727,152 @@ VlnPlot(clus2, features = c("CD40"),
   ) + 
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
 ggsave(file = "figures/clus2/CD40_2.png", dpi=300, width=10, height=6)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# feature plots for annotation all cells for presentation ----------
+
+T_cells = readRDS("objects/tils_all_.45_integrgate_annotated (2).rds")
+DefaultAssay(T_cells) <- "RNA"
+
+#cluster 0
+Activated_memory_CD4 <- c("IL7R", "TNFRSF4", "AQP3", "GPR183", "CD4", "LTB")
+FeaturePlot(T_cells, features = Activated_memory_CD4, label.size = 8, pt.size = 1, label=F, ncol = 3, order = T,reduction = "tsne")
+ggsave(file = "figures/Tcells/Activated_memory_CD4_Markers.png", dpi=300, width=20, height=x1*2)
+
+#cluster 1
+Cytotoxic_CD8 <- c("NKG7", "GZMB", "CD8B", "CCL4", "GNLY", "PRF1", "CCL5", "CD8A", "JUNB")
+FeaturePlot(T_cells, features = Cytotoxic_CD8, label.size = 8, pt.size = 1, label=F, ncol = 3, order = T,reduction = "tsne")
+ggsave(file = "figures/Tcells/Cytotoxic_CD8_Markers.png", dpi=300, width=20, height=x1*3)
+
+#cluster 2
+Cytotoxic_CD8_early <- c("NELL2", "CD27", "TXK", "CCL5")
+FeaturePlot(T_cells, features = Cytotoxic_CD8_early, label.size = 8, pt.size = 1, label=F, ncol = 3, order = T,reduction = "tsne")
+ggsave(file = "figures/Tcells/Cytotoxic_CD8_early_Markers.png", dpi=300, width=20, height=x1*2)
+
+#cluster 3
+CD8_DNA_replication <- c("GINS2", "MCM2", "CDC6", "MCM5", "CDC45", "MCM7", "MCM4", "MCM10", "E2F1", "CHEK1")
+FeaturePlot(T_cells, features = CD8_DNA_replication, label.size = 8, pt.size = 1, label=F, ncol = 3, order = T,reduction = "tsne")
+ggsave(file = "figures/Tcells/CD8_DNA_replication_Markers.png", dpi=300, width=20, height=x1*4)
+
+#cluster 4
+CD8_Heat_Shock_Proteins <- c("HSPA6", "BAG3", "HSPA1B", "HSPA1A", "HSPH1", "CHORDC1", "HSPD1")
+FeaturePlot(T_cells, features = CD8_Heat_Shock_Proteins, label.size = 8, pt.size = 1, label=F, ncol = 3, order = T,reduction = "tsne")
+ggsave(file = "figures/Tcells/CD8_Heat_Shock_Proteins_Markers.png", dpi=300, width=20, height=x1*3)
+
+#cluster 5
+CD8_Cell_cycle <- c("TOP2A", "HIST1H3B", "HIST1H3G", "HIST1H3F", "HIST1H3C", "HIST1H1B", "HIST1H2AH", "HIST1H4C", "ESCO2")
+FeaturePlot(T_cells, features = CD8_Cell_cycle, label.size = 8, pt.size = 1, label=F, ncol = 3, order = T,reduction = "tsne")
+ggsave(file = "figures/Tcells/CD8_Cell_cycle_Markers.png", dpi=300, width=20, height=x1*3)
+
+#cluster 6
+CD8_CD4_exhausted <- c("CD4", "CD8", "MIAT", "SETBP1")
+FeaturePlot(T_cells, features = CD8_CD4_exhausted, label.size = 8, pt.size = 1, label=F, ncol = 3, order = T,reduction = "tsne")
+ggsave(file = "figures/Tcells/CD8_CD4_exhausted_Markers.png", dpi=300, width=20, height=x1)
+
+#cluster 7
+CD8_Proliferating_7 <- c("CCNB1", "CCNB2", "TUBB4B", "TOP2A", "MKI67")
+FeaturePlot(T_cells, features = CD8_Proliferating_7, label.size = 8, pt.size = 1, label=F, ncol = 3, order = T,reduction = "tsne")
+ggsave(file = "figures/Tcells/CD8_Proliferating_7_Markers.png", dpi=300, width=20, height=x1*2)
+
+#cluster 8
+CD8_Proliferating_cluster_8 <- c("TOP2A", "MKI67")
+FeaturePlot(T_cells, features = CD8_Proliferating_cluster_8, label.size = 8, pt.size = 0.5, label=F, ncol = 2, order = T,reduction = "tsne")
+ggsave(file = "figures/Tcells/CD8_Proliferating_cluster_8_Markers.png", dpi=300, width=10, height=x1)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#proliferation signature between response groups------
+prolif = readRDS("objects/prolif.rds")
+T_cells = readRDS("objects/tils_all_.45_integrgate_annotated (2).rds")
+
+proliferation_sig <- c("MKI67", "STMN1","TOP2A","Nolc1", "Npm1","Ccne2")
+proliferation_sig <- toupper(proliferation_sig)
+proliferation_sig <- list(proliferation_sig)
+
+# proliferation object (clusters 5, 7, 8)
+prolif = AddModuleScore(object = prolif, features = proliferation_sig, name = "proliferation", assay = "RNA")
+a <- FeaturePlot(object = prolif, features = "proliferation1", reduction = "tsne", cols=c("grey","grey","#e46467", "#b33336", "#A73033"))+labs(title = "proliferation_sig", subtitle = "MKI67, STMN1, TOP2A, Nolc1, Npm1,Ccne2..")+ theme(plot.subtitle = element_text(hjust = 0.5))
+a
+ggsave(file = "figures/prolif/proliferation_signature.png.png", dpi=300, width=5, height=5)
+
+gglist <-  list()
+name <- "proliferation1"
+DefaultAssay(prolif) <- "RNA" 
+for(clus in levels(prolif$seurat_clusters)){
+  print(clus)
+  obj <- subset(prolif, subset = seurat_clusters == clus)
+  p <- SignatureScore(obj, 'proliferation1') + ggtitle(obj@active.ident)
+  gglist[[(as.numeric(clus)+1)]] <- p
+}
+cowplot::plot_grid(plotlist = gglist, ncol = 4, nrow = 2) + 
+  ggtitle(name)
+ggsave(file = "figures/prolif/proliferation1_vln_signature.png", dpi=300, width=16, height=10)
+
+# all cells
+T_cells = AddModuleScore(object = T_cells, features = proliferation_sig, name = "proliferation", assay = "RNA")
+a <- FeaturePlot(object = T_cells, features = "proliferation1", reduction = "tsne", cols=c("grey","grey","#e46467", "#b33336", "#A73033"))+labs(title = "proliferation_sig", subtitle = "MKI67, STMN1, TOP2A, Nolc1, Npm1,Ccne2..")+ theme(plot.subtitle = element_text(hjust = 0.5))
+a
+ggsave(file = "figures/Tcells/proliferation_signature.png", dpi=300, width=5, height=5)
+
+gglist <-  list()
+name <- "proliferation1"
+DefaultAssay(T_cells) <- "RNA" 
+for(clus in levels(T_cells$seurat_clusters)){
+  print(clus)
+  obj <- subset(T_cells, subset = seurat_clusters == clus)
+  p <- SignatureScore(obj, 'proliferation1') + ggtitle(obj@active.ident)
+  gglist[[(as.numeric(clus)+1)]] <- p
+}
+cowplot::plot_grid(plotlist = gglist, ncol = 4, nrow = 2) + 
+  ggtitle(name)
+ggsave(file = "figures/Tcells/proliferation1_vln_signature.png", dpi=300, width=16, height=10)
+
+# responder vs. non responder in all cells all together
+p <- SignatureScore(T_cells, 'proliferation1') + ggtitle("proliferation sig")
+ggsave(file = "figures/Tcells/proliferation1_all_cells_combined_signature.png", dpi=300, width=16, height=10)
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

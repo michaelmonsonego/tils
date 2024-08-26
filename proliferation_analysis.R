@@ -33,7 +33,8 @@ levels(Idents(T_cells))
 DimPlot(T_cells, reduction = "tsne",repel = T, label = TRUE, label.size = 5)
 DefaultAssay(T_cells) <- "RNA" #M# important before subseting! otherwise doesnt find cd8
 # pipeline-----------
-prolif <- subset(T_cells, idents = c("7" = "7_CD8_proliferation_like",
+prolif <- subset(T_cells, idents = c("5" = "5_CD8_cell_cycle",
+                                     "7" = "7_CD8_proliferation_like",
                                      "8" = "8_CD8_proliferation")) #M# also subset out CD8 cells
 table(prolif$orig.ident)
 table(prolif$seurat_clusters)
@@ -52,7 +53,7 @@ ggsave(file = "figures/prolif/elbow_plot.png", dpi=300, width=10, height=10)
 
 prolif <- FindNeighbors(prolif, reduction = "pca", dims = 1:10) #M# choose ?
 prolif = RunTSNE(prolif, dims = 1:10)
-#M# prolif = RunUMAP(prolif, dims = 1:18)
+#M# prolif = RunUMAP(prolif, dims = 1:10)
 
 res_seq <- c(.05,.3, .35, .4, .45, .5)
 for(res in res_seq){
@@ -69,7 +70,7 @@ tSNE_ls <- list(tSNE_0.05,tSNE_0.3,tSNE_0.35,tSNE_0.4,tSNE_0.45,tSNE_0.5)
 all_tSNE <- plot_grid(tSNE_0.05,tSNE_0.3,tSNE_0.35,tSNE_0.4,tSNE_0.45,tSNE_0.5, ncol = 3) 
 ggsave(all_tSNE,filename = 'figures/prolif/tils_0_14_dim_res_test.png', dpi=300, height=10, width=16)
 
-prolif <- FindClusters(prolif, resolution = 0.35)
+prolif <- FindClusters(prolif, resolution = 0.3)
 # saveRDS(prolif, file = "objects/prolif.rds") #M# change if adjusted
 prolif <- readRDS("objects/prolif.rds")
 
