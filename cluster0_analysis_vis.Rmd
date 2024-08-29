@@ -60,6 +60,13 @@ TSNEPlot(cd4_cells, group.by ="Treatment", cols= c("#1f77b4","#ff7f0e"), pt.size
 ggsave(file = "figures/cd4_cells/tsne_by_treatment.png", dpi=300, width=10, height=7)
 ```
 
+```{r include=FALSE}
+#M# subset for cluster 0 only for vln plots : to avoid non-informative cluster plotting
+cd4_cluster0 <- subset(cd4_cells, idents = "0_Tefm")
+DefaultAssay(cd4_cluster0) <- "RNA"
+```
+
+
 Top DE genes
 --------------
 ```{r echo=FALSE, cashe = TRUE}

@@ -248,7 +248,7 @@ ggsave(file = "figures/clus1/normalized_cluster_counts.png", dpi=300, width=14, 
 volcano plot
 =====
 ```{r fig.height=10}
-DE_genes <- read.csv("excels/DE_genes_res_nonRes_clus1_no_5.csv")
+DE_genes <- read.csv("excels/DE_genes_res_nonRes_clus1_no_5_second.csv")
 
 DE_genes$Significance <- "Not Significant"
 DE_genes$Significance[DE_genes$p_val_adj < 0.05 & DE_genes$avg_log2FC > 0] <- "Upregulated"
@@ -282,7 +282,7 @@ ggsave(file = "figures/clus1/volcano.png", dpi=300, width=15, height=10)
 Top DE genes between responders and non-responders
 --------------
 ```{r}
-Top100Markers <- read.delim("excels/Top100Markers_per_treatment_tils_1_.5_no_5.csv", sep = ",", header = T, quote="\"", check.names=FALSE)
+Top100Markers <- read.delim("excels/Top100Markers_per_treatment_tils_1_.5_no_5_second.csv", sep = ",", header = T, quote="\"", check.names=FALSE)
 Top100Markers$avg_log2FC <- Top100Markers$avg_log2FC %>% round(2)
 Top100Markers <- Top100Markers[,c("gene", "avg_log2FC", "p_val")] 
 datatable(Top100Markers, rownames = FALSE, filter = 'top', colnames = c('Gene Name', "log2(FC)", 'P.value'))

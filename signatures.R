@@ -39,7 +39,7 @@ setwd("D:/Michael/git_check/tils")
 
 
 # telomere signature ------------------------------------------------------
-clus1 = readRDS("objects/clus1_no_cd4_14_0.5.rds")
+clus1 = readRDS("objects/clus1_no_cd4_second_sub_14_0.5.rds")
 clus2 = readRDS("objects/tils_2.rds")
 
 #M# downregulated in cd8-------------
@@ -118,7 +118,7 @@ ggsave(file = "figures/signatures/stem_cd8_clus_2_down_vln.png", dpi=300, width=
 
 
 #M# upregulated in cd8 ---------
-DNAJA1 #M# memory cd8 DE gene for telomere legth
+# DNAJA1 #M# memory cd8 DE gene for telomere legth
 
 up_cd8 <- "CORO1A
 DBI
@@ -481,6 +481,7 @@ DefaultAssay(clus1_with_sigs) <- "integrated"
 # ____
 
 #M# same for cluster 2 : 
+clus_2_with_sigs <- readRDS("objects/tils_2_with_sigs.rds")
 
 # violin plot per treatment per cluster
 gglist <-  list()

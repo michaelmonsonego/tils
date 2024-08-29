@@ -442,9 +442,12 @@ ggsave(file = "figures/Tcells/Vln_T_naive_by_treatment_1.png", dpi=300, width=6,
 
 #_____________________________________________________________________________________________________________________
 #M# cluster 0
+#M# subset for cluster 0 only for vln plots : to avoid non-informative cluster plotting
+cd4_cluster0 <- subset(cd4_cells, idents = "0_Tefm")
+DefaultAssay(cd4_cluster0) <- "RNA"
 # exhaustion
 VlnPlot(
-  cd4_cells, 
+  cd4_cluster0, 
   features = c("HAVCR2", "LAG3", "TIGIT", "TOX"), 
   assay = "RNA", 
   stack = TRUE, 
@@ -461,11 +464,11 @@ VlnPlot(
     strip.text.y = element_text(angle = 0, size = 16, face = "bold")
   ) +
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
-ggsave(filename = "vln_activation_exhastion_cluster_by_treatment_1.png" , path = "figures/cd4_cells/", dpi=300, width=12, height=10)
+ggsave(filename = "vln_activation_exhastion_cluster_by_treatment_1.png" , path = "figures/cd4_cluster0/", dpi=300, width=8, height=10)
 
 
 VlnPlot(
-  cd4_cells,
+  cd4_cluster0,
   features = c("HAVCR2","LAG3","TIGIT","TOX"),
   assay = "RNA",
   stack=TRUE,
@@ -483,13 +486,13 @@ VlnPlot(
     strip.text.y = element_text(angle = 0, size = 16, face = "bold")
   ) +
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
-ggsave(file = "figures/cd4_cells/vln_activation_exhastion_by_treatment_1.png", dpi=300, width=6, height=10)
+ggsave(file = "figures/cd4_cluster0/vln_activation_exhastion_by_treatment_1.png", dpi=300, width=6, height=10)
 
 
 
 # effector markers
 VlnPlot(
-  cd4_cells, 
+  cd4_cluster0, 
   features = c("GZMB","PRF1","IFNG","TNF", "ICOS"), 
   assay = "RNA", 
   stack = TRUE, 
@@ -506,11 +509,11 @@ VlnPlot(
     strip.text.y = element_text(angle = 0, size = 16, face = "bold")
   ) +
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
-ggsave(file = "figures/cd4_cells/Vln_T_effector_cluster_by_treatment_1.png", dpi=300, width=12, height=10, limitsize=FALSE)
+ggsave(file = "figures/cd4_cluster0/Vln_T_effector_cluster_by_treatment_1.png", dpi=300, width=8, height=10, limitsize=FALSE)
 
 
 VlnPlot(
-  cd4_cells,
+  cd4_cluster0,
   features = c("GZMB","PRF1","IFNG","TNF", "ICOS"),
   assay = "RNA",
   stack=TRUE,
@@ -528,12 +531,12 @@ VlnPlot(
     strip.text.y = element_text(angle = 0, size = 16, face = "bold")
   ) +
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
-ggsave(file = "figures/cd4_cells/Vln_T_effector_by_treatment_1.png", dpi=300, width=6, height=10, limitsize=FALSE)
+ggsave(file = "figures/cd4_cluster0/Vln_T_effector_by_treatment_1.png", dpi=300, width=6, height=10, limitsize=FALSE)
 
 
 # naive markers
 VlnPlot(
-  cd4_cells, 
+  cd4_cluster0, 
   features = c("IL7R","CD44","CD69","ENTPD1"), 
   assay = "RNA", 
   stack = TRUE, 
@@ -550,11 +553,11 @@ VlnPlot(
     strip.text.y = element_text(angle = 0, size = 16, face = "bold")
   ) +
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
-ggsave(file = "figures/cd4_cells/Vln_T_naive_cluster_by_treatment_1.png", dpi=300, width=12, height=10, limitsize=FALSE)
+ggsave(file = "figures/cd4_cluster0/Vln_T_naive_cluster_by_treatment_1.png", dpi=300, width=8, height=10, limitsize=FALSE)
 
 
 VlnPlot(
-  cd4_cells,
+  cd4_cluster0,
   features = c("IL7R","CD44","CD69","ENTPD1"),
   assay = "RNA",
   stack=TRUE,
@@ -572,7 +575,7 @@ VlnPlot(
     strip.text.y = element_text(angle = 0, size = 16, face = "bold")
   ) +
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
-ggsave(file = "figures/cd4_cells/Vln_T_naive_by_treatment_1.png", dpi=300, width=6, height=10, limitsize=FALSE)
+ggsave(file = "figures/cd4_cluster0/Vln_T_naive_by_treatment_1.png", dpi=300, width=6, height=10, limitsize=FALSE)
 
 #_____________________________________________________________________________________________________________________
 
@@ -843,33 +846,6 @@ VlnPlot(
   ) +
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
 ggsave(file = "figures/clus2/Vln_T_naive_by_treatment_1.png", dpi=300, width=6, height=10, limitsize=FALSE)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
