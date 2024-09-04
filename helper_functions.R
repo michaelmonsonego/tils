@@ -30,33 +30,22 @@ x1=4.6
 
 
 
-# merge proliferation clusters --------------------------------------------
+# merge proliferation clusters(5,7,8) in all cells--------------------------------------------
 
-clusters_to_merge <- c("5_CD8_cell_cycle", "7_CD8_proliferation_like", "8_CD8_proliferation")
-# Convert the column to a character vector
-T_cells$merged_clusters <- as.character(T_cells$seurat_clusters)
+new.cluster.ids <- c("0" = "0_activated_memory_CD4",
+                     "1" = "1_cytotoxic_CD8",
+                     "2" = "2_cytotoxic_CD8",
+                     "3" = "3_CD8_DNA_replication",
+                     "4" = "4_CD8 heat_shock_proteins",
+                     "5" = "5_CD8_proliferation",
+                     "6" = "6_CD8_(CD4)_exhausted",
+                     "7" = "5_CD8_proliferation",
+                     "8" = "5_CD8_proliferation")
+names(new.cluster.ids) <- levels(T_cells)
+T_cells <- RenameIdents(T_cells, new.cluster.ids)
+DimPlot(T_cells, reduction = "tsne", label = TRUE, pt.size = 0.5) + NoLegend()
 
-# Assign the new value to the clusters you want to merge
-T_cells$merged_clusters[T_cells$seurat_clusters %in% clusters_to_merge] <- "5_Proliferation_Cycle"
-
-# (Optional) Convert back to a factor
-T_cells$merged_clusters <- factor(T_cells$merged_clusters)
-
-# Update the identities in the Seurat object
-T_cells <- SetIdent(T_cells, value = "merged_clusters")
-
-# Re-run the tSNE with the updated identities
-T_cells <- RunTSNE(T_cells, dims = 1:15) 
-
-# Plot the new tSNE
-DimPlot(T_cells, reduction = "tsne", label = TRUE, pt.size = 0.5, label.size = 6)
-
-
-
-
-
-
-
+#M# saveRDS(T_cells, file = "objects/tils_all_.45_integrgate_annotated_merge_prolif.rds")
 
 
 # signature score function ------------

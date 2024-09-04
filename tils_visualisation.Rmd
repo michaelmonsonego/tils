@@ -51,7 +51,8 @@ setwd("D:/Michael/git_check/tils")
 #  setwd("C:/Users/michael monsonego/Documents/tils") #M# update between computers(git)
 
 x1=4.6
-T_cells = readRDS("objects/tils_all_.45_integrgate_annotated (2).rds")
+#T_cells = readRDS("objects/tils_all_.45_integrgate_annotated (2).rds")
+T_cells = readRDS("objects/tils_all_.45_integrgate_annotated_merge_prolif.rds")
 
 # counting cells in treatment and control
 unique(T_cells$orig.ident) # R1-4, N1-4
@@ -499,6 +500,23 @@ T_cells <- RenameIdents(T_cells, "0" = "0_activated_memory_CD4",
 p <- DimPlot(T_cells, reduction = "tsne", label = F, label.size = 3.5)
 LabelClusters(p, id = "ident",  fontface = "bold",position = "median")
 #M# saveRDS(T_cells, file = "objects/tils_all_.45_integrgate_annotated.rds")
+
+# merge proliferation clusters(5,7,8) in all cells--------------------------------------------
+
+new.cluster.ids <- c("0" = "0_activated_memory_CD4",
+                     "1" = "1_cytotoxic_CD8",
+                     "2" = "2_cytotoxic_CD8",
+                     "3" = "3_CD8_DNA_replication",
+                     "4" = "4_CD8 heat_shock_proteins",
+                     "5" = "5_CD8_proliferation",
+                     "6" = "6_CD8_(CD4)_exhausted",
+                     "7" = "5_CD8_proliferation",
+                     "8" = "5_CD8_proliferation")
+names(new.cluster.ids) <- levels(T_cells)
+T_cells <- RenameIdents(T_cells, new.cluster.ids)
+DimPlot(T_cells, reduction = "tsne", label = TRUE, pt.size = 0.5) + NoLegend()
+
+#M# saveRDS(T_cells, file = "objects/tils_all_.45_integrgate_annotated_merge_prolif.rds")
 ```
 
 
