@@ -27,6 +27,39 @@ library(fgsea)
 setwd("D:/Michael/git_check/tils")
 x1=4.6
 
+
+
+
+# merge proliferation clusters --------------------------------------------
+
+clusters_to_merge <- c("5_CD8_cell_cycle", "7_CD8_proliferation_like", "8_CD8_proliferation")
+# Convert the column to a character vector
+T_cells$merged_clusters <- as.character(T_cells$seurat_clusters)
+
+# Assign the new value to the clusters you want to merge
+T_cells$merged_clusters[T_cells$seurat_clusters %in% clusters_to_merge] <- "5_Proliferation_Cycle"
+
+# (Optional) Convert back to a factor
+T_cells$merged_clusters <- factor(T_cells$merged_clusters)
+
+# Update the identities in the Seurat object
+T_cells <- SetIdent(T_cells, value = "merged_clusters")
+
+# Re-run the tSNE with the updated identities
+T_cells <- RunTSNE(T_cells, dims = 1:15) 
+
+# Plot the new tSNE
+DimPlot(T_cells, reduction = "tsne", label = TRUE, pt.size = 0.5, label.size = 6)
+
+
+
+
+
+
+
+
+
+# signature score function ------------
 SignatureScore <- function(object, name){
   merged_responder <- subset(object, subset = Treatment == "Responder")
   merged_NON_responder <- subset(object, subset = Treatment == "Non_Responder")
