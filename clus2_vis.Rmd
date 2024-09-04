@@ -260,12 +260,12 @@ ggsave(file = "figures/clus2/T_Cells_Markers.png", dpi=300, width=15, height=x1*
 ### checking 
 ```{r cache=T, fig.height=x1*2, warning=FALSE}
 DefaultAssay(clus2) <- "RNA"
-FeaturePlot(clus2, features = c("PDCD1", "HIVEP1"), order=TRUE,pt.size=1, reduction="tsne", ncol=3)
+FeaturePlot(clus2, features = c("LDHA","LDHB", "LDHC"), order=TRUE,pt.size=1, reduction="tsne", ncol=3)
 ggsave(file = "figures/clus2/checking.png", dpi=300, width=15, height=6)
 ```
 
 ```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height=16}
-VlnPlot(clus2, features = c("IL27RA", "IL12RA"), 
+VlnPlot(clus2, features = c("LDHA","LDHB", "LDHC"), 
   assay = "RNA", 
   stack = TRUE, 
   flip = TRUE, 
