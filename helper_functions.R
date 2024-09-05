@@ -48,6 +48,28 @@ DimPlot(T_cells, reduction = "tsne", label = TRUE, pt.size = 0.5) + NoLegend()
 #M# saveRDS(T_cells, file = "objects/tils_all_.45_integrgate_annotated_merge_prolif.rds")
 
 
+# info of proliferation cluster in all cells ----------------------------------
+cluster_5_cells <- subset(T_cells, idents = c("5_CD8_proliferation"))
+
+Res_cell_counts <- table(cluster_5_cells$Treatment)["Responder"]
+Non_res_cell_counts <- table(cluster_5_cells$Treatment)["Non_Responder"]
+total_cells_in_cluster <- Res_cell_counts + Non_res_cell_counts
+
+res_percentage <- (Res_cell_counts / total_cells_in_cluster) * 100
+non_res_percentage <-  (Non_res_cell_counts / total_cells_in_cluster) * 100
+
+
+
+cluster_5_stats <- data.frame(
+  Treatment = names(cell_counts),
+  Cluster_5_Cell_Counts = as.vector(cell_counts),
+  Total_Cell_Counts = as.vector(total_cells),
+  Percentage_in_Cluster_5 = as.vector(percentages)
+)
+
+print(cluster_5_stats)
+
+
 # signature score function ------------
 SignatureScore <- function(object, name){
   merged_responder <- subset(object, subset = Treatment == "Responder")
@@ -1811,7 +1833,7 @@ ggsave(file = "figures/Tcells/CD8_Proliferating_cluster_8_Markers.png", dpi=300,
 
 #proliferation signature between response groups------
 prolif = readRDS("objects/prolif.rds")
-T_cells = readRDS("objects/tils_all_.45_integrgate_annotated (2).rds")
+T_cells = readRDS("objects/tils_all_.45_integrgate_annotated_merge_prolif.rds")
 
 proliferation_sig <- c("MKI67", "STMN1","TOP2A","Nolc1", "Npm1","Ccne2")
 proliferation_sig <- toupper(proliferation_sig)
