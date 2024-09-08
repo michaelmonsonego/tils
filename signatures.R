@@ -164,7 +164,7 @@ cowplot::plot_grid(plotlist = gglist, ncol = 4, nrow = 2) +
 ggsave(file = "figures/clus2/clus_2_down_ifng_vln.png", dpi=300, width=16, height=10)
 
 
-# IFNg up signbarue cluster 2-------------------------------
+# IFNg hallmark signbarue cluster 2-------------------------------
 
 up_ifng <- "ADAR
 APOL6
