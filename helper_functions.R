@@ -716,7 +716,7 @@ ggsave(file = "figures/clus1/Vln_T_effector_by_treatment_1.png", dpi=300, width=
 # naive markers
 VlnPlot(
   clus1, 
-  features = c("IL7R","CD44","CD69","ENTPD1"), 
+  features = c("IL7R","CD44","CD69","ENTPD1", "CD40LG"), 
   assay = "RNA", 
   stack = TRUE, 
   flip = TRUE, 
@@ -737,7 +737,7 @@ ggsave(file = "figures/clus1/Vln_T_naive_cluster_by_treatment_1.png", dpi=300, w
 
 VlnPlot(
   clus1,
-  features = c("IL7R","CD44","CD69","ENTPD1"),
+  features = c("IL7R","CD44","CD69","ENTPD1", "CD40LG"),
   assay = "RNA",
   stack=TRUE,
   flip= TRUE,
