@@ -29,6 +29,19 @@ x1=4.6
 
 
 
+# info for rons tool ---------------------
+
+
+cell_annotations <- data.frame(Cell_ID = names(Idents(T_cells)), 
+                               Identity = Idents(T_cells), row.names = NULL)
+write.csv(cell_annotations, file = "excels/T_cells_idents_annotations.csv", row.names = FALSE)
+
+
+rna_assay <- GetAssayData(T_cells, assay = "RNA", slot = "counts")
+rna_assay_df <- as.data.frame(as.matrix(rna_assay))
+write.csv(rna_assay_df, file = "excels/T_cells_RNA_assay_counts.csv")
+
+
 
 # merge proliferation clusters(5,7,8) in all cells--------------------------------------------
 
@@ -1065,10 +1078,32 @@ ggsave(file = "figures/Tcells/cd8_cd4_ratio.png", dpi=300, width=4, height=6)
 
 
 # cd40lg zoom in --------
+# all cells
+VlnPlot(T_cells, features = c("CD40LG"),
+        assay = "RNA", 
+        flip = TRUE, 
+        split.by = "Treatment",
+        pt.size = 0
+) + 
+  theme_classic() +
+  theme(
+    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.title.x = element_blank(),
+    axis.text.y = element_text(size = 24, face = "italic"),
+    axis.title.y = element_text(size = 20, face = "bold"),
+    axis.ticks.y = element_line(size = 0.5),
+    strip.text.y = element_text(angle = 0, size = 16, face = "bold")
+  ) + 
+  geom_boxplot(alpha = 0.3, show.legend = FALSE)
+ggsave(file = "figures/Tcells/cd40lg.png", dpi=300, width=10, height=6)
+
+
+# cd4 cluster
 VlnPlot(cd4_cells, features = c("CD40LG"),
         assay = "RNA", 
         flip = TRUE, 
-        split.by = "Treatment"
+        split.by = "Treatment",
+        pt.size = 0
 ) + 
   theme_classic() +
   theme(
@@ -1082,10 +1117,12 @@ VlnPlot(cd4_cells, features = c("CD40LG"),
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
 ggsave(file = "figures/cd4_cells/cd40lg_cluster_0.png", dpi=300, width=10, height=6)
 
+# clus 1
 VlnPlot(clus1, features = c("CD40LG"),
         assay = "RNA", 
         flip = TRUE, 
-        split.by = "Treatment"
+        split.by = "Treatment",
+        pt.size = 0
 ) + 
   theme_classic() +
   theme(
@@ -1099,10 +1136,12 @@ VlnPlot(clus1, features = c("CD40LG"),
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
 ggsave(file = "figures/clus1/cd40lg_cluster_1.png", dpi=300, width=10, height=6)
 
+# clus 2
 VlnPlot(clus2, features = c("CD40LG"),
         assay = "RNA", 
         flip = TRUE, 
-        split.by = "Treatment"
+        split.by = "Treatment",
+        pt.size = 0
 ) + 
   theme_classic() +
   theme(
