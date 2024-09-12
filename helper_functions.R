@@ -28,6 +28,9 @@ setwd("D:/Michael/git_check/tils")
 x1=4.6
 
 
+# save tsne with cluster number as label for all cells -------------------------
+DimPlot(T_cells, reduction = "tsne", group.by = "seurat_clusters", label = TRUE, pt.size = 0.5, label.size = 16)
+ggsave(file = "figures/Tcells/tsne_number_labels.png", dpi=300, width=15, height=10)
 
 # info for rons tool ---------------------
 
@@ -456,7 +459,7 @@ ggsave(file = "figures/Tcells/Vln_T_effector_by_treatment_1.png", dpi=300, width
 # naive markers
 VlnPlot(
   T_cells, 
-  features = c("IL7R","CD44","CD69","ENTPD1"), 
+  features = c("IL7R","CD44","CD69","ENTPD1", "CD40LG"), 
   assay = "RNA", 
   stack = TRUE, 
   flip = TRUE, 
@@ -594,7 +597,7 @@ ggsave(file = "figures/cd4_cluster0/Vln_T_effector_by_treatment_1.png", dpi=300,
 # naive markers
 VlnPlot(
   cd4_cluster0, 
-  features = c("IL7R","CD44","CD69","ENTPD1"), 
+  features = c("IL7R","CD44","CD69","ENTPD1", "CD40LG"), 
   assay = "RNA", 
   stack = TRUE, 
   flip = TRUE, 
@@ -610,7 +613,7 @@ VlnPlot(
     strip.text.y = element_text(angle = 0, size = 16, face = "bold")
   ) +
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
-ggsave(file = "figures/cd4_cluster0/Vln_T_naive_cluster_by_treatment_1.png", dpi=300, width=8, height=10, limitsize=FALSE)
+ggsave(file = "figures/cd4_cells/cluster0_only/Vln_T_naive_cluster_by_treatment_1.png", dpi=300, width=8, height=10, limitsize=FALSE)
 
 
 VlnPlot(
@@ -987,13 +990,12 @@ ggsave(file = "figures/clus2/tsne_by_treatment_together.png", dpi=300, width=14,
 # calculate cd8/cd4 ratio in responders and non ---------
 
 # add cell type for ratio calculation
-T_cells$cell_type <- ifelse(T_cells@assays$RNA@data["CD8A", ] > 0.2 | T_cells@assays$RNA@data["CD8B", ] > 0.2, 
+T_cells$cell_type <- ifelse(T_cells@assays$RNA@data["CD8A", ] > 0 | T_cells@assays$RNA@data["CD8B", ] > 0, 
                             "CD8", 
-                            ifelse(T_cells@assays$RNA@data["CD4", ] > 0.2, 
+                            ifelse(T_cells@assays$RNA@data["CD4", ] > 0, 
                                    "CD4", 
                                    "Other"))
 table(T_cells$cell_type)
-
 
 responders <- subset(T_cells, subset = Treatment == "Responder")
 non_responders <- subset(T_cells, subset = Treatment == "Non_Responder")
@@ -1007,8 +1009,14 @@ cat("CD8/CD4 ratio in responders:", cd8_cd4_ratio_responders, "\n")
 cat("CD8/CD4 ratio in non-responders:", cd8_cd4_ratio_non_responders, "\n")
 
 #M# calculate ratio per patient
+df <- T_cells@meta.data %>%
+  group_by(Sample, cell_type) %>%
+  summarize(Freq = n())
+#M# why doesnt this work?! 11.9.24
+
 df_wide <- df %>%
   pivot_wider(names_from = Var2, values_from = Freq)
+
 calculate_ratio <- function(sample_id) {
   cd4_count <- df_wide[df_wide$Var1 == sample_id, "CD4"]
   cd8_count <- df_wide[df_wide$Var1 == sample_id, "CD8"]

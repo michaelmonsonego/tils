@@ -36,7 +36,7 @@ setwd("D:/Michael/git_check/tils")
 
 
 
-# TGFb up signbarue cluster 2-------------------------------
+# TGFb up signature -------------------------------
 
 up_tgfb <- "ACVR1	APC	ARID4B	BCAR3	BMP2	BMPR1A	BMPR2	CDH1	CDK9	CDKN1C	CTNNB1	ENG	FKBP1A	FNTA	FURIN	HDAC1	HIPK2	ID1	ID2	ID3	IFNGR2	JUNB	KLF10	LEFTY2	LTBP2	MAP3K7	NCOR2	NOG	PMEPA1	PPM1A	PPP1CA	PPP1R15A	RAB31	RHOA	SERPINE1	SKI	SKIL	SLC20A1	SMAD1	SMAD3	SMAD6	SMAD7	SMURF1	SMURF2	SPTBN1	TGFB1	TGFBR1	TGIF1	THBS1	TJP1	TRIM33	UBE2D3	WWTR1	XIAP
 "
@@ -65,13 +65,48 @@ cowplot::plot_grid(plotlist = gglist, ncol = 4, nrow = 2) +
   ggtitle(name)
 ggsave(file = "figures/clus2/clus_2_up_tgfb_vln.png", dpi=300, width=16, height=10)
 
+# clus 1
+clus1 = AddModuleScore(object = clus1, features = up_tgfb, name = "up_tgfb", assay = "RNA")
+a <- FeaturePlot(object = clus1, features = "up_tgfb1", reduction = "tsne", cols=c("grey","grey","#e46467", "#b33336", "#A73033"))+labs(title = "up_tgfb", subtitle = "up_tgfb")+ theme(plot.subtitle = element_text(hjust = 0.5))
+a
+ggsave(file = "figures/clus1/clus_1_up_tgfb.png", dpi=300, width=5, height=5)
 
 
+gglist <-  list()
+name <- "up_tgfb1"
+DefaultAssay(clus1) <- "RNA" 
+for(clus in levels(clus1$seurat_clusters)){
+  print(clus)
+  obj <- subset(clus1, subset = seurat_clusters == clus)
+  p <- SignatureScore(obj, 'up_tgfb1') + ggtitle(obj@active.ident)
+  gglist[[(as.numeric(clus)+1)]] <- p
+}
+cowplot::plot_grid(plotlist = gglist, ncol = 4, nrow = 2) + 
+  ggtitle(name)
+ggsave(file = "figures/clus1/clus_1_up_tgfb_vln.png", dpi=300, width=16, height=10)
+
+# cluster 0
+cd4_cells = AddModuleScore(object = cd4_cells, features = up_tgfb, name = "up_tgfb", assay = "RNA")
+a <- FeaturePlot(object = cd4_cells, features = "up_tgfb1", reduction = "tsne", cols=c("grey","grey","#e46467", "#b33336", "#A73033"))+labs(title = "up_tgfb", subtitle = "up_tgfb")+ theme(plot.subtitle = element_text(hjust = 0.5))
+a
+ggsave(file = "figures/cd4_cells/clus_0_up_tgfb.png", dpi=300, width=5, height=5)
 
 
+gglist <-  list()
+name <- "up_tgfb1"
+DefaultAssay(cd4_cells) <- "RNA" 
+for(clus in levels(cd4_cells$seurat_clusters)){
+  print(clus)
+  obj <- subset(cd4_cells, subset = seurat_clusters == clus)
+  p <- SignatureScore(obj, 'up_tgfb1') + ggtitle(obj@active.ident)
+  gglist[[(as.numeric(clus)+1)]] <- p
+}
+cowplot::plot_grid(plotlist = gglist, ncol = 4, nrow = 2) + 
+  ggtitle(name)
+ggsave(file = "figures/cd4_cells/clus_0_up_tgfb_vln.png", dpi=300, width=16, height=10)
 
 
-# IFNg down signbarue cluster 2-------------------------------
+# IFNg down signature cluster 2-------------------------------
 down_ifng <- "Akr1c18
 Apex1
 BC094916
@@ -164,7 +199,7 @@ cowplot::plot_grid(plotlist = gglist, ncol = 4, nrow = 2) +
 ggsave(file = "figures/clus2/clus_2_down_ifng_vln.png", dpi=300, width=16, height=10)
 
 
-# IFNg hallmark signbarue cluster 2-------------------------------
+# IFNg hallmark signature -------------------------------
 
 up_ifng <- "ADAR
 APOL6
@@ -373,6 +408,8 @@ up_ifng <- toupper(up_ifng)
 up_ifng <- trimws(up_ifng)
 
 up_ifng <- list(up_ifng)
+
+# clus 2
 clus2 = AddModuleScore(object = clus2, features = up_ifng, name = "up_ifng", assay = "RNA")
 a <- FeaturePlot(object = clus2, features = "up_ifng1", reduction = "tsne", cols=c("grey","grey","#e46467", "#b33336", "#A73033"))+labs(title = "up_ifng", subtitle = "up_ifng")+ theme(plot.subtitle = element_text(hjust = 0.5))
 a
@@ -393,7 +430,46 @@ cowplot::plot_grid(plotlist = gglist, ncol = 4, nrow = 2) +
 ggsave(file = "figures/clus2/clus_2_up_ifng_vln.png", dpi=300, width=16, height=10)
 
 
+# clus 1
+clus1 = AddModuleScore(object = clus1, features = up_ifng, name = "up_ifng", assay = "RNA")
+a <- FeaturePlot(object = clus1, features = "up_ifng1", reduction = "tsne", cols=c("grey","grey","#e46467", "#b33336", "#A73033"))+labs(title = "up_ifng", subtitle = "up_ifng")+ theme(plot.subtitle = element_text(hjust = 0.5))
+a
+ggsave(file = "figures/clus1/clus_1_up_ifng.png", dpi=300, width=5, height=5)
 
+
+gglist <-  list()
+name <- "up_ifng1"
+DefaultAssay(clus1) <- "RNA" 
+for(clus in levels(clus1$seurat_clusters)){
+  print(clus)
+  obj <- subset(clus1, subset = seurat_clusters == clus)
+  p <- SignatureScore(obj, 'up_ifng1') + ggtitle(obj@active.ident)
+  gglist[[(as.numeric(clus)+1)]] <- p
+}
+cowplot::plot_grid(plotlist = gglist, ncol = 4, nrow = 2) + 
+  ggtitle(name)
+ggsave(file = "figures/clus1/clus_1_up_ifng_vln.png", dpi=300, width=16, height=10)
+
+
+# clus 0
+cd4_cells = AddModuleScore(object = cd4_cells, features = up_ifng, name = "up_ifng", assay = "RNA")
+a <- FeaturePlot(object = cd4_cells, features = "up_ifng1", reduction = "tsne", cols=c("grey","grey","#e46467", "#b33336", "#A73033"))+labs(title = "up_ifng", subtitle = "up_ifng")+ theme(plot.subtitle = element_text(hjust = 0.5))
+a
+ggsave(file = "figures/cd4_cells/clus_0_up_ifng.png", dpi=300, width=5, height=5)
+
+
+gglist <-  list()
+name <- "up_ifng1"
+DefaultAssay(cd4_cells) <- "RNA" 
+for(clus in levels(cd4_cells$seurat_clusters)){
+  print(clus)
+  obj <- subset(cd4_cells, subset = seurat_clusters == clus)
+  p <- SignatureScore(obj, 'up_ifng1') + ggtitle(obj@active.ident)
+  gglist[[(as.numeric(clus)+1)]] <- p
+}
+cowplot::plot_grid(plotlist = gglist, ncol = 4, nrow = 2) + 
+  ggtitle(name)
+ggsave(file = "figures/cd4_cells/clus_0_up_ifng_vln.png", dpi=300, width=16, height=10)
 
 
 
