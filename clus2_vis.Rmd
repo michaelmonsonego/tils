@@ -172,7 +172,7 @@ p1 <- ggplot(frque, aes(x = Cluster, y = normalizedppstatus, fill = Treatment)) 
    title = element_text(size = 13),
    legend.justification = "top",
    panel.border = element_blank()) +
- geom_hline(yintercept = 33.3, linetype='dotted') 
+ geom_hline(yintercept = 50, linetype='dotted') 
 
 p2<-ggplot(frque, aes(x= Cluster, y= Freq, fill = Treatment)) +
  theme_minimal() +
@@ -939,31 +939,31 @@ VlnPlot(clus2, features = c("PRDM1","ITGAE","IL7R","CD44","ITGA1","CD69","CRTAM"
 ### h. T cells features signatures 
 ```{r fig.height=4, fig.width=4, message=FALSE, warning=FALSE}
 
-il2 <- list(c("Shc1","Stat5b","Lck","Stat5a","Jak3","Syk","Csnk2a1","Elk1","Grb2","Hras","Il2","Il2ra","Il2rb","Map2k1","Sos1","Csnk2a2","Fos","Jun","Mapk3","Il2rg","Mapk8","Raf1","Jak1"))
+il2 <- list(toupper(c("Shc1","Stat5b","Lck","Stat5a","Jak3","Syk","Csnk2a1","Elk1","Grb2","Hras","Il2","Il2ra","Il2rb","Map2k1","Sos1","Csnk2a2","Fos","Jun","Mapk3","Il2rg","Mapk8","Raf1","Jak1")))
 clus2 = AddModuleScore(object = clus2, features = il2, name = "il2", assay = "RNA")
 a <- FeaturePlot(object = clus2, features = "il21", reduction = "tsne", cols=c("grey","grey","#e46467", "#b33336", "#A73033"))+labs(title = "il2", subtitle = "Il2,Il2ra,Il2rb..")+ theme(plot.subtitle = element_text(hjust = 0.5))
 a
 ggsave(file = "figures/clus2/il2.png", dpi=300, width=5, height=5)
 
-il2_r <- list(c("Bad", "Bcl2", "Cbl", "Cflar", "Crkl", "E2f1", "Fas", "Fasl",	"Fos", "Grb2", "Hras", "Ikzf3", "Il2ra", "Il2rb", "Il2rg", "Irs1", "Jak1", "Jak3", "Mapk1", "Mapk3", "Myc", "Nmi", "Pik3ca", "Pik3cg", "Pik3r1", "Ptpn6", "Raf1", "Rps6kb1", "Shc1", "Socs1", "Socs3", "Sos1", "Stat5a", "Stat5b", "Syk"))
+il2_r <- list(toupper(c("Bad", "Bcl2", "Cbl", "Cflar", "Crkl", "E2f1", "Fas", "Fasl",	"Fos", "Grb2", "Hras", "Ikzf3", "Il2ra", "Il2rb", "Il2rg", "Irs1", "Jak1", "Jak3", "Mapk1", "Mapk3", "Myc", "Nmi", "Pik3ca", "Pik3cg", "Pik3r1", "Ptpn6", "Raf1", "Rps6kb1", "Shc1", "Socs1", "Socs3", "Sos1", "Stat5a", "Stat5b", "Syk")))
 clus2 = AddModuleScore(object = clus2, features = il2_r, name = "il2_r", assay = "RNA")
 a <- FeaturePlot(object = clus2, features = "il2_r1", reduction = "tsne", cols=c("grey","grey","#e46467", "#b33336", "#A73033"))+labs(title = "il2_R", subtitle = "Il2ra, Il2rb, Il2rg...")+ theme(plot.subtitle = element_text(hjust = 0.5))
 a
 ggsave(file = "figures/clus2/il2_R_.png", dpi=300, width=5, height=5)
 
-persistance_up <- list(c('KLRB1','ZNF683','ITGB1','IL7R','LIME1', "S1PR1", "TIMP1", "TBXAS1", "KLF2", "LTB", "UBXN11", "CD40LG", "VCL", "RASA3", "SCML4", "MYC", "P2RY8"))
+persistance_up <- list(toupper(c('KLRB1','ZNF683','ITGB1','IL7R','LIME1', "S1PR1", "TIMP1", "TBXAS1", "KLF2", "LTB", "UBXN11", "CD40LG", "VCL", "RASA3", "SCML4", "MYC", "P2RY8")))
 clus2 = AddModuleScore(object = clus2, features = persistance_up, name = "persistance_up", assay = "RNA")
 a <- FeaturePlot(object = clus2, features = "persistance_up1", reduction = "tsne", cols=c("grey","grey","#e46467", "#b33336", "#A73033"))+labs(title = "persistance_up", subtitle = "KLRB1, ZNF683, ITGB1..")+ theme(plot.subtitle = element_text(hjust = 0.5))
 a
 ggsave(file = "figures/clus2/persistance_up.png", dpi=300, width=5, height=5)
 
-CD8_memory_list = list(c("IL7R","CD44","CXCR6"))
+CD8_memory_list = list(toupper(c("IL7R","CD44","CXCR6")))
 clus2 = AddModuleScore(object = clus2, features = CD8_memory_list, name = "CD8_memory", assay = "RNA")
 a <- FeaturePlot(object = clus2, features = "CD8_memory1", reduction = "tsne", cols=c("grey","grey","#e46467", "#b33336", "#A73033"))+labs(title = "0_ CD8+ memory", subtitle = "(IL7R,CD44,CXCR6)")+ theme(plot.subtitle = element_text(hjust = 0.5))
 a
 ggsave(file = "figures/clus2/CD8_memory_Cxcl10.png", dpi=300, width=5, height=5)
 
-activated_list = list(c("PDCD1","KLRD1","GZMA"))
+activated_list = list(toupper(c("PDCD1","KLRD1","GZMA")))
 clus2 = AddModuleScore(object = clus2, features = activated_list, name = "activated", assay = "RNA")
 b <- FeaturePlot(object = clus2, features = "activated1", reduction = "tsne", cols=c("grey","grey","#e46467", "#b33336", "#A73033"))+labs(title = "activated_CD8+activated", subtitle = "(PDCD1,KLRD1,GZMA)")+ theme(plot.subtitle = element_text(hjust =0.5))
 b
@@ -1023,7 +1023,7 @@ Idents(clus2) <- 'seurat_clusters'
 clus2 <- RenameIdents(clus2, "0" = "0_cytotoxic_CD8",
                                  "1" = "1_Tefm",
                                  "2" = "2_activated",
-                                 "3" = "3_stem_like(?)",
+                                 "3" = "3_stem_like",
                                  "4" = "4_proliferation")
 
 p <- DimPlot(clus2, reduction = "tsne", label = F, label.size = 3.5)

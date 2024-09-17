@@ -222,7 +222,7 @@ p1 <- ggplot(frque, aes(x = Cluster, y = normalizedppstatus, fill = Treatment)) 
    title = element_text(size = 13),
    legend.justification = "top",
    panel.border = element_blank()) +
- geom_hline(yintercept = 33.3, linetype='dotted') 
+ geom_hline(yintercept = 50, linetype='dotted') 
 
 p2<-ggplot(frque, aes(x= Cluster, y= Freq, fill = Treatment)) +
  theme_minimal() +

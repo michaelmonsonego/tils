@@ -459,7 +459,7 @@ ggsave(file = "figures/Tcells/Vln_T_effector_by_treatment_1.png", dpi=300, width
 # naive markers
 VlnPlot(
   T_cells, 
-  features = c("IL7R","CD44","CD69","ENTPD1", "CD40LG"), 
+  features = c("CD44","CD69","ENTPD1", "CD40LG"), 
   assay = "RNA", 
   stack = TRUE, 
   flip = TRUE, 
@@ -867,7 +867,7 @@ ggsave(file = "figures/clus2/Vln_T_effector_by_treatment_1.png", dpi=300, width=
 # naive markers
 VlnPlot(
   clus2, 
-  features = c("IL7R","CD44","CD69","ENTPD1", "CD40LG"), 
+  features = c("CD44","CD69","ENTPD1", "CD40LG"), 
   assay = "RNA", 
   stack = TRUE, 
   flip = TRUE, 
@@ -888,7 +888,7 @@ ggsave(file = "figures/clus2/Vln_T_naive_cluster_by_treatment_1.png", dpi=300, w
 
 VlnPlot(
   clus2,
-  features = c("IL7R","CD44","CD69","ENTPD1", "CD40LG"),
+  features = c("CD44","CD69","ENTPD1", "CD40LG"),
   assay = "RNA",
   stack=TRUE,
   flip= TRUE,
@@ -908,7 +908,25 @@ VlnPlot(
 ggsave(file = "figures/clus2/Vln_T_naive_by_treatment_1.png", dpi=300, width=6, height=10, limitsize=FALSE)
 
 
-
+VlnPlot(
+  clus2, 
+  features = c("ISG20", "TGFBR3"), 
+  assay = "RNA", 
+  stack = TRUE, 
+  flip = TRUE, 
+  split.by = "Treatment"
+) + 
+  theme_classic() +
+  theme(
+    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.title.x = element_blank(),
+    axis.text.y = element_text(size = 24, face = "italic"),
+    axis.title.y = element_text(size = 20, face = "bold"),
+    axis.ticks.y = element_line(size = 0.5),
+    strip.text.y = element_text(angle = 0, size = 16, face = "bold")
+  ) +
+  geom_boxplot(alpha = 0.3, show.legend = FALSE)
+ggsave(file = "figures/clus2/de_gene_search/interesting_DE_genes_for_presentation.png", dpi=300, width=16, height=12)
 
 # make tsne's by responders/non responders ---------------
 # all cells
