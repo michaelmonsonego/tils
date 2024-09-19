@@ -788,7 +788,7 @@ SignatureScore <- function(object, name){
 }
 
 
-# signatures(effector, il2..) -----------------------------------------------------------------
+# signatures(persistance, effector, il2..) -----------------------------------------------------------------
 #M# clus 1 sigs
 clus1_with_sigs = readRDS("objects/clus1_with_sigs.rds")
 clus_2_with_sigs <- readRDS("objects/tils_2_with_sigs.rds")

@@ -194,6 +194,8 @@ table(immune.combined$orig.ident)
 
 # immune.combined <- JoinLayers(immune.combined, assay = "RNA") #M# this did not work : no layers in my seurat
 allmarkers <- FindAllMarkers(immune.combined, only.pos = TRUE, min.pct = 0.25, logfc.threshold = 0.25, assay = "RNA")
+write_csv(allmarkers, "excels/allmarkers.csv") 
+
 Top50Markers <- allmarkers %>% 
   group_by(cluster) %>% 
   top_n(n = 50, wt = avg_log2FC) %>% 

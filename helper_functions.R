@@ -28,6 +28,112 @@ setwd("D:/Michael/git_check/tils")
 x1=4.6
 
 
+# stem like analysis : CD39 & CD69 negative population ------------
+
+VlnPlot(
+    T_cells, 
+    features = c('ENTPD1', 'CD69'), 
+    assay = "RNA", 
+    stack = TRUE, 
+    flip = TRUE, 
+    split.by = "Treatment"
+  ) + 
+    theme_classic() +
+    theme(
+      axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+      axis.title.x = element_blank(),
+      axis.text.y = element_text(size = 24, face = "italic"),
+      axis.title.y = element_text(size = 20, face = "bold"),
+      axis.ticks.y = element_line(size = 0.5),
+      strip.text.y = element_text(angle = 0, size = 16, face = "bold")
+    ) +
+    geom_boxplot(alpha = 0.3, show.legend = FALSE)
+ggsave(file = "figures/Tcells/stem_like.png", dpi=300, width=18, height=8)
+
+
+DefaultAssay(T_cells) <- "RNA"
+dim(T_cells)
+
+# subset for double negative
+T_cells_stem_like <- subset(T_cells, subset = ENTPD1 == 0 & CD69 == 0)
+
+dim(T_cells_stem_like) # 2367 cells in the double negative population
+table(T_cells_stem_like$Treatment)
+DimPlot(T_cells_stem_like, reduction = "tsne")
+
+responders <- subset(T_cells_stem_like, subset = Treatment == "Responder")
+non_responders <- subset(T_cells_stem_like, subset = Treatment == "Non_Responder")
+library(cowplot)
+p1 <- DimPlot(responders, reduction = "tsne", label = TRUE, pt.size = 0.5, label.size = 6) +
+  ggtitle("Responders")
+p2 <- DimPlot(non_responders, reduction = "tsne", label = TRUE, pt.size = 0.5, label.size = 6) +
+  ggtitle("Non Responders")
+plot_grid(p1, p2, ncol = 2)
+ggsave(file = "figures/Tcells/stem_like_tsne_by_treatment.png", dpi=300, width=18, height=8)
+
+
+# cluster 2 DE genes visualisation vln -----------------
+
+allmarkers <- read.delim("excels/allmarkers.csv", sep = ",", header = T, quote="\"", check.names=FALSE)
+clus2.markers = allmarkers %>%
+  filter(cluster=="2_cytotoxic_CD8") %>% # 19.9.24
+  top_n(n = 80, wt = avg_log2FC) %>%
+  as.data.frame %>% 
+  arrange(cluster,-avg_log2FC) %>% 
+  pull(gene)
+
+#M# in clus2
+i <- 1
+while(i<length(clus2.markers)){
+  VlnPlot(
+    clus2, 
+    features = c(clus2.markers[i], clus2.markers[i+1], clus2.markers[i+2], clus2.markers[i+3], clus2.markers[i+4], clus2.markers[i+5], clus2.markers[i+6], clus2.markers[i+7]), 
+    assay = "RNA", 
+    stack = TRUE, 
+    flip = TRUE, 
+    split.by = "Treatment"
+  ) + 
+    theme_classic() +
+    theme(
+      axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+      axis.title.x = element_blank(),
+      axis.text.y = element_text(size = 24, face = "italic"),
+      axis.title.y = element_text(size = 20, face = "bold"),
+      axis.ticks.y = element_line(size = 0.5),
+      strip.text.y = element_text(angle = 0, size = 16, face = "bold")
+    ) +
+    geom_boxplot(alpha = 0.3, show.legend = FALSE)
+  ggsave(file = paste0("figures/clus2/de_gene_search_by_cluster/","interesting_DE_run_", i,  ".png"), dpi=300, width=16, height=12)
+  i <- i+8
+}
+i <- 1
+
+#M# in all cells
+i <- 1
+while(i<length(clus2.markers)){
+  VlnPlot(
+    T_cells, 
+    features = c(clus2.markers[i], clus2.markers[i+1], clus2.markers[i+2], clus2.markers[i+3], clus2.markers[i+4], clus2.markers[i+5], clus2.markers[i+6], clus2.markers[i+7]), 
+    assay = "RNA", 
+    stack = TRUE, 
+    flip = TRUE, 
+    split.by = "Treatment"
+  ) + 
+    theme_classic() +
+    theme(
+      axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+      axis.title.x = element_blank(),
+      axis.text.y = element_text(size = 24, face = "italic"),
+      axis.title.y = element_text(size = 20, face = "bold"),
+      axis.ticks.y = element_line(size = 0.5),
+      strip.text.y = element_text(angle = 0, size = 16, face = "bold")
+    ) +
+    geom_boxplot(alpha = 0.3, show.legend = FALSE)
+  ggsave(file = paste0("figures/clus2/de_gene_search_by_cluster/","all_cells_interesting_DE_run_", i,  ".png"), dpi=300, width=16, height=12)
+  i <- i+8
+}
+i <- 1
+
 # save tsne with cluster number as label for all cells -------------------------
 DimPlot(T_cells, reduction = "tsne", group.by = "seurat_clusters", label = TRUE, pt.size = 0.5, label.size = 16)
 ggsave(file = "figures/Tcells/tsne_number_labels.png", dpi=300, width=15, height=10)
