@@ -1132,32 +1132,46 @@ cd8_cd4_ratio_non_responders <- cd8_count_non_responders / cd4_count_non_respond
 cat("CD8/CD4 ratio in responders:", cd8_cd4_ratio_responders, "\n")
 cat("CD8/CD4 ratio in non-responders:", cd8_cd4_ratio_non_responders, "\n")
 
+DefaultAssay(T_cells) <- "RNA"
 #M# calculate ratio per patient
 df <- T_cells@meta.data %>%
+  as.data.frame() %>% 
   group_by(Sample, cell_type) %>%
   summarize(Freq = n())
 #M# why doesnt this work?! 11.9.24
 
-df_wide <- df %>%
-  pivot_wider(names_from = Var2, values_from = Freq)
 
-calculate_ratio <- function(sample_id) {
-  cd4_count <- df_wide[df_wide$Var1 == sample_id, "CD4"]
-  cd8_count <- df_wide[df_wide$Var1 == sample_id, "CD8"]
+df <-  T_cells@meta.data %>%
+  as.data.frame() %>% 
+  group_by(Sample, cell_type) %>%
+  tally(name = "Freq") %>% 
+  as.data.frame()
+
+
+
+calculate_ratio <- function(df, sample_id) {
+  cd4_count <- df[df$Sample == sample_id & df$cell_type == "CD4", "Freq"]
+  cd8_count <- df[df$Sample == sample_id & df$cell_type == "CD8", "Freq"]
   if (cd4_count > 0) {
     ratio <- cd8_count / cd4_count
   } else {
     ratio <- NA
   }
-  return(c(cd4_count = cd4_count, cd8_count = cd8_count, ratio = ratio))
+  return(ratio = ratio)
 }
 patients <- unique(T_cells$Sample)
 treatments <- sapply(patients, function(p) unique(subset(T_cells, Sample == p)$Treatment))
-ratios_list <- lapply(patients, calculate_ratio)
-ratios_df <- do.call(rbind, ratios_list)
+ratios_list <- list()
+for (patient in patients) {
+  ratios_list[[patient]] <- calculate_ratio(df, patient)  
+}
+ratios_df <- do.call(rbind, lapply(ratios_list, as.data.frame))
+
 ratios_df <- data.frame(Sample = patients, Treatment = treatments, ratios_df)
 ratios_df$ratio <- as.numeric(ratios_df$ratio)
 print(ratios_df)
+
+colnames(ratios_df)[colnames(ratios_df) == "X..i.."] <- "ratio"
 
 summary_stats_responders <- ratios_df %>%
   filter(Treatment == "Responder") %>%
@@ -1190,7 +1204,7 @@ ggplot(summary_stats, aes(x = Treatment, y = Mean_Ratio, fill = Treatment)) +
     axis.text.x = element_text(size = 12, angle = 40),
     axis.text.y = element_text(size = 12)
   )
-ggsave(file = "figures/Tcells/cd8_cd4_ratio.png", dpi=300, width=4, height=6)
+ggsave(file = "figures/Tcells/cd8_cd4_ratio_2.png", dpi=300, width=4, height=6)
 
 
 
