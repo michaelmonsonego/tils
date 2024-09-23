@@ -73,6 +73,7 @@ ggsave(file = "figures/Tcells/stem_like_tsne_by_treatment.png", dpi=300, width=1
 
 
 # cluster 2 DE genes visualisation vln -----------------
+DefaultAssay(clus2) <- "RNA"
 
 allmarkers <- read.delim("excels/allmarkers.csv", sep = ",", header = T, quote="\"", check.names=FALSE)
 clus2.markers = allmarkers %>%
@@ -129,7 +130,7 @@ while(i<length(clus2.markers)){
       strip.text.y = element_text(angle = 0, size = 16, face = "bold")
     ) +
     geom_boxplot(alpha = 0.3, show.legend = FALSE)
-  ggsave(file = paste0("figures/clus2/de_gene_search_by_cluster/","all_cells_interesting_DE_run_", i,  ".png"), dpi=300, width=16, height=12)
+  ggsave(file = paste0("figures/clus2/de_gene_search_by_cluster_allCellsClusters/","all_cells_interesting_DE_run_", i,  ".png"), dpi=300, width=16, height=12)
   i <- i+8
 }
 i <- 1
