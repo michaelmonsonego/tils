@@ -50,10 +50,9 @@ VlnPlot(
     geom_boxplot(alpha = 0.3, show.legend = FALSE)
 ggsave(file = "figures/Tcells/stem_like.png", dpi=300, width=18, height=8)
 
-
+# important!
 DefaultAssay(T_cells) <- "RNA"
 dim(T_cells)
-
 # subset for double negative
 T_cells_stem_like <- subset(T_cells, subset = ENTPD1 == 0 & CD69 == 0)
 
@@ -70,6 +69,88 @@ p2 <- DimPlot(non_responders, reduction = "tsne", label = TRUE, pt.size = 0.5, l
   ggtitle("Non Responders")
 plot_grid(p1, p2, ncol = 2)
 ggsave(file = "figures/Tcells/stem_like_tsne_by_treatment.png", dpi=300, width=18, height=8)
+
+
+# bar plots 
+frque <- table(Idents(T_cells_stem_like), T_cells_stem_like$Treatment)
+frque <- as.data.frame(frque)
+frque <- frque %>% dplyr::rename(Cluster = Var1, Treatment = Var2)
+frque$Treatment <- factor(frque$Treatment)
+
+frque <- ddply(frque, .(Treatment),  transform, percentperstatus   = Freq/sum(Freq))
+frque <- ddply(frque, .(Cluster), transform, percentpercluster  = Freq/sum(Freq))
+frque <- ddply(frque, .(Cluster), transform, normalizedppstatus = percentperstatus/sum(percentperstatus)*100)
+frque <- ddply(frque, .(Treatment),  transform, normalizedpcluster = percentpercluster/sum(percentpercluster))
+
+mfrque <- table(Idents(T_cells_stem_like), T_cells_stem_like$orig.ident)
+mfrque <- as.data.frame(mfrque)
+mfrque <- mfrque %>% dplyr::rename(Cluster = Var1, patient = Var2)
+
+mfrque <- ddply(mfrque, .(patient),  transform, percentperstatus   = Freq/sum(Freq))
+mfrque <- ddply(mfrque, .(Cluster), transform, percentpercluster  = Freq/sum(Freq))
+mfrque <- ddply(mfrque, .(Cluster), transform, normalizedppstatus = percentperstatus/sum(percentperstatus)*100)
+mfrque <- ddply(mfrque, .(patient),  transform, normalizedpcluster = percentpercluster/sum(percentpercluster))
+
+
+p3 <- ggplot(mfrque, aes(x = Cluster, y = normalizedppstatus, fill = patient)) +
+  theme_minimal() +
+  geom_bar(stat = "identity", width = 0.7,position="dodge") +
+  scale_fill_manual(values= c("#CFBAE1", "#A8A5CA", "#8291B3", "#5C7D9D", "#FF6F61", "#D78459", "#AF9A52", "#88B04B"))+
+  ggtitle("Normalized Cluster Counts") +
+  ylab("Normalized Proportions in %") +
+  theme(
+    axis.text.x  = element_text(angle = 67, hjust = 1, size = 11, color = "black"),
+    axis.text.y  = element_text(size = 11, color = "black"),
+    axis.title.x = element_text(size = 13, color = "black"),
+    axis.title.y = element_text(size = 13, color = "black"),
+    title = element_text(size = 13),
+    legend.justification = "top",
+    panel.border = element_blank()) +
+  geom_hline(yintercept = 20, linetype='dotted')
+
+
+p1 <- ggplot(frque, aes(x = Cluster, y = normalizedppstatus, fill = Treatment)) +
+  theme_minimal() +
+  geom_bar(stat = "identity", width = 0.7,position="dodge") +
+  scale_fill_manual(values= c("#ff7f0e", "#1f77b4"))+
+  ggtitle("Normalized Cluster Counts") +
+  ylab("Normalized Proportions in %") +
+  theme(
+    axis.text.x  = element_text(angle = 67, hjust = 1, size = 11, color = "black"),
+    axis.text.y  = element_text(size = 11, color = "black"),
+    axis.title.x = element_text(size = 13, color = "black"),
+    axis.title.y = element_text(size = 13, color = "black"),
+    title = element_text(size = 13),
+    legend.justification = "top",
+    panel.border = element_blank()) +
+  geom_hline(yintercept = 50, linetype='dotted') 
+
+p2<-ggplot(frque, aes(x= Cluster, y= Freq, fill = Treatment)) +
+  theme_minimal() +
+  geom_bar(stat = "identity", width = 0.7) +
+  scale_fill_manual(values= c("#ff7f0e", "#1f77b4"))+
+  ggtitle("Cluster Counts") + ylab("Cell counts\n") +
+  theme(
+    axis.text.x  = element_text(angle = 67, hjust = 1, size = 11, color = "black"),
+    axis.text.y  = element_text(size = 11, color = "black"),
+    axis.title.x = element_text(size = 13, color = "black"),
+    axis.title.y = element_text(size = 13, color = "black"),
+    title = element_text(size = 13),
+    legend.justification = "top",
+    panel.border = element_blank())
+
+p2+p1+plot_layout(guides = "collect")+plot_annotation(tag_levels = 'A') 
+ggsave(file = "figures/T_cells_stem_like/unnormalized_and_normalized_contribution_per_patient.png", dpi=300, width=14, height=10)
+
+p3
+ggsave(file = "figures/T_cells_stem_like/normalized_cluster_counts.png", dpi=300, width=14, height=10)
+
+
+
+
+
+
+
 
 
 # cluster 2 DE genes visualisation vln -----------------

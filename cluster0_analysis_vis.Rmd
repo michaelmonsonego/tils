@@ -55,7 +55,7 @@ cd4_cells = readRDS("objects/tils_0_.35.rds")
 
 DimPlot(cd4_cells , reduction = "tsne", label= TRUE, pt.size=0.5, label.size = 6)
 ggsave(file = "figures/cd4_cells/tsne.png", dpi=300, width=10, height=8)
-TSNEPlot(cd4_cells, group.by ="Treatment", cols= c("#1f77b4","#ff7f0e"), pt.size=0.5)+
+TSNEPlot(cd4_cells, group.by ="Treatment", cols= c("#ff7f0e", "#1f77b4"), pt.size=0.5)+
   theme(legend.text=element_text(size=20))
 ggsave(file = "figures/cd4_cells/tsne_by_treatment.png", dpi=300, width=10, height=7)
 ```
@@ -169,7 +169,7 @@ p3 <- ggplot(mfrque, aes(x = Cluster, y = normalizedppstatus, fill = patient)) +
 p1 <- ggplot(frque, aes(x = Cluster, y = normalizedppstatus, fill = Treatment)) +
  theme_minimal() +
  geom_bar(stat = "identity", width = 0.7,position="dodge") +
- scale_fill_manual(values= c("#1f77b4","#ff7f0e"))+
+ scale_fill_manual(values= c("#ff7f0e", "#1f77b4"))+
  ggtitle("Normalized Cluster Counts") +
  ylab("Normalized Proportions in %") +
  theme(
@@ -185,7 +185,7 @@ p1 <- ggplot(frque, aes(x = Cluster, y = normalizedppstatus, fill = Treatment)) 
 p2<-ggplot(frque, aes(x= Cluster, y= Freq, fill = Treatment)) +
  theme_minimal() +
  geom_bar(stat = "identity", width = 0.7) +
- scale_fill_manual(values= c("#1f77b4","#ff7f0e"))+
+ scale_fill_manual(values= c("#ff7f0e", "#1f77b4"))+
  ggtitle("Cluster Counts") + ylab("Cell counts\n") +
  theme(
    axis.text.x  = element_text(angle = 67, hjust = 1, size = 11, color = "black"),
