@@ -54,7 +54,7 @@ ggsave(file = "figures/Tcells/stem_like.png", dpi=300, width=18, height=8)
 DefaultAssay(T_cells) <- "RNA"
 dim(T_cells)
 # subset for double negative
-T_cells_stem_like <- subset(T_cells, subset = ENTPD1 == 0 & CD69 == 0)
+T_cells_stem_like <- subset(T_cells, subset = ENTPD1 == 0 & CD69 == 0 & CD4 < 0.0000000005)
 
 dim(T_cells_stem_like) # 2367 cells in the double negative population
 table(T_cells_stem_like$Treatment)
@@ -647,7 +647,7 @@ ggsave(file = "figures/Tcells/Vln_T_effector_by_treatment_1.png", dpi=300, width
 # naive markers
 VlnPlot(
   T_cells, 
-  features = c("CD44","CD69","ENTPD1", "CD40LG"), 
+  features = c("CD69","ENTPD1"), 
   assay = "RNA", 
   stack = TRUE, 
   flip = TRUE, 
@@ -668,7 +668,7 @@ ggsave(file = "figures/Tcells/Vln_T_naive_cluster_by_treatment_1.png", dpi=300, 
 
 VlnPlot(
   T_cells,
-  features = c("IL7R","CD44","CD69","ENTPD1"),
+  features = c("CD69","ENTPD1"),
   assay = "RNA",
   stack=TRUE,
   flip= TRUE,
@@ -785,7 +785,7 @@ ggsave(file = "figures/cd4_cluster0/Vln_T_effector_by_treatment_1.png", dpi=300,
 # naive markers
 VlnPlot(
   cd4_cluster0, 
-  features = c("IL7R","CD44","CD69","ENTPD1", "CD40LG"), 
+  features = c("CD69","ENTPD1"), 
   assay = "RNA", 
   stack = TRUE, 
   flip = TRUE, 
@@ -806,7 +806,7 @@ ggsave(file = "figures/cd4_cells/cluster0_only/Vln_T_naive_cluster_by_treatment_
 
 VlnPlot(
   cd4_cluster0,
-  features = c("IL7R","CD44","CD69","ENTPD1"),
+  features = c("CD69","ENTPD1"),
   assay = "RNA",
   stack=TRUE,
   flip= TRUE,
@@ -920,7 +920,7 @@ ggsave(file = "figures/clus1/Vln_T_effector_by_treatment_1.png", dpi=300, width=
 # naive markers
 VlnPlot(
   clus1, 
-  features = c("IL7R","CD44","CD69","ENTPD1", "CD40LG"), 
+  features = c("CD69","ENTPD1"), 
   assay = "RNA", 
   stack = TRUE, 
   flip = TRUE, 
@@ -941,7 +941,7 @@ ggsave(file = "figures/clus1/Vln_T_naive_cluster_by_treatment_1.png", dpi=300, w
 
 VlnPlot(
   clus1,
-  features = c("IL7R","CD44","CD69","ENTPD1", "CD40LG"),
+  features = c("CD69","ENTPD1"),
   assay = "RNA",
   stack=TRUE,
   flip= TRUE,
@@ -1055,7 +1055,7 @@ ggsave(file = "figures/clus2/Vln_T_effector_by_treatment_1.png", dpi=300, width=
 # naive markers
 VlnPlot(
   clus2, 
-  features = c("CD44","CD69","ENTPD1", "CD40LG"), 
+  features = c("CD69","ENTPD1"), 
   assay = "RNA", 
   stack = TRUE, 
   flip = TRUE, 
@@ -1076,7 +1076,7 @@ ggsave(file = "figures/clus2/Vln_T_naive_cluster_by_treatment_1.png", dpi=300, w
 
 VlnPlot(
   clus2,
-  features = c("CD44","CD69","ENTPD1", "CD40LG"),
+  features = c("CD69","ENTPD1"),
   assay = "RNA",
   stack=TRUE,
   flip= TRUE,
@@ -1544,8 +1544,9 @@ VlnPlot(clus2, features = c("IL1A"),
 ggsave(file = "figures/clus2/IL1_cluster_2.png", dpi=300, width=10, height=6)
 # checking ------------
 
-VlnPlot(cd4_cells, features = c("TGFBR3", "HIVEP1"),
+VlnPlot(T_cells, features = c("KLF2", "SLAMF6", "CD27", "IL4"),
         assay = "RNA", 
+        stack = TRUE, 
         flip = TRUE, 
         split.by = "Treatment"
 ) + 
@@ -1559,7 +1560,7 @@ VlnPlot(cd4_cells, features = c("TGFBR3", "HIVEP1"),
     strip.text.y = element_text(angle = 0, size = 16, face = "bold")
   ) + 
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
-ggsave(file = "figures/cd4_cells/0.png", dpi=300, width=10, height=6)
+ggsave(file = "figures/Tcells/check_paper_DN.png", dpi=300, width=10, height=6)
 
 VlnPlot(clus1, features = c("TGFBR3", "HIVEP1"),
         assay = "RNA", 
