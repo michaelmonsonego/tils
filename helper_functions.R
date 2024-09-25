@@ -28,6 +28,25 @@ setwd("D:/Michael/git_check/tils")
 x1=4.6
 
 
+
+# checking Adi's R question function with browser() ----------------
+prime_factorization= function(num){
+  factors=c()
+  devider=2
+  new_num=num
+  while (devider!=new_num){
+    if (new_num %% devider ==0){
+      browser()
+      factors=c(factors, devider)
+      new_num= num %% devider
+      devider=devider+1
+      }
+    else { devider=devider+1 }
+    }
+  return(factors)
+}
+
+prime_factorization(80)  
 # stem like analysis : CD39 & CD69 negative population ------------
 
 VlnPlot(
@@ -222,7 +241,12 @@ ggsave(file = "figures/Tcells/tsne_number_labels.png", dpi=300, width=15, height
 
 # info for rons tool ---------------------
 
+# convert seurat version to lower than 5
+for_ron_tool <- T_cells
+for_ron_tool[["RNA3"]] <- as(object = T_cells[["RNA"]], Class = "Assay")
+saveRDS(for_ron_tool, file = "objects/for_ron_tool.rds")
 
+# old trys
 cell_annotations <- data.frame(Cell_ID = names(Idents(T_cells)), 
                                Identity = Idents(T_cells), row.names = NULL)
 write.csv(cell_annotations, file = "excels/T_cells_idents_annotations.csv", row.names = FALSE)
@@ -231,6 +255,7 @@ write.csv(cell_annotations, file = "excels/T_cells_idents_annotations.csv", row.
 rna_assay <- GetAssayData(T_cells, assay = "RNA", slot = "counts")
 rna_assay_df <- as.data.frame(as.matrix(rna_assay))
 write.csv(rna_assay_df, file = "excels/T_cells_RNA_assay_counts.csv")
+
 
 
 
@@ -1437,8 +1462,128 @@ VlnPlot(clus2, features = c("TNFRSF9"),
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
 ggsave(file = "figures/clus2/41bb_cluster_2.png", dpi=300, width=10, height=6)
 
-# IL21 check-------------
+# IL21, IL11, IL27, IL27RA check-------------
 
+# T cells
+# cytokines 
+VlnPlot(T_cells, features = c("IL21"),
+        assay = "RNA", 
+        flip = TRUE, 
+        group.by = "Treatment",
+        fill.by ="ident",
+        pt.size = 0
+) + 
+  theme_classic() +
+  theme(
+    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.title.x = element_blank(),
+    axis.text.y = element_text(size = 24, face = "italic"),
+    axis.title.y = element_text(size = 20, face = "bold"),
+    axis.ticks.y = element_line(size = 0.5),
+    strip.text.y = element_text(angle = 0, size = 16, face = "bold")
+  ) + 
+  geom_boxplot(alpha = 0.3, show.legend = FALSE)
+ggsave(file = "figures/Tcells/IL21.png", dpi=300, width=10, height=6)
+
+
+VlnPlot(T_cells, features = c("IL11"),
+        assay = "RNA", 
+        flip = TRUE, 
+        group.by = "Treatment",
+        fill.by ="ident",
+        pt.size = 0) + 
+  theme_classic() +
+  theme(
+    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.title.x = element_blank(),
+    axis.text.y = element_text(size = 24, face = "italic"),
+    axis.title.y = element_text(size = 20, face = "bold"),
+    axis.ticks.y = element_line(size = 0.5),
+    strip.text.y = element_text(angle = 0, size = 16, face = "bold")
+  ) + 
+  geom_boxplot(alpha = 0.3, show.legend = FALSE)
+ggsave(file = "figures/Tcells/IL11.png", dpi=300, width=10, height=6)
+
+
+VlnPlot(T_cells, features = c("IL27"),
+        assay = "RNA", 
+        flip = TRUE, 
+        group.by = "Treatment",
+        fill.by ="ident",
+        pt.size = 0
+) + 
+  theme_classic() +
+  theme(
+    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.title.x = element_blank(),
+    axis.text.y = element_text(size = 24, face = "italic"),
+    axis.title.y = element_text(size = 20, face = "bold"),
+    axis.ticks.y = element_line(size = 0.5),
+    strip.text.y = element_text(angle = 0, size = 16, face = "bold")
+  ) + 
+  geom_boxplot(alpha = 0.3, show.legend = FALSE)
+ggsave(file = "figures/Tcells/IL27.png", dpi=300, width=10, height=6)
+
+# receptors
+VlnPlot(T_cells, features = c("IL21R"),
+        assay = "RNA", 
+        flip = TRUE, 
+        group.by = "Treatment",
+        fill.by ="ident",
+        pt.size = 0
+) + 
+  theme_classic() +
+  theme(
+    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.title.x = element_blank(),
+    axis.text.y = element_text(size = 24, face = "italic"),
+    axis.title.y = element_text(size = 20, face = "bold"),
+    axis.ticks.y = element_line(size = 0.5),
+    strip.text.y = element_text(angle = 0, size = 16, face = "bold")
+  ) + 
+  geom_boxplot(alpha = 0.3, show.legend = FALSE)
+ggsave(file = "figures/Tcells/IL21R.png", dpi=300, width=10, height=6)
+
+
+VlnPlot(T_cells, features = c("IL11RA"),
+        assay = "RNA", 
+        flip = TRUE, 
+        group.by = "Treatment",
+        fill.by ="ident",
+        pt.size = 0) + 
+  theme_classic() +
+  theme(
+    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.title.x = element_blank(),
+    axis.text.y = element_text(size = 24, face = "italic"),
+    axis.title.y = element_text(size = 20, face = "bold"),
+    axis.ticks.y = element_line(size = 0.5),
+    strip.text.y = element_text(angle = 0, size = 16, face = "bold")
+  ) + 
+  geom_boxplot(alpha = 0.3, show.legend = FALSE)
+ggsave(file = "figures/Tcells/IL11RA.png", dpi=300, width=10, height=6)
+
+
+VlnPlot(T_cells, features = c("IL27RA"),
+        assay = "RNA", 
+        flip = TRUE, 
+        group.by = "Treatment",
+        fill.by ="ident",
+        pt.size = 0
+) + 
+  theme_classic() +
+  theme(
+    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.title.x = element_blank(),
+    axis.text.y = element_text(size = 24, face = "italic"),
+    axis.title.y = element_text(size = 20, face = "bold"),
+    axis.ticks.y = element_line(size = 0.5),
+    strip.text.y = element_text(angle = 0, size = 16, face = "bold")
+  ) + 
+  geom_boxplot(alpha = 0.3, show.legend = FALSE)
+ggsave(file = "figures/Tcells/IL27RA.png", dpi=300, width=10, height=6)
+
+# other clusters
 VlnPlot(cd4_cells, features = c("IL21"),
         assay = "RNA", 
         flip = TRUE, 
@@ -1544,7 +1689,7 @@ VlnPlot(clus2, features = c("IL1A"),
 ggsave(file = "figures/clus2/IL1_cluster_2.png", dpi=300, width=10, height=6)
 # checking ------------
 
-VlnPlot(T_cells, features = c("KLF2", "SLAMF6", "CD27", "IL4"),
+VlnPlot(T_cells, features = c("KLF2", "SLAMF6", "CD27"),
         assay = "RNA", 
         stack = TRUE, 
         flip = TRUE, 
