@@ -73,7 +73,7 @@ ggsave(file = "figures/Tcells/stem_like.png", dpi=300, width=18, height=8)
 DefaultAssay(T_cells) <- "RNA"
 dim(T_cells)
 # subset for double negative
-T_cells_stem_like <- subset(T_cells, subset = ENTPD1 == 0 & CD69 == 0 & CD4 < 0.0000000005)
+T_cells_stem_like <- subset(T_cells, subset = (ENTPD1 < 0.00005) & (CD69 < 0.00005) & (CD4 < 0.0000000005))
 
 dim(T_cells_stem_like) # 2367 cells in the double negative population
 table(T_cells_stem_like$Treatment)
