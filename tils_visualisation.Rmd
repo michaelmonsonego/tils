@@ -66,12 +66,12 @@ table(T_cells$orig.ident)["N3"] #
 table(T_cells$orig.ident)["N4"] #  
 table(T_cells$Treatment)
 
-DimPlot(T_cells , reduction = "tsne", label= T, pt.size=0.5, label.size = 10)
-ggsave(file = "figures/Tcells/tsne.png", dpi=300, width=15, height=10)
+DimPlot(T_cells , reduction = "tsne", label= T, pt.size=0.5, label.size = 10) + ggplot2::theme(legend.position = "none")
+ggsave(file = "figures/Tcells/tsne_no_legend.png", dpi=300, width=15, height=10)
 
 TSNEPlot(T_cells, group.by ="Treatment", cols= c("#ff7f0e", "#1f77b4"), pt.size=0.5)+
   theme(legend.text=element_text(size=20))
-ggsave(file = "figures/Tcells/tsne_by_treatment.png", dpi=300, width=10, height=7)
+ggsave(file = "figures/Tcells/tsne_by_treatment.png", dpi=300, width=8, height=6)
 ```
 
 Top DE genes
@@ -163,14 +163,14 @@ p3 <- ggplot(mfrque, aes(x = Cluster, y = normalizedppstatus, fill = patient)) +
  ggtitle("Normalized Cluster Counts") +
  ylab("Normalized Proportions in %") +
  theme(
-   axis.text.x  = element_text(angle = 67, hjust = 1, size = 11, color = "black"),
-   axis.text.y  = element_text(size = 11, color = "black"),
-   axis.title.x = element_text(size = 13, color = "black"),
-   axis.title.y = element_text(size = 13, color = "black"),
-   title = element_text(size = 13),
+   axis.text.x  = element_text(angle = 340, hjust = 1, size = 15, color = "black"),
+   axis.text.y  = element_text(size = 15, color = "black"),
+   axis.title.x = element_text(size = 18, color = "black"),
+   axis.title.y = element_text(size = 18, color = "black"),
+   title = element_text(size = 18, hjust = 0.5),
    legend.justification = "top",
    panel.border = element_blank()) +
- geom_hline(yintercept = 20, linetype='dotted')
+ geom_hline(yintercept = 12.5, linetype='dotted')
   
   
 p1 <- ggplot(frque, aes(x = Cluster, y = normalizedppstatus, fill = Treatment)) +
