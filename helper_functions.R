@@ -1303,6 +1303,7 @@ ggplot(summary_stats, aes(x = Treatment, y = Mean_Ratio, fill = Treatment)) +
   geom_bar(stat = "identity", position = position_dodge(), width = 0.6) +
   geom_errorbar(aes(ymin = Mean_Ratio - SD_Ratio, ymax = Mean_Ratio + SD_Ratio),
                 width = 0.2, position = position_dodge(0.6)) +
+  scale_fill_manual(values= c("#A799B7", "#DD614A")) +
   theme_minimal() +
   theme(
     plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),

@@ -55,7 +55,7 @@ cd4_cells = readRDS("objects/tils_0_.35.rds")
 
 DimPlot(cd4_cells , reduction = "tsne", label= TRUE, pt.size=0.5, label.size = 6)
 ggsave(file = "figures/cd4_cells/tsne.png", dpi=300, width=10, height=8)
-TSNEPlot(cd4_cells, group.by ="Treatment", cols= c("#ff7f0e", "#1f77b4"), pt.size=0.5)+
+TSNEPlot(cd4_cells, group.by ="Treatment", cols= c("#A799B7", "#DD614A"), pt.size=0.5)+
   theme(legend.text=element_text(size=20))
 ggsave(file = "figures/cd4_cells/tsne_by_treatment.png", dpi=300, width=10, height=7)
 ```
@@ -169,7 +169,7 @@ p3 <- ggplot(mfrque, aes(x = Cluster, y = normalizedppstatus, fill = patient)) +
 p1 <- ggplot(frque, aes(x = Cluster, y = normalizedppstatus, fill = Treatment)) +
  theme_minimal() +
  geom_bar(stat = "identity", width = 0.7,position="dodge") +
- scale_fill_manual(values= c("#ff7f0e", "#1f77b4"))+
+ scale_fill_manual(values= c("#A799B7", "#DD614A"))+
  ggtitle("Normalized Cluster Counts") +
  ylab("Normalized Proportions in %") +
  theme(
@@ -185,7 +185,7 @@ p1 <- ggplot(frque, aes(x = Cluster, y = normalizedppstatus, fill = Treatment)) 
 p2<-ggplot(frque, aes(x= Cluster, y= Freq, fill = Treatment)) +
  theme_minimal() +
  geom_bar(stat = "identity", width = 0.7) +
- scale_fill_manual(values= c("#ff7f0e", "#1f77b4"))+
+ scale_fill_manual(values= c("#A799B7", "#DD614A"))+
  ggtitle("Cluster Counts") + ylab("Cell counts\n") +
  theme(
    axis.text.x  = element_text(angle = 67, hjust = 1, size = 11, color = "black"),
@@ -278,7 +278,7 @@ VlnPlot(cd4_cells, features = c("ENTPD1", "GZMB", "FOXP3", "CD40LG"),
   flip = TRUE, 
   split.by = "Treatment"
 ) + 
-  theme_classic() +
+   theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -297,7 +297,7 @@ VlnPlot(cd4_cells, features = c("ENTPD1", "GZMB", "FOXP3", "CD40LG"),
   group.by = "Treatment",
   fill.by ="ident"
   )+ 
-  theme_classic() +
+   theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -315,7 +315,7 @@ VlnPlot(cd4_cells, features = c("ENTPD1", "GZMB", "FOXP3", "CD40LG"),
   flip= TRUE,
   fill.by ="ident"
   )+ 
-  theme_classic() +
+   theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -345,7 +345,7 @@ VlnPlot(cd4_cells, features = Th1Markers,
   flip = TRUE, 
   split.by = "Treatment"
 ) + 
-  theme_classic() +
+   theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -364,7 +364,7 @@ VlnPlot(cd4_cells, features = Th1Markers,
   group.by = "Treatment",
   fill.by ="ident"
   )+ 
-  theme_classic() +
+   theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -382,7 +382,7 @@ VlnPlot(cd4_cells, features = Th1Markers,
   flip= TRUE,
   fill.by ="ident"
   )+ 
-  theme_classic() +
+   theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -409,7 +409,7 @@ VlnPlot(cd4_cells, features = Th2Markers,
   flip = TRUE, 
   split.by = "Treatment"
 ) + 
-  theme_classic() +
+   theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -428,7 +428,7 @@ VlnPlot(cd4_cells, features = Th2Markers,
   group.by = "Treatment",
   fill.by ="ident"
   )+ 
-  theme_classic() +
+   theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -446,7 +446,7 @@ VlnPlot(cd4_cells, features = Th2Markers,
   flip= TRUE,
   fill.by ="ident"
   )+ 
-  theme_classic() +
+   theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -475,7 +475,7 @@ VlnPlot(cd4_cells, features = c('IL23R', 'RORC', 'TNF'),
   flip = TRUE, 
   split.by = "Treatment"
 ) + 
-  theme_classic() +
+   theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -494,7 +494,7 @@ VlnPlot(cd4_cells, features = c('IL23R', 'RORC', 'TNF'),
   group.by = "Treatment",
   fill.by ="ident"
   )+ 
-  theme_classic() +
+   theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -512,7 +512,7 @@ VlnPlot(cd4_cells, features = c('IL23R', 'RORC', 'TNF'),
   flip= TRUE,
   fill.by ="ident"
   )+ 
-  theme_classic() +
+   theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -539,7 +539,7 @@ VlnPlot(cd4_cells, features = c("PDCD1","HAVCR2","LAG3","TIGIT","TNFRSF4","TNFRS
   flip = TRUE, 
   split.by = "Treatment"
 ) + 
-  theme_classic() +
+   theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -566,7 +566,7 @@ VlnPlot(cd4_cells, features = c("PDCD1","HAVCR2","LAG3","TIGIT","TNFRSF4","TNFRS
   group.by = "Treatment",
   fill.by ="ident"
   )+ 
-  theme_classic() +
+   theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -584,7 +584,7 @@ VlnPlot(cd4_cells, features = c("PDCD1","HAVCR2","LAG3","TIGIT","TNFRSF4","TNFRS
   flip= TRUE,
   fill.by ="ident"
   )+ 
-  theme_classic() +
+   theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -604,7 +604,7 @@ VlnPlot(cd4_cells, features = c("ICOS","CTLA4","KLRD1","IRF8","KLRC1","TOX"),
   flip = TRUE, 
   split.by = "Treatment"
 ) + 
-  theme_classic() +
+   theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -623,7 +623,7 @@ VlnPlot(cd4_cells, features = c("ICOS","CTLA4","KLRD1","IRF8","KLRC1","TOX"),
   group.by = "Treatment",
   fill.by ="ident"
   )+ 
-  theme_classic() +
+   theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -641,7 +641,7 @@ VlnPlot(cd4_cells, features = c("ICOS","CTLA4","KLRD1","IRF8","KLRC1","TOX"),
   flip= TRUE,
   fill.by ="ident"
   )+ 
-  theme_classic() +
+   theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -667,7 +667,7 @@ VlnPlot(cd4_cells, features = c("GZMB","PRF1","IFNG","TNF"),
   flip = TRUE, 
   split.by = "Treatment"
 ) + 
-  theme_classic() +
+   theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -686,7 +686,7 @@ VlnPlot(cd4_cells, features = c("GZMB","PRF1","IFNG","TNF"),
   group.by = "Treatment",
   fill.by ="ident"
   )+ 
-  theme_classic() +
+   theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -704,7 +704,7 @@ VlnPlot(cd4_cells, features = c("GZMB","PRF1","IFNG","TNF"),
   flip= TRUE,
   fill.by ="ident"
   )+ 
-  theme_classic() +
+   theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -724,7 +724,7 @@ VlnPlot(cd4_cells, features = c("GZMC","GZMA","KLRG1","CD52"),
   flip = TRUE, 
   split.by = "Treatment"
 ) + 
-  theme_classic() +
+   theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -743,7 +743,7 @@ VlnPlot(cd4_cells, features = c("GZMC","GZMA","KLRG1","CD52"),
   group.by = "Treatment",
   fill.by ="ident"
   )+ 
-  theme_classic() +
+   theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -761,7 +761,7 @@ VlnPlot(cd4_cells, features = c("GZMC","GZMA","KLRG1","CD52", fill.by = "ident")
   flip= TRUE,
   fill.by ="ident"
   )+ 
-  theme_classic() +
+   theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -789,7 +789,7 @@ VlnPlot(cd4_cells, features = c("CD69","ENTPD1"),
   group.by = "Treatment",
   fill.by ="ident"
   )+ 
-  theme_classic() +
+   theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -806,7 +806,7 @@ VlnPlot(cd4_cells, features = c("CD69"),
   flip = TRUE, 
   split.by = "Treatment"
 ) + 
-  theme_classic() +
+   theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -837,7 +837,7 @@ VlnPlot(cd4_cells, features = c("SELL","CD44","IL7R","CCR7","TCF7","CXCR6"),
   flip = TRUE, 
   split.by = "Treatment"
 ) + 
-  theme_classic() +
+   theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -856,7 +856,7 @@ VlnPlot(cd4_cells, features = c("SELL","CD44","IL7R","CCR7","TCF7","CXCR6"),
   group.by = "Treatment",
   fill.by ="ident"
   )+ 
-  theme_classic() +
+   theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -874,7 +874,7 @@ VlnPlot(cd4_cells, features = c("SELL","CD44","IL7R","CCR7","TCF7","CXCR6"),
   flip= TRUE,
   fill.by ="ident"
   )+ 
-  theme_classic() +
+   theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -900,7 +900,7 @@ VlnPlot(cd4_cells, features = c("BACH2","PRDM1","IL7R","CD44","CX3CR1","ID2","KL
   flip = TRUE, 
   split.by = "Treatment"
 ) + 
-  theme_classic() +
+   theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -918,7 +918,7 @@ VlnPlot(cd4_cells, features = c("BACH2","PRDM1","IL7R","CD44","CX3CR1","ID2","KL
   group.by = "Treatment",
   fill.by ="ident"
   )+ 
-  theme_classic() +
+   theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -935,7 +935,7 @@ VlnPlot(cd4_cells, features = c("BACH2","PRDM1","IL7R","CD44","CX3CR1","ID2","KL
   flip= TRUE,
   fill.by ="ident"
   )+ 
-  theme_classic() +
+   theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -959,7 +959,7 @@ VlnPlot(cd4_cells, features = c("TCF7","BACH2","BCL16","CCR7","IL7R","CD27","CD4
   flip = TRUE, 
   split.by = "Treatment"
 ) + 
-  theme_classic() +
+   theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -977,7 +977,7 @@ VlnPlot(cd4_cells, features = c("TCF7","BACH2","BCL16","CCR7","IL7R","CD27","CD4
   group.by = "Treatment",
   fill.by ="ident"
   )+ 
-  theme_classic() +
+   theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -994,7 +994,7 @@ VlnPlot(cd4_cells, features = c("TCF7","BACH2","BCL16","CCR7","IL7R","CD27","CD4
   flip= TRUE,
   fill.by ="ident"
   )+ 
-  theme_classic() +
+   theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -1020,7 +1020,7 @@ VlnPlot(cd4_cells, features = c("PRDM1","ITGAE","IL7R","CD44","ITGA1","CD69","CR
   flip = TRUE, 
   split.by = "Treatment"
 ) + 
-  theme_classic() +
+   theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -1038,7 +1038,7 @@ VlnPlot(cd4_cells, features = c("PRDM1","ITGAE","IL7R","CD44","ITGA1","CD69","CR
   group.by = "Treatment",
   fill.by ="ident"
   )+ 
-  theme_classic() +
+   theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -1055,7 +1055,7 @@ VlnPlot(cd4_cells, features = c("PRDM1","ITGAE","IL7R","CD44","ITGA1","CD69","CR
   flip= TRUE,
   fill.by ="ident"
   )+ 
-  theme_classic() +
+   theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
