@@ -131,7 +131,7 @@ p3 <- ggplot(mfrque, aes(x = Cluster, y = normalizedppstatus, fill = patient)) +
 p1 <- ggplot(frque, aes(x = Cluster, y = normalizedppstatus, fill = Treatment)) +
   theme_minimal() +
   geom_bar(stat = "identity", width = 0.7,position="dodge") +
-  scale_fill_manual(values= c("#ff7f0e", "#1f77b4"))+
+  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   ggtitle("Normalized Cluster Counts") +
   ylab("Normalized Proportions in %") +
   theme(
@@ -147,7 +147,7 @@ p1 <- ggplot(frque, aes(x = Cluster, y = normalizedppstatus, fill = Treatment)) 
 p2<-ggplot(frque, aes(x= Cluster, y= Freq, fill = Treatment)) +
   theme_minimal() +
   geom_bar(stat = "identity", width = 0.7) +
-  scale_fill_manual(values= c("#ff7f0e", "#1f77b4"))+
+  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   ggtitle("Cluster Counts") + ylab("Cell counts\n") +
   theme(
     axis.text.x  = element_text(angle = 67, hjust = 1, size = 11, color = "black"),
@@ -194,7 +194,7 @@ while(i<length(clus2.markers)){
     flip = TRUE, 
     split.by = "Treatment"
   ) + 
-    theme_classic() +
+    theme_classic()+  scale_fill_manual(values= c("#A799B7", "#DD614A")) +
     theme(
       axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
       axis.title.x = element_blank(),
@@ -220,7 +220,7 @@ while(i<length(clus2.markers)){
     flip = TRUE, 
     split.by = "Treatment"
   ) + 
-    theme_classic() +
+    theme_classic()+  scale_fill_manual(values= c("#A799B7", "#DD614A")) +
     theme(
       axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
       axis.title.x = element_blank(),
@@ -324,7 +324,7 @@ SignatureScore <- function(object, name){
   
   p <- VlnPlot(object, features='normalized', group.by = "Treatment",
                y.max = y.max, pt.size = 0,
-               cols= c("#ff7f0e", "#1f77b4")) +  theme_classic(base_size = 14) +
+               cols= c("#A799B7", "#DD614A")) +  theme_classic(base_size = 14) +
     theme(text = element_text(size=18, colour = "black")) + RotatedAxis() +
     theme(axis.title.x=element_blank(), axis.text.x=element_blank(),axis.ticks.x=element_blank())+
     labs(title = "", y = name,  x="") + theme(legend.position="right") +
@@ -589,7 +589,7 @@ VlnPlot(
   flip = TRUE, 
   split.by = "Treatment"
 ) + 
-  theme_classic() +
+  theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -611,7 +611,7 @@ VlnPlot(
   group.by = "Treatment",
   fill.by ="ident"
   )+ 
-  theme_classic() +
+  theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -634,7 +634,7 @@ VlnPlot(
   flip = TRUE, 
   split.by = "Treatment"
 ) + 
-  theme_classic() +
+  theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -656,7 +656,7 @@ VlnPlot(
   group.by = "Treatment",
   fill.by ="ident"
 )+ 
-  theme_classic() +
+  theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -678,7 +678,7 @@ VlnPlot(
   flip = TRUE, 
   split.by = "Treatment"
 ) + 
-  theme_classic() +
+  theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -700,7 +700,7 @@ VlnPlot(
   group.by = "Treatment",
   fill.by ="ident"
 )+ 
-  theme_classic() +
+  theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -727,7 +727,7 @@ VlnPlot(
   flip = TRUE, 
   split.by = "Treatment"
 ) + 
-  theme_classic() +
+  theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -749,7 +749,7 @@ VlnPlot(
   group.by = "Treatment",
   fill.by ="ident"
 )+ 
-  theme_classic() +
+  theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -772,7 +772,7 @@ VlnPlot(
   flip = TRUE, 
   split.by = "Treatment"
 ) + 
-  theme_classic() +
+  theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -794,7 +794,7 @@ VlnPlot(
   group.by = "Treatment",
   fill.by ="ident"
 )+ 
-  theme_classic() +
+  theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -816,7 +816,7 @@ VlnPlot(
   flip = TRUE, 
   split.by = "Treatment"
 ) + 
-  theme_classic() +
+  theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -838,7 +838,7 @@ VlnPlot(
   group.by = "Treatment",
   fill.by ="ident"
 )+ 
-  theme_classic() +
+  theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -862,7 +862,7 @@ VlnPlot(
   flip = TRUE, 
   split.by = "Treatment"
 ) + 
-  theme_classic() +
+  theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -884,7 +884,7 @@ VlnPlot(
   group.by = "Treatment",
   fill.by ="ident"
 )+ 
-  theme_classic() +
+  theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -907,7 +907,7 @@ VlnPlot(
   flip = TRUE, 
   split.by = "Treatment"
 ) + 
-  theme_classic() +
+  theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -929,7 +929,7 @@ VlnPlot(
   group.by = "Treatment",
   fill.by ="ident"
 )+ 
-  theme_classic() +
+  theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -951,7 +951,7 @@ VlnPlot(
   flip = TRUE, 
   split.by = "Treatment"
 ) + 
-  theme_classic() +
+  theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -973,7 +973,7 @@ VlnPlot(
   group.by = "Treatment",
   fill.by ="ident"
 )+ 
-  theme_classic() +
+  theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -998,7 +998,7 @@ VlnPlot(
   flip = TRUE, 
   split.by = "Treatment"
 ) + 
-  theme_classic() +
+  theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -1020,7 +1020,7 @@ VlnPlot(
   group.by = "Treatment",
   fill.by ="ident"
 )+ 
-  theme_classic() +
+  theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -1043,7 +1043,7 @@ VlnPlot(
   flip = TRUE, 
   split.by = "Treatment"
 ) + 
-  theme_classic() +
+  theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -1065,7 +1065,7 @@ VlnPlot(
   group.by = "Treatment",
   fill.by ="ident"
 )+ 
-  theme_classic() +
+  theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -1086,7 +1086,7 @@ VlnPlot(
   flip = TRUE, 
   split.by = "Treatment"
 ) + 
-  theme_classic() +
+  theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -1108,7 +1108,7 @@ VlnPlot(
   group.by = "Treatment",
   fill.by ="ident"
 )+ 
-  theme_classic() +
+  theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -1129,7 +1129,7 @@ VlnPlot(
   flip = TRUE, 
   split.by = "Treatment"
 ) + 
-  theme_classic() +
+  theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -1185,39 +1185,6 @@ ggsave(file = "figures/clus2/tsne_by_treatment_together.png", dpi=300, width=14,
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # calculate cd8/cd4 ratio in responders and non ---------
 
 # add cell type for ratio calculation
@@ -1241,10 +1208,10 @@ cat("CD8/CD4 ratio in non-responders:", cd8_cd4_ratio_non_responders, "\n")
 
 DefaultAssay(T_cells) <- "RNA"
 #M# calculate ratio per patient
-df <- T_cells@meta.data %>%
-  as.data.frame() %>% 
-  group_by(Sample, cell_type) %>%
-  summarize(Freq = n())
+# df <- T_cells@meta.data %>%
+#   as.data.frame() %>% 
+#   group_by(Sample, cell_type) %>%
+#   summarize(Freq = n())
 #M# why doesnt this work?! 11.9.24
 
 
@@ -1319,18 +1286,6 @@ ggsave(file = "figures/Tcells/cd8_cd4_ratio_2.png", dpi=300, width=4, height=6)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 # cd40lg zoom in --------
 # all cells
 VlnPlot(T_cells, features = c("CD40LG"),
@@ -1339,7 +1294,7 @@ VlnPlot(T_cells, features = c("CD40LG"),
         split.by = "Treatment",
         pt.size = 0
 ) + 
-  theme_classic() +
+  theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -1359,7 +1314,7 @@ VlnPlot(cd4_cells, features = c("CD40LG"),
         split.by = "Treatment",
         pt.size = 0
 ) + 
-  theme_classic() +
+  theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -1378,7 +1333,7 @@ VlnPlot(clus1, features = c("CD40LG"),
         split.by = "Treatment",
         pt.size = 0
 ) + 
-  theme_classic() +
+  theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -1397,7 +1352,7 @@ VlnPlot(clus2, features = c("CD40LG"),
         split.by = "Treatment",
         pt.size = 0
 ) + 
-  theme_classic() +
+  theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -1415,7 +1370,7 @@ VlnPlot(cd4_cells, features = c("TNFRSF9"),
         flip = TRUE, 
         split.by = "Treatment"
 ) + 
-  theme_classic() +
+  theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -1433,7 +1388,7 @@ VlnPlot(clus1, features = c("TNFRSF9"),
         flip = TRUE, 
         split.by = "Treatment"
 ) + 
-  theme_classic() +
+  theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -1451,7 +1406,7 @@ VlnPlot(clus2, features = c("TNFRSF9"),
         flip = TRUE, 
         split.by = "Treatment"
 ) + 
-  theme_classic() +
+  theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -1474,7 +1429,7 @@ VlnPlot(T_cells, features = c("IL21"),
         fill.by ="ident",
         pt.size = 0
 ) + 
-  theme_classic() +
+  theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A"))  +
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -1493,7 +1448,7 @@ VlnPlot(T_cells, features = c("IL11"),
         group.by = "Treatment",
         fill.by ="ident",
         pt.size = 0) + 
-  theme_classic() +
+  theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A"))  +
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -1513,7 +1468,7 @@ VlnPlot(T_cells, features = c("IL27"),
         fill.by ="ident",
         pt.size = 0
 ) + 
-  theme_classic() +
+  theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A"))  +
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -1533,7 +1488,7 @@ VlnPlot(T_cells, features = c("IL21R"),
         fill.by ="ident",
         pt.size = 0
 ) + 
-  theme_classic() +
+  theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A"))  +
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -1552,7 +1507,7 @@ VlnPlot(T_cells, features = c("IL11RA"),
         group.by = "Treatment",
         fill.by ="ident",
         pt.size = 0) + 
-  theme_classic() +
+  theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A"))  +
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -1572,7 +1527,7 @@ VlnPlot(T_cells, features = c("IL27RA"),
         fill.by ="ident",
         pt.size = 0
 ) + 
-  theme_classic() +
+  theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A"))  +
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -1590,7 +1545,7 @@ VlnPlot(cd4_cells, features = c("IL21"),
         flip = TRUE, 
         split.by = "Treatment"
 ) + 
-  theme_classic() +
+  theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A"))  +
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -1607,7 +1562,7 @@ VlnPlot(clus1, features = c("IL21"),
         flip = TRUE, 
         split.by = "Treatment"
 ) + 
-  theme_classic() +
+  theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A"))  +
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -1624,7 +1579,7 @@ VlnPlot(clus2, features = c("IL21"),
         flip = TRUE, 
         split.by = "Treatment"
 ) + 
-  theme_classic() +
+  theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A"))  +
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -1810,7 +1765,7 @@ for (gene in genes) {
           flip = TRUE, 
           split.by = "Treatment"
   ) + 
-    theme_classic() +
+    theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A"))  +
     theme(
       axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
       axis.title.x = element_blank(),
@@ -1834,7 +1789,7 @@ while(i<length(genes)){
     flip = TRUE, 
     split.by = "Treatment"
   ) + 
-    theme_classic() +
+    theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A"))  +
     theme(
       axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
       axis.title.x = element_blank(),
@@ -1870,7 +1825,7 @@ while(i<length(genes)){
     flip = TRUE, 
     split.by = "Treatment"
   ) + 
-    theme_classic() +
+    theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A"))  +
     theme(
       axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
       axis.title.x = element_blank(),
@@ -1925,7 +1880,7 @@ while(i<length(genes)){
     flip = TRUE, 
     split.by = "Treatment"
   ) + 
-    theme_classic() +
+    theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A"))  +
     theme(
       axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
       axis.title.x = element_blank(),
@@ -2014,7 +1969,7 @@ while(i<length(tnf_family)){
     flip = TRUE, 
     split.by = "Treatment"
   ) + 
-    theme_classic() +
+    theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A"))  +
     theme(
       axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
       axis.title.x = element_blank(),
@@ -2046,7 +2001,7 @@ while(i<length(tnf_family)){
     flip = TRUE, 
     split.by = "Treatment"
   ) + 
-    theme_classic() +
+    theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A"))  +
     theme(
       axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
       axis.title.x = element_blank(),
@@ -2080,7 +2035,7 @@ while(i<length(tnf_family)){
     flip = TRUE, 
     split.by = "Treatment"
   ) + 
-    theme_classic() +
+    theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A"))  +
     theme(
       axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
       axis.title.x = element_blank(),

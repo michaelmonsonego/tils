@@ -776,7 +776,7 @@ SignatureScore <- function(object, name){
   
   p <- VlnPlot(object, features='normalized', group.by = "Treatment",
                y.max = y.max, pt.size = 0,
-               cols= c("#ff7f0e", "#1f77b4")) +  theme_classic(base_size = 14) +
+               cols= c("#A799B7", "#DD614A")) +  theme_classic(base_size = 14) +
     theme(text = element_text(size=18, colour = "black")) + RotatedAxis() +
     theme(axis.title.x=element_blank(), axis.text.x=element_blank(),axis.ticks.x=element_blank())+
     labs(title = "", y = name,  x="") + theme(legend.position="right") +

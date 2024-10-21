@@ -357,7 +357,7 @@ VlnPlot(clus1, features = c("ENTPD1", "GZMB", "PRF1", "CD40LG","CD8A","CD8B"),
   flip= TRUE,
   fill.by ="ident"
   )+ 
-  theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
+  theme_classic() + 
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -424,7 +424,7 @@ VlnPlot(clus1, features = Ts,
   flip= TRUE,
   fill.by ="ident"
   )+ 
-  theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
+  theme_classic() + 
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -492,7 +492,7 @@ VlnPlot(clus1, features = c("PDCD1","HAVCR2","LAG3","TIGIT","TNFRSF4","TNFRSF9")
   flip= TRUE,
   fill.by ="ident"
   )+ 
-  theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
+  theme_classic() + 
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -549,7 +549,7 @@ VlnPlot(clus1, features = c("ICOS","CTLA4","KLRD1","IRF8","KLRC1","TOX"),
   flip= TRUE,
   fill.by ="ident"
   )+ 
-  theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
+  theme_classic() +  
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -612,7 +612,7 @@ VlnPlot(clus1, features = c("GZMB","PRF1","IFNG","TNF"),
   flip= TRUE,
   fill.by ="ident"
   )+ 
-  theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
+  theme_classic() +  
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -669,7 +669,7 @@ VlnPlot(clus1, features = c("GZMC","GZMA","KLRG1","CD52", fill.by = "ident"),
   flip= TRUE,
   fill.by ="ident"
   )+ 
-  theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
+  theme_classic() +  
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -696,7 +696,7 @@ VlnPlot(clus1, features = c("CD69","ENTPD1"),
   flip= TRUE,
   fill.by ="ident"
   )+ 
-  theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
+  theme_classic() + 
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -792,7 +792,7 @@ VlnPlot(clus1, features = c("SELL","CD44","IL7R","CCR7","TCF7","CXCR6"),
   flip= TRUE,
   fill.by ="ident"
   )+ 
-  theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
+  theme_classic() +
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -853,7 +853,7 @@ VlnPlot(clus1, features = c("BACH2","PRDM1","IL7R","CD44","CX3CR1","ID2","KLF2",
   flip= TRUE,
   fill.by ="ident"
   )+ 
-  theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
+  theme_classic() +  
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -912,7 +912,7 @@ VlnPlot(clus1, features = c("TCF7","BACH2","BCL16","CCR7","IL7R","CD27","CD44","
   flip= TRUE,
   fill.by ="ident"
   )+ 
-  theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
+  theme_classic() + 
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
@@ -973,7 +973,7 @@ VlnPlot(clus1, features = c("PRDM1","ITGAE","IL7R","CD44","ITGA1","CD69","CRTAM"
   flip= TRUE,
   fill.by ="ident"
   )+ 
-  theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
+  theme_classic() +  
   theme(
     axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
