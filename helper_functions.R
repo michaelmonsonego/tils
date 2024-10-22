@@ -591,15 +591,16 @@ VlnPlot(
 ) + 
   theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
     axis.ticks.y = element_line(size = 0.5),
-    strip.text.y = element_text(angle = 0, size = 16, face = "bold")
+    strip.text.y = element_text(angle = 0, size = 16, face = "bold"), 
+    legend.text = element_text(size=24)
     ) +
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
-ggsave(filename = "vln_activation_exhastion_cluster_by_treatment_1.png" , path = "figures/Tcells/", dpi=300, width=12, height=10)
+ggsave(filename = "vln_activation_exhastion_cluster_by_treatment_1.png" , path = "figures/Tcells/", dpi=300, width=19, height=10)
 
 
 VlnPlot(
@@ -613,12 +614,13 @@ VlnPlot(
   )+ 
   theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
     axis.ticks.y = element_line(size = 0.5),
-    strip.text.y = element_text(angle = 0, size = 16, face = "bold")
+    strip.text.y = element_text(angle = 0, size = 16, face = "bold"), 
+    legend.text = element_text(size=24)
   ) +
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
 ggsave(file = "figures/Tcells/vln_activation_exhastion_by_treatment_1.png", dpi=300, width=6, height=10)
@@ -636,15 +638,16 @@ VlnPlot(
 ) + 
   theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
     axis.ticks.y = element_line(size = 0.5),
-    strip.text.y = element_text(angle = 0, size = 16, face = "bold")
+    strip.text.y = element_text(angle = 0, size = 16, face = "bold"), 
+    legend.text = element_text(size=24)
   ) +
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
-ggsave(file = "figures/Tcells/Vln_T_effector_cluster_by_treatment_1.png", dpi=300, width=12, height=10, limitsize=FALSE)
+ggsave(file = "figures/Tcells/Vln_T_effector_cluster_by_treatment_1.png", dpi=300, width=19, height=10, limitsize=FALSE)
 
 
 VlnPlot(
@@ -658,12 +661,13 @@ VlnPlot(
 )+ 
   theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
     axis.ticks.y = element_line(size = 0.5),
-    strip.text.y = element_text(angle = 0, size = 16, face = "bold")
+    strip.text.y = element_text(angle = 0, size = 16, face = "bold"), 
+    legend.text = element_text(size=24)
   ) +
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
 ggsave(file = "figures/Tcells/Vln_T_effector_by_treatment_1.png", dpi=300, width=6, height=10, limitsize=FALSE)
@@ -680,15 +684,16 @@ VlnPlot(
 ) + 
   theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 30, face = "bold"),
     axis.title.x = element_blank(),
-    axis.text.y = element_text(size = 24, face = "italic"),
-    axis.title.y = element_text(size = 20, face = "bold"),
+    axis.text.y = element_text(size = 34, face = "italic"),
+    axis.title.y = element_text(size = 30, face = "bold"),
     axis.ticks.y = element_line(size = 0.5),
-    strip.text.y = element_text(angle = 0, size = 16, face = "bold")
+    strip.text.y = element_text(angle = 0, size = 24, face = "bold"), 
+    legend.text = element_text(size=30)
   ) +
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
-ggsave(file = "figures/Tcells/Vln_T_naive_cluster_by_treatment_1.png", dpi=300, width=12, height=10, limitsize=FALSE)
+ggsave(file = "figures/Tcells/Vln_T_naive_cluster_by_treatment_1.png", dpi=300, width=30, height=10, limitsize=FALSE)
 
 
 VlnPlot(
@@ -702,12 +707,13 @@ VlnPlot(
 )+ 
   theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
     axis.ticks.y = element_line(size = 0.5),
-    strip.text.y = element_text(angle = 0, size = 16, face = "bold")
+    strip.text.y = element_text(angle = 0, size = 16, face = "bold"), 
+    legend.text = element_text(size=24)
   ) +
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
 ggsave(file = "figures/Tcells/Vln_T_naive_by_treatment_1.png", dpi=300, width=6, height=10, limitsize=FALSE)
@@ -729,12 +735,13 @@ VlnPlot(
 ) + 
   theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
     axis.ticks.y = element_line(size = 0.5),
-    strip.text.y = element_text(angle = 0, size = 16, face = "bold")
+    strip.text.y = element_text(angle = 0, size = 16, face = "bold"), 
+    legend.text = element_text(size=24)
   ) +
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
 ggsave(filename = "vln_activation_exhastion_cluster_by_treatment_1.png" , path = "figures/cd4_cluster0/", dpi=300, width=8, height=10)
@@ -751,12 +758,13 @@ VlnPlot(
 )+ 
   theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
     axis.ticks.y = element_line(size = 0.5),
-    strip.text.y = element_text(angle = 0, size = 16, face = "bold")
+    strip.text.y = element_text(angle = 0, size = 16, face = "bold"), 
+    legend.text = element_text(size=24)
   ) +
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
 ggsave(file = "figures/cd4_cluster0/vln_activation_exhastion_by_treatment_1.png", dpi=300, width=6, height=10)
@@ -774,12 +782,13 @@ VlnPlot(
 ) + 
   theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
     axis.ticks.y = element_line(size = 0.5),
-    strip.text.y = element_text(angle = 0, size = 16, face = "bold")
+    strip.text.y = element_text(angle = 0, size = 16, face = "bold"), 
+    legend.text = element_text(size=24)
   ) +
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
 ggsave(file = "figures/cd4_cluster0/Vln_T_effector_cluster_by_treatment_1.png", dpi=300, width=8, height=10, limitsize=FALSE)
@@ -796,12 +805,13 @@ VlnPlot(
 )+ 
   theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
     axis.ticks.y = element_line(size = 0.5),
-    strip.text.y = element_text(angle = 0, size = 16, face = "bold")
+    strip.text.y = element_text(angle = 0, size = 16, face = "bold"), 
+    legend.text = element_text(size=24)
   ) +
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
 ggsave(file = "figures/cd4_cluster0/Vln_T_effector_by_treatment_1.png", dpi=300, width=6, height=10, limitsize=FALSE)
@@ -818,12 +828,13 @@ VlnPlot(
 ) + 
   theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
     axis.ticks.y = element_line(size = 0.5),
-    strip.text.y = element_text(angle = 0, size = 16, face = "bold")
+    strip.text.y = element_text(angle = 0, size = 16, face = "bold"), 
+    legend.text = element_text(size=24)
   ) +
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
 ggsave(file = "figures/cd4_cells/cluster0_only/Vln_T_naive_cluster_by_treatment_1.png", dpi=300, width=8, height=10, limitsize=FALSE)
@@ -840,12 +851,13 @@ VlnPlot(
 )+ 
   theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
     axis.ticks.y = element_line(size = 0.5),
-    strip.text.y = element_text(angle = 0, size = 16, face = "bold")
+    strip.text.y = element_text(angle = 0, size = 16, face = "bold"), 
+    legend.text = element_text(size=24)
   ) +
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
 ggsave(file = "figures/cd4_cluster0/Vln_T_naive_by_treatment_1.png", dpi=300, width=6, height=10, limitsize=FALSE)
@@ -864,12 +876,13 @@ VlnPlot(
 ) + 
   theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
     axis.ticks.y = element_line(size = 0.5),
-    strip.text.y = element_text(angle = 0, size = 16, face = "bold")
+    strip.text.y = element_text(angle = 0, size = 16, face = "bold"), 
+    legend.text = element_text(size=24)
   ) +
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
 ggsave(filename = "vln_activation_exhastion_cluster_by_treatment_1.png" , path = "figures/clus1/", dpi=300, width=12, height=10)
@@ -886,12 +899,13 @@ VlnPlot(
 )+ 
   theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
     axis.ticks.y = element_line(size = 0.5),
-    strip.text.y = element_text(angle = 0, size = 16, face = "bold")
+    strip.text.y = element_text(angle = 0, size = 16, face = "bold"), 
+    legend.text = element_text(size=24)
   ) +
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
 ggsave(file = "figures/clus1/vln_activation_exhastion_by_treatment_1.png", dpi=300, width=6, height=10)
@@ -909,12 +923,13 @@ VlnPlot(
 ) + 
   theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
     axis.ticks.y = element_line(size = 0.5),
-    strip.text.y = element_text(angle = 0, size = 16, face = "bold")
+    strip.text.y = element_text(angle = 0, size = 16, face = "bold"),
+    legend.text = element_text(size=24)
   ) +
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
 ggsave(file = "figures/clus1/Vln_T_effector_cluster_by_treatment_1.png", dpi=300, width=12, height=10, limitsize=FALSE)
@@ -931,12 +946,13 @@ VlnPlot(
 )+ 
   theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
     axis.ticks.y = element_line(size = 0.5),
-    strip.text.y = element_text(angle = 0, size = 16, face = "bold")
+    strip.text.y = element_text(angle = 0, size = 16, face = "bold"),
+    legend.text = element_text(size=24)
   ) +
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
 ggsave(file = "figures/clus1/Vln_T_effector_by_treatment_1.png", dpi=300, width=6, height=10, limitsize=FALSE)
@@ -953,12 +969,13 @@ VlnPlot(
 ) + 
   theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
     axis.ticks.y = element_line(size = 0.5),
-    strip.text.y = element_text(angle = 0, size = 16, face = "bold")
+    strip.text.y = element_text(angle = 0, size = 16, face = "bold"),
+    legend.text = element_text(size=24)
   ) +
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
 ggsave(file = "figures/clus1/Vln_T_naive_cluster_by_treatment_1.png", dpi=300, width=12, height=10, limitsize=FALSE)
@@ -975,12 +992,13 @@ VlnPlot(
 )+ 
   theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
     axis.ticks.y = element_line(size = 0.5),
-    strip.text.y = element_text(angle = 0, size = 16, face = "bold")
+    strip.text.y = element_text(angle = 0, size = 16, face = "bold"),
+    legend.text = element_text(size=24)
   ) +
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
 ggsave(file = "figures/clus1/Vln_T_naive_by_treatment_1.png", dpi=300, width=6, height=10, limitsize=FALSE)
@@ -1000,12 +1018,13 @@ VlnPlot(
 ) + 
   theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
     axis.ticks.y = element_line(size = 0.5),
-    strip.text.y = element_text(angle = 0, size = 16, face = "bold")
+    strip.text.y = element_text(angle = 0, size = 16, face = "bold"),
+    legend.text = element_text(size=24)
   ) +
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
 ggsave(filename = "vln_activation_exhastion_cluster_by_treatment_1.png" , path = "figures/clus2/", dpi=300, width=12, height=10)
@@ -1022,12 +1041,13 @@ VlnPlot(
 )+ 
   theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
     axis.ticks.y = element_line(size = 0.5),
-    strip.text.y = element_text(angle = 0, size = 16, face = "bold")
+    strip.text.y = element_text(angle = 0, size = 16, face = "bold"),
+    legend.text = element_text(size=24)
   ) +
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
 ggsave(file = "figures/clus2/vln_activation_exhastion_by_treatment_1.png", dpi=300, width=6, height=10)
@@ -1045,12 +1065,13 @@ VlnPlot(
 ) + 
   theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
     axis.ticks.y = element_line(size = 0.5),
-    strip.text.y = element_text(angle = 0, size = 16, face = "bold")
+    strip.text.y = element_text(angle = 0, size = 16, face = "bold"),
+    legend.text = element_text(size=24)
   ) +
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
 ggsave(file = "figures/clus2/Vln_T_effector_cluster_by_treatment_1.png", dpi=300, width=12, height=10, limitsize=FALSE)
@@ -1067,12 +1088,13 @@ VlnPlot(
 )+ 
   theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
     axis.ticks.y = element_line(size = 0.5),
-    strip.text.y = element_text(angle = 0, size = 16, face = "bold")
+    strip.text.y = element_text(angle = 0, size = 16, face = "bold"),
+    legend.text = element_text(size=24)
   ) +
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
 ggsave(file = "figures/clus2/Vln_T_effector_by_treatment_1.png", dpi=300, width=6, height=10, limitsize=FALSE)
@@ -1088,12 +1110,13 @@ VlnPlot(
 ) + 
   theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
     axis.ticks.y = element_line(size = 0.5),
-    strip.text.y = element_text(angle = 0, size = 16, face = "bold")
+    strip.text.y = element_text(angle = 0, size = 16, face = "bold"),
+    legend.text = element_text(size=24)
   ) +
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
 ggsave(file = "figures/clus2/Vln_T_naive_cluster_by_treatment_1.png", dpi=300, width=12, height=10, limitsize=FALSE)
@@ -1110,12 +1133,13 @@ VlnPlot(
 )+ 
   theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
     axis.ticks.y = element_line(size = 0.5),
-    strip.text.y = element_text(angle = 0, size = 16, face = "bold")
+    strip.text.y = element_text(angle = 0, size = 16, face = "bold"),
+    legend.text = element_text(size=24)
   ) +
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
 ggsave(file = "figures/clus2/Vln_T_naive_by_treatment_1.png", dpi=300, width=6, height=10, limitsize=FALSE)
@@ -1131,12 +1155,13 @@ VlnPlot(
 ) + 
   theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
     axis.ticks.y = element_line(size = 0.5),
-    strip.text.y = element_text(angle = 0, size = 16, face = "bold")
+    strip.text.y = element_text(angle = 0, size = 16, face = "bold"),
+    legend.text = element_text(size=24)
   ) +
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
 ggsave(file = "figures/clus2/de_gene_search/interesting_DE_genes_for_presentation.png", dpi=300, width=16, height=12)
@@ -1274,11 +1299,12 @@ ggplot(summary_stats, aes(x = Treatment, y = Mean_Ratio, fill = Treatment)) +
   theme_minimal() +
   theme(
     plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
-    axis.title.x = element_text(size = 14, face = "bold"),
-    axis.title.y = element_text(size = 14, face = "bold"),
+    axis.title.x = element_text(size = 16),
+    axis.title.y = element_text(size = 16),
     axis.text.x = element_text(size = 12, angle = 40),
     axis.text.y = element_text(size = 12)
-  )
+  )+
+  ylab("CD8/CD4 ratio")
 ggsave(file = "figures/Tcells/cd8_cd4_ratio_2.png", dpi=300, width=4, height=6)
 
 
@@ -1296,12 +1322,13 @@ VlnPlot(T_cells, features = c("CD40LG"),
 ) + 
   theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
     axis.ticks.y = element_line(size = 0.5),
-    strip.text.y = element_text(angle = 0, size = 16, face = "bold")
+    strip.text.y = element_text(angle = 0, size = 16, face = "bold"),
+    legend.text = element_text(size=24)
   ) + 
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
 ggsave(file = "figures/Tcells/cd40lg.png", dpi=300, width=10, height=6)
@@ -2248,7 +2275,7 @@ ggsave(file = "figures/Tcells/proliferation1_vln_signature.png", dpi=300, width=
 
 # responder vs. non responder in all cells all together
 p <- SignatureScore(T_cells, 'proliferation1') + ggtitle("proliferation sig")
-ggsave(file = "figures/Tcells/proliferation1_all_cells_combined_signature.png", dpi=300, width=16, height=10)
+ggsave(file = "figures/Tcells/proliferation1_all_cells_combined_signature.png", dpi=300, width=8, height=6)
 
 
 

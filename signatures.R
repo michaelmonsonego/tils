@@ -1014,7 +1014,7 @@ cowplot::plot_grid(plotlist = gglist, ncol = 4, nrow = 2) +
   ggtitle(name)
 ggsave(file = "figures/clus2/effector_memory_sig_per_cluster_treatment.png", dpi=300, width=16, height=10)
 
-SignatureScore(clus2, 'effector_memory1')
+SignatureScore(clus_2_with_sigs, 'effector_memory1')
 ggsave(file = "figures/clus2/clus_2_effector_memory_vln_all_clusters.png", dpi=300, width=8, height=6)
 
 

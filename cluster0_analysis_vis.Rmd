@@ -280,7 +280,7 @@ VlnPlot(cd4_cells, features = c("ENTPD1", "GZMB", "FOXP3", "CD40LG"),
 ) + 
    theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
@@ -299,7 +299,7 @@ VlnPlot(cd4_cells, features = c("ENTPD1", "GZMB", "FOXP3", "CD40LG"),
   )+ 
    theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
@@ -317,7 +317,7 @@ VlnPlot(cd4_cells, features = c("ENTPD1", "GZMB", "FOXP3", "CD40LG"),
   )+ 
    theme_classic()+
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
@@ -347,7 +347,7 @@ VlnPlot(cd4_cells, features = Th1Markers,
 ) + 
    theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
@@ -366,7 +366,7 @@ VlnPlot(cd4_cells, features = Th1Markers,
   )+ 
    theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
@@ -384,7 +384,7 @@ VlnPlot(cd4_cells, features = Th1Markers,
   )+ 
    theme_classic() +
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
@@ -411,7 +411,7 @@ VlnPlot(cd4_cells, features = Th2Markers,
 ) + 
    theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
@@ -430,7 +430,7 @@ VlnPlot(cd4_cells, features = Th2Markers,
   )+ 
    theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
@@ -448,7 +448,7 @@ VlnPlot(cd4_cells, features = Th2Markers,
   )+ 
    theme_classic() +
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
@@ -477,7 +477,7 @@ VlnPlot(cd4_cells, features = c('IL23R', 'RORC', 'TNF'),
 ) + 
    theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
@@ -496,7 +496,7 @@ VlnPlot(cd4_cells, features = c('IL23R', 'RORC', 'TNF'),
   )+ 
    theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
@@ -514,7 +514,7 @@ VlnPlot(cd4_cells, features = c('IL23R', 'RORC', 'TNF'),
   )+ 
    theme_classic() +
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
@@ -541,7 +541,7 @@ VlnPlot(cd4_cells, features = c("PDCD1","HAVCR2","LAG3","TIGIT","TNFRSF4","TNFRS
 ) + 
    theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
@@ -552,7 +552,7 @@ VlnPlot(cd4_cells, features = c("PDCD1","HAVCR2","LAG3","TIGIT","TNFRSF4","TNFRS
  ggsave(filename = "vln_activation_exhastion_cluster_by_treatment_1.png" , path = "figures/cd4_cells/", dpi=300, width=12, height=10)
 
  #M# trying to fix plot visualise
- VlnPlot(cd4_cells, features = c("HAVCR2"), assay = "RNA", flip= TRUE, split.by = "Treatment")+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) +
+ VlnPlot(cd4_cells, features = c("HAVCR2"), assay = "RNA", flip= TRUE, split.by = "Treatment")+ theme_classic()+theme(axis.text.x = element_text(angle = 50, hjust=1, size=12), axis.title.x = element_blank()) +
   theme(
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
@@ -568,7 +568,7 @@ VlnPlot(cd4_cells, features = c("PDCD1","HAVCR2","LAG3","TIGIT","TNFRSF4","TNFRS
   )+ 
    theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
@@ -586,7 +586,7 @@ VlnPlot(cd4_cells, features = c("PDCD1","HAVCR2","LAG3","TIGIT","TNFRSF4","TNFRS
   )+ 
    theme_classic() +
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
@@ -606,7 +606,7 @@ VlnPlot(cd4_cells, features = c("ICOS","CTLA4","KLRD1","IRF8","KLRC1","TOX"),
 ) + 
    theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
@@ -625,7 +625,7 @@ VlnPlot(cd4_cells, features = c("ICOS","CTLA4","KLRD1","IRF8","KLRC1","TOX"),
   )+ 
    theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
@@ -643,7 +643,7 @@ VlnPlot(cd4_cells, features = c("ICOS","CTLA4","KLRD1","IRF8","KLRC1","TOX"),
   )+ 
    theme_classic() +
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
@@ -669,7 +669,7 @@ VlnPlot(cd4_cells, features = c("GZMB","PRF1","IFNG","TNF"),
 ) + 
    theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
@@ -688,7 +688,7 @@ VlnPlot(cd4_cells, features = c("GZMB","PRF1","IFNG","TNF"),
   )+ 
    theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
@@ -706,7 +706,7 @@ VlnPlot(cd4_cells, features = c("GZMB","PRF1","IFNG","TNF"),
   )+ 
    theme_classic() +
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
@@ -726,7 +726,7 @@ VlnPlot(cd4_cells, features = c("GZMC","GZMA","KLRG1","CD52"),
 ) + 
    theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
@@ -745,7 +745,7 @@ VlnPlot(cd4_cells, features = c("GZMC","GZMA","KLRG1","CD52"),
   )+ 
    theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
@@ -763,7 +763,7 @@ VlnPlot(cd4_cells, features = c("GZMC","GZMA","KLRG1","CD52", fill.by = "ident")
   )+ 
    theme_classic() +
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
@@ -791,7 +791,7 @@ VlnPlot(cd4_cells, features = c("CD69","ENTPD1"),
   )+ 
    theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
@@ -808,7 +808,7 @@ VlnPlot(cd4_cells, features = c("CD69"),
 ) + 
    theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
@@ -817,7 +817,7 @@ VlnPlot(cd4_cells, features = c("CD69"),
     ) +
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
 
-VlnPlot(cd4_cells, features = c("ENTPD1"), assay = "RNA", flip= TRUE, split.by = "Treatment", pt.size = 0)+theme(axis.text.y =element_text(size=6))+ theme_classic()+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
+VlnPlot(cd4_cells, features = c("ENTPD1"), assay = "RNA", flip= TRUE, split.by = "Treatment", pt.size = 0)+theme(axis.text.y =element_text(size=6))+ theme_classic()+theme(axis.text.x = element_text(angle = 50, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
 geom_boxplot(alpha=0.3,show.legend = FALSE)
 
 
@@ -839,7 +839,7 @@ VlnPlot(cd4_cells, features = c("SELL","CD44","IL7R","CCR7","TCF7","CXCR6"),
 ) + 
    theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
@@ -858,7 +858,7 @@ VlnPlot(cd4_cells, features = c("SELL","CD44","IL7R","CCR7","TCF7","CXCR6"),
   )+ 
    theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
@@ -876,7 +876,7 @@ VlnPlot(cd4_cells, features = c("SELL","CD44","IL7R","CCR7","TCF7","CXCR6"),
   )+ 
    theme_classic() +
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
@@ -902,7 +902,7 @@ VlnPlot(cd4_cells, features = c("BACH2","PRDM1","IL7R","CD44","CX3CR1","ID2","KL
 ) + 
    theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
@@ -920,7 +920,7 @@ VlnPlot(cd4_cells, features = c("BACH2","PRDM1","IL7R","CD44","CX3CR1","ID2","KL
   )+ 
    theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
@@ -937,7 +937,7 @@ VlnPlot(cd4_cells, features = c("BACH2","PRDM1","IL7R","CD44","CX3CR1","ID2","KL
   )+ 
    theme_classic()+
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
@@ -961,7 +961,7 @@ VlnPlot(cd4_cells, features = c("TCF7","BACH2","BCL16","CCR7","IL7R","CD27","CD4
 ) + 
    theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
@@ -979,7 +979,7 @@ VlnPlot(cd4_cells, features = c("TCF7","BACH2","BCL16","CCR7","IL7R","CD27","CD4
   )+ 
    theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
@@ -996,7 +996,7 @@ VlnPlot(cd4_cells, features = c("TCF7","BACH2","BCL16","CCR7","IL7R","CD27","CD4
   )+ 
    theme_classic() +
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
@@ -1022,7 +1022,7 @@ VlnPlot(cd4_cells, features = c("PRDM1","ITGAE","IL7R","CD44","ITGA1","CD69","CR
 ) + 
    theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
@@ -1040,7 +1040,7 @@ VlnPlot(cd4_cells, features = c("PRDM1","ITGAE","IL7R","CD44","ITGA1","CD69","CR
   )+ 
    theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
@@ -1057,7 +1057,7 @@ VlnPlot(cd4_cells, features = c("PRDM1","ITGAE","IL7R","CD44","ITGA1","CD69","CR
   )+ 
    theme_classic() +
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),

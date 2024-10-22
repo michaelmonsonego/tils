@@ -66,16 +66,16 @@ table(T_cells$orig.ident)["N3"] #
 table(T_cells$orig.ident)["N4"] #  
 table(T_cells$Treatment)
 
-DimPlot(T_cells , reduction = "tsne", label= T, pt.size=0.5, label.size = 10) + ggplot2::theme(legend.position = "none")
-ggsave(file = "figures/Tcells/tsne_no_legend.png", dpi=300, width=15, height=10)
-
-
 DimPlot(T_cells, reduction = "tsne", label = TRUE, pt.size = 0.5, label.size = 10) +
   ggplot2::theme(legend.position = "none") +
   ggplot2::theme(
-    axis.title.x = element_text(size = 20),  # Adjust size as needed
-    axis.text.x = element_text(size = 14)    # Adjust tick label size as needed
+    axis.title.x = element_text(size = 30),  # X-axis title size
+    axis.title.y = element_text(size = 30),  # Y-axis title size
+    axis.text.x = element_text(size = 18),                 # X-axis tick labels size
+    axis.text.y = element_text(size = 18),                 # Y-axis tick labels size
+    axis.ticks = element_line(size = 1)                    # Adjust axis tick size
   )
+ggsave(file = "figures/Tcells/tsne_no_legend.png", dpi=300, width=15, height=10)
 
 
 
@@ -173,13 +173,14 @@ p3 <- ggplot(mfrque, aes(x = Cluster, y = normalizedppstatus, fill = patient)) +
  ggtitle("Normalized Cluster Counts") +
  ylab("Normalized Proportions in %") +
  theme(
-   axis.text.x  = element_text(angle = 50, hjust = 1, size = 15, color = "black"),
-   axis.text.y  = element_text(size = 15, color = "black"),
-   axis.title.x = element_text(size = 18, color = "black"),
-   axis.title.y = element_text(size = 18, color = "black"),
-   title = element_text(size = 18, hjust = 0.5),
+   axis.text.x  = element_text(angle = 50, hjust = 1, size = 18, color = "black"),
+   axis.text.y  = element_text(size = 18, color = "black"),
+   axis.title.x = element_text(size = 30, color = "black"),
+   axis.title.y = element_text(size = 30, color = "black"),
+   title = element_text(size = 30, hjust = 0.5),
    legend.justification = "top",
-   panel.border = element_blank()) +
+   panel.border = element_blank(),
+   legend.text = element_text(size=24)) +
  geom_hline(yintercept = 12.5, linetype='dotted')
   
   
@@ -190,11 +191,11 @@ p1 <- ggplot(frque, aes(x = Cluster, y = normalizedppstatus, fill = Treatment)) 
  ggtitle("Normalized Cluster Counts") +
  ylab("Normalized Proportions in %") +
  theme(
-   axis.text.x  = element_text(angle = 67, hjust = 1, size = 11, color = "black"),
-   axis.text.y  = element_text(size = 11, color = "black"),
-   axis.title.x = element_text(size = 13, color = "black"),
-   axis.title.y = element_text(size = 13, color = "black"),
-   title = element_text(size = 13),
+   axis.text.x  = element_text(angle = 50, hjust = 1, size = 18, color = "black"),
+   axis.text.y  = element_text(size = 18, color = "black"),
+   axis.title.x = element_text(size = 30, color = "black"),
+   axis.title.y = element_text(size = 30, color = "black"),
+   title = element_text(size = 30),
    legend.justification = "top",
    panel.border = element_blank()) +
  geom_hline(yintercept = 50, linetype='dotted') 
@@ -205,16 +206,25 @@ p2<-ggplot(frque, aes(x= Cluster, y= Freq, fill = Treatment)) +
  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
  ggtitle("Cluster Counts") + ylab("Cell counts\n") +
  theme(
-   axis.text.x  = element_text(angle = 67, hjust = 1, size = 11, color = "black"),
-   axis.text.y  = element_text(size = 11, color = "black"),
-   axis.title.x = element_text(size = 13, color = "black"),
-   axis.title.y = element_text(size = 13, color = "black"),
-   title = element_text(size = 13),
+   axis.text.x  = element_text(angle = 50, hjust = 1, size = 18, color = "black"),
+   axis.text.y  = element_text(size = 18, color = "black"),
+   axis.title.x = element_text(size = 30, color = "black"),
+   axis.title.y = element_text(size = 30, color = "black"),
+   title = element_text(size = 30),
    legend.justification = "top",
-   panel.border = element_blank())
+   panel.border = element_blank(),
+   legend.text = element_text(size=24))
 
 p2+p1+plot_layout(guides = "collect")+plot_annotation(tag_levels = 'A') 
 ggsave(file = "figures/Tcells/unnormalized_and_normalized_contribution_per_patient.png", dpi=300, width=14, height=10)
+
+p1
+ggsave(file = "figures/Tcells/barPlotsSeparated_1.png", dpi=300, width=14, height=10)
+
+
+p2
+ggsave(file = "figures/Tcells/barPlotsSeparated_2.png", dpi=300, width=14, height=10)
+
 
 p3
 ggsave(file = "figures/Tcells/normalized_cluster_counts.png", dpi=300, width=14, height=10)
@@ -296,7 +306,7 @@ FeaturePlot(T_cells, features = c("CXCR5", "CXCL13", "BCL6", "ASCL2", "IL21", "P
 ```
 
 ```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height=20}
-VlnPlot(T_cells, features = c("CXCR5", "CXCL13", "BCL6", "ASCL2", "IL21", "PDCD1", "FOXP3"), assay = "RNA", stack=TRUE, flip= TRUE, split.by = "Treatment")+  theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank())+
+VlnPlot(T_cells, features = c("CXCR5", "CXCL13", "BCL6", "ASCL2", "IL21", "PDCD1", "FOXP3"), assay = "RNA", stack=TRUE, flip= TRUE, split.by = "Treatment")+  theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+theme(axis.text.x = element_text(angle = 50, hjust=1, size=12), axis.title.x = element_blank(), legend.text = element_text(size=24))+
   theme(
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
@@ -305,10 +315,10 @@ geom_boxplot(alpha=0.3,show.legend = FALSE)
 
 VlnPlot(T_cells, features = c("CXCR5", "CXCL13", "BCL6", "ASCL2", "IL21", "PDCD1", "FOXP3"), assay = "RNA", stack=TRUE, flip= TRUE, group.by = "Treatment", fill.by ="ident")+theme(axis.text.y =element_text(size=6))+ theme_classic() +
    scale_fill_manual(values= c("#A799B7", "#DD614A"))+
-  theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
+  theme(axis.text.x = element_text(angle = 50, hjust=1, size=12), axis.title.x = element_blank(), legend.text = element_text(size=24)) + theme(axis.title.y=element_text(size=12))+
 geom_boxplot(alpha=0.3,show.legend = FALSE)
 
-VlnPlot(T_cells, features = c("CXCR5", "CXCL13", "BCL6", "ASCL2", "IL21", "PDCD1", "FOXP3"), assay = "RNA", stack=TRUE, flip= TRUE, fill.by = "ident")+theme(axis.text.y =element_text(size=6))+  theme_classic() +theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
+VlnPlot(T_cells, features = c("CXCR5", "CXCL13", "BCL6", "ASCL2", "IL21", "PDCD1", "FOXP3"), assay = "RNA", stack=TRUE, flip= TRUE, fill.by = "ident")+theme(axis.text.y =element_text(size=6))+  theme_classic() +theme(axis.text.x = element_text(angle = 50, hjust=1, size=12), axis.title.x = element_blank(), legend.text = element_text(size=24)) + theme(axis.title.y=element_text(size=12))+
 geom_boxplot(alpha=0.3,show.legend = FALSE)
 ```
 
@@ -322,7 +332,7 @@ ggsave(file = "figures/Tcells/features_T_activation.png", dpi=300, width=10, hei
 ```
 
 ```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height=20}
-VlnPlot(T_cells, features = c("PDCD1","HAVCR2","LAG3","TIGIT","TNFRSF4","TNFRSF9"), assay = "RNA", stack=TRUE, flip= TRUE, split.by = "Treatment")+  theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) +
+VlnPlot(T_cells, features = c("PDCD1","HAVCR2","LAG3","TIGIT","TNFRSF4","TNFRSF9"), assay = "RNA", stack=TRUE, flip= TRUE, split.by = "Treatment")+  theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+theme(axis.text.x = element_text(angle = 50, hjust=1, size=12), axis.title.x = element_blank(), legend.text = element_text(size=24)) +
    scale_fill_manual(values= c("#A799B7", "#DD614A"))+
   theme(
     axis.text.y = element_text(size = 24, face = "italic"),
@@ -331,26 +341,26 @@ VlnPlot(T_cells, features = c("PDCD1","HAVCR2","LAG3","TIGIT","TNFRSF4","TNFRSF9
 geom_boxplot(alpha=0.3,show.legend = FALSE)
  ggsave(filename = "vln_activation_exhastion_cluster_by_treatment_1.png" , path = "figures/Tcells/", dpi=300, width=12, height=10)
 
-VlnPlot(T_cells, features = c("PDCD1","HAVCR2","LAG3","TIGIT","TNFRSF4","TNFRSF9"), assay = "RNA", stack=TRUE, flip= TRUE, group.by = "Treatment", fill.by ="ident")+theme(axis.text.y =element_text(size=6))+  theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
+VlnPlot(T_cells, features = c("PDCD1","HAVCR2","LAG3","TIGIT","TNFRSF4","TNFRSF9"), assay = "RNA", stack=TRUE, flip= TRUE, group.by = "Treatment", fill.by ="ident")+theme(axis.text.y =element_text(size=6))+  theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+theme(axis.text.x = element_text(angle = 50, hjust=1, size=12), axis.title.x = element_blank(), legend.text = element_text(size=24)) + theme(axis.title.y=element_text(size=12))+
 geom_boxplot(alpha=0.3,show.legend = FALSE)
 ggsave(file = "figures/Tcells/vln_activation_exhastion_by_treatment_1.png", dpi=300, width=6, height=10)
 
-VlnPlot(T_cells, features = c("PDCD1","HAVCR2","LAG3","TIGIT","TNFRSF4","TNFRSF9"), assay = "RNA", stack=TRUE, flip= TRUE, fill.by = "ident")+theme(axis.text.y =element_text(size=6))+  theme_classic() +theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
+VlnPlot(T_cells, features = c("PDCD1","HAVCR2","LAG3","TIGIT","TNFRSF4","TNFRSF9"), assay = "RNA", stack=TRUE, flip= TRUE, fill.by = "ident")+theme(axis.text.y =element_text(size=6))+  theme_classic() +theme(axis.text.x = element_text(angle = 50, hjust=1, size=12), axis.title.x = element_blank(), legend.text = element_text(size=24)) + theme(axis.title.y=element_text(size=12))+
 geom_boxplot(alpha=0.3,show.legend = FALSE)
 ggsave(file = "figures/Tcells/vln_activation_exhastion_by_cluster_1.png", dpi=300, width=6, height=10)
 
 ##
 
-VlnPlot(T_cells, features = c("ICOS","CTLA4","KLRD1","IRF8","KLRC1","TOX"), assay = "RNA", stack=TRUE, flip= TRUE, split.by = "Treatment")+theme(axis.text.y =element_text(size=4))+  theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
+VlnPlot(T_cells, features = c("ICOS","CTLA4","KLRD1","IRF8","KLRC1","TOX"), assay = "RNA", stack=TRUE, flip= TRUE, split.by = "Treatment")+theme(axis.text.y =element_text(size=4))+  theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+theme(axis.text.x = element_text(angle = 50, hjust=1, size=12), axis.title.x = element_blank(), legend.text = element_text(size=24)) + theme(axis.title.y=element_text(size=12))+
 geom_boxplot(alpha=0.3,show.legend = FALSE)
 ggsave(file = "figures/Tcells/Vln_T_activation_exhaustion_cluster_by_treatment_2.png", dpi=300, width=8, height=10, limitsize=FALSE)
 
-VlnPlot(T_cells, features = c("ICOS","CTLA4","KLRD1","IRF8","KLRC1","TOX"), assay = "RNA", stack=TRUE, flip= TRUE, group.by = "Treatment", fill.by ="ident")+theme(axis.text.y =element_text(size=4))+  theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
+VlnPlot(T_cells, features = c("ICOS","CTLA4","KLRD1","IRF8","KLRC1","TOX"), assay = "RNA", stack=TRUE, flip= TRUE, group.by = "Treatment", fill.by ="ident")+theme(axis.text.y =element_text(size=4))+  theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+theme(axis.text.x = element_text(angle = 50, hjust=1, size=12), axis.title.x = element_blank(), legend.text = element_text(size=24)) + theme(axis.title.y=element_text(size=12))+
 geom_boxplot(alpha=0.3,show.legend = FALSE)
 ggsave(file = "figures/Tcells/Vln_T_activation_exhaustion_by_treatment_2.png", dpi=300, width=4, height=10, limitsize=FALSE)
 
 VlnPlot(T_cells, features = c("ICOS","CTLA4","KLRD1","IRF8","KLRC1","TOX"), assay = "RNA", stack=TRUE, flip= TRUE, fill.by = "ident")+theme(axis.text.y =element_text(size=4))+  theme_classic() +
-  theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
+  theme(axis.text.x = element_text(angle = 50, hjust=1, size=12), axis.title.x = element_blank(), legend.text = element_text(size=24)) + theme(axis.title.y=element_text(size=12))+
 geom_boxplot(alpha=0.3,show.legend = FALSE)
 ggsave(file = "figures/Tcells/Vln_T_activation_exhaustion_by_cluster_2.png", dpi=300, width=6, height=10, limitsize=FALSE)
 
@@ -362,29 +372,29 @@ FeaturePlot(T_cells, features = c("GZMB","PRF1","IFNG","MKI67","GZMC","GZMA","KL
 ggsave(file = "figures/Tcells/features_T_effector.png", dpi=300, width=8, height=10)
 ```
 ```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height=20}
-VlnPlot(T_cells, features = c("GZMB","PRF1","IFNG","TNF"), assay = "RNA", stack=TRUE, flip= TRUE, split.by = "Treatment")+theme(axis.text.y =element_text(size=6))+  theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12)) +
+VlnPlot(T_cells, features = c("GZMB","PRF1","IFNG","TNF"), assay = "RNA", stack=TRUE, flip= TRUE, split.by = "Treatment")+theme(axis.text.y =element_text(size=6))+  theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+theme(axis.text.x = element_text(angle = 50, hjust=1, size=12), axis.title.x = element_blank(), legend.text = element_text(size=24)) + theme(axis.title.y=element_text(size=12)) +
 geom_boxplot(alpha=0.3,show.legend = FALSE)
 ggsave(file = "figures/Tcells/Vln_T_effector_cluster_by_treatment_1.png", dpi=300, width=12, height=10, limitsize=FALSE)
 
-VlnPlot(T_cells, features = c("GZMB","PRF1","IFNG","TNF"), assay = "RNA", stack=TRUE, flip= TRUE, group.by = "Treatment", fill.by ="ident")+theme(axis.text.y =element_text(size=6))+  theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12)) +
+VlnPlot(T_cells, features = c("GZMB","PRF1","IFNG","TNF"), assay = "RNA", stack=TRUE, flip= TRUE, group.by = "Treatment", fill.by ="ident")+theme(axis.text.y =element_text(size=6))+  theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+theme(axis.text.x = element_text(angle = 50, hjust=1, size=12), axis.title.x = element_blank(), legend.text = element_text(size=24)) + theme(axis.title.y=element_text(size=12)) +
 geom_boxplot(alpha=0.3,show.legend = FALSE)
 ggsave(file = "figures/Tcells/Vln_T_effector_by_treatment_1.png", dpi=300, width=6, height=10, limitsize=FALSE)
 
-VlnPlot(T_cells, features = c("GZMB","PRF1","IFNG","TNF"), assay = "RNA", stack=TRUE, flip= TRUE, fill.by = "ident")+theme(axis.text.y =element_text(size=6))+  theme_classic() +  theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12)) +
+VlnPlot(T_cells, features = c("GZMB","PRF1","IFNG","TNF"), assay = "RNA", stack=TRUE, flip= TRUE, fill.by = "ident")+theme(axis.text.y =element_text(size=6))+  theme_classic() +  theme(axis.text.x = element_text(angle = 50, hjust=1, size=12), axis.title.x = element_blank(), legend.text = element_text(size=24)) + theme(axis.title.y=element_text(size=12)) +
 geom_boxplot(alpha=0.3,show.legend = FALSE)
 ggsave(file = "figures/Tcells/Vln_T_effector_by_cluster_1.png", dpi=300, width=6, height=10, limitsize=FALSE)
 
 ##
 
-VlnPlot(T_cells, features = c("GZMC","GZMA","KLRG1","CD52"), assay = "RNA", stack=TRUE, flip= TRUE, split.by = "Treatment")+theme(axis.text.y =element_text(size=6))+  theme_classic()+  scale_fill_manual(values= c("#A799B7", "#DD614A")) +theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
+VlnPlot(T_cells, features = c("GZMC","GZMA","KLRG1","CD52"), assay = "RNA", stack=TRUE, flip= TRUE, split.by = "Treatment")+theme(axis.text.y =element_text(size=6))+  theme_classic()+  scale_fill_manual(values= c("#A799B7", "#DD614A")) +theme(axis.text.x = element_text(angle = 50, hjust=1, size=12), axis.title.x = element_blank(), legend.text = element_text(size=24)) + theme(axis.title.y=element_text(size=12))+
 geom_boxplot(alpha=0.3,show.legend = FALSE)
 ggsave(file = "figures/Tcells/Vln_T_effector_cluster_by_treatment_2.png", dpi=300, width=8, height=10, limitsize=FALSE)
 
-VlnPlot(T_cells, features = c("GZMC","GZMA","KLRG1","CD52"), assay = "RNA", stack=TRUE, flip= TRUE, group.by = "Treatment", fill.by ="ident")+theme(axis.text.y =element_text(size=6))+  theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
+VlnPlot(T_cells, features = c("GZMC","GZMA","KLRG1","CD52"), assay = "RNA", stack=TRUE, flip= TRUE, group.by = "Treatment", fill.by ="ident")+theme(axis.text.y =element_text(size=6))+  theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+theme(axis.text.x = element_text(angle = 50, hjust=1, size=12), axis.title.x = element_blank(), legend.text = element_text(size=24), legend.text = element_text(size=24)) + theme(axis.title.y=element_text(size=12))+
 geom_boxplot(alpha=0.3,show.legend = FALSE)
 ggsave(file = "figures/Tcells/Vln_T_effector_by_treatment_2.png", dpi=300, width=4, height=10, limitsize=FALSE)
 
-VlnPlot(T_cells, features = c("GZMC","GZMA","KLRG1","CD52", fill.by = "ident"), assay = "RNA", stack=TRUE, flip= TRUE)+theme(axis.text.y =element_text(size=6))+  theme_classic() +theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
+VlnPlot(T_cells, features = c("GZMC","GZMA","KLRG1","CD52", fill.by = "ident"), assay = "RNA", stack=TRUE, flip= TRUE)+theme(axis.text.y =element_text(size=6))+  theme_classic() +theme(axis.text.x = element_text(angle = 50, hjust=1, size=12), axis.title.x = element_blank(), legend.text = element_text(size=24)) + theme(axis.title.y=element_text(size=12))+
 geom_boxplot(alpha=0.3,show.legend = FALSE)
 ggsave(file = "figures/Tcells/Vln_T_effector_by_cluster_2.png", dpi=300, width=6, height=10, limitsize=FALSE)
 
@@ -397,14 +407,14 @@ FeaturePlot(T_cells, features = c("CD69","ENTPD1"),order=TRUE,pt.size=1, reducti
 ggsave(file = "figures/Tcells/CD69.png", dpi=300, width=8, height=10)
 ```
 ```{r message=FALSE, warning=FALSE, cache= TRUE, fig.height= x1}
-VlnPlot(T_cells, features = c("CD69","ENTPD1"), fill.by = "ident", assay = "RNA", stack=TRUE, flip= TRUE)+theme(axis.text.y =element_text(size=6))+  theme_classic() +theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
+VlnPlot(T_cells, features = c("CD69","ENTPD1"), fill.by = "ident", assay = "RNA", stack=TRUE, flip= TRUE)+theme(axis.text.y =element_text(size=6))+  theme_classic() +theme(axis.text.x = element_text(angle = 50, hjust=1, size=12), axis.title.x = element_blank(), legend.text = element_text(size=24)) + theme(axis.title.y=element_text(size=12))+
 geom_boxplot(alpha=0.3,show.legend = FALSE)
 ggsave(file = "figures/Tcells/Vln_CD69.png", dpi=300, width=6, height=10, limitsize=FALSE)
 
-VlnPlot(T_cells, features = c("CD69"), assay = "RNA", flip= TRUE, split.by = "Treatment", pt.size = 0)+theme(axis.text.y =element_text(size=6))+  theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
+VlnPlot(T_cells, features = c("CD69"), assay = "RNA", flip= TRUE, split.by = "Treatment", pt.size = 0)+theme(axis.text.y =element_text(size=6))+  theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+theme(axis.text.x = element_text(angle = 50, hjust=1, size=12), axis.title.x = element_blank(), legend.text = element_text(size=24)) + theme(axis.title.y=element_text(size=12))+
 geom_boxplot(alpha=0.3,show.legend = FALSE)
 
-VlnPlot(T_cells, features = c("ENTPD1"), assay = "RNA", flip= TRUE, split.by = "Treatment", pt.size = 0)+theme(axis.text.y =element_text(size=6))+  theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+theme(axis.text.x = element_text(angle = 70, hjust=1, size=12), axis.title.x = element_blank()) + theme(axis.title.y=element_text(size=12))+
+VlnPlot(T_cells, features = c("ENTPD1"), assay = "RNA", flip= TRUE, split.by = "Treatment", pt.size = 0)+theme(axis.text.y =element_text(size=6))+  theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+theme(axis.text.x = element_text(angle = 50, hjust=1, size=12), axis.title.x = element_blank(), legend.text = element_text(size=24)) + theme(axis.title.y=element_text(size=12))+
 geom_boxplot(alpha=0.3,show.legend = FALSE)
 ```
 
