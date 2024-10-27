@@ -28,556 +28,6 @@ setwd("D:/Michael/git_check/tils")
 x1=4.6
 
 
-
-# checking Adi's R question function with browser() ----------------
-prime_factorization= function(num){
-  factors=c()
-  devider=2
-  new_num=num
-  while (devider!=new_num){
-    if (new_num %% devider ==0){
-      browser()
-      factors=c(factors, devider)
-      new_num= num %% devider
-      devider=devider+1
-      }
-    else { devider=devider+1 }
-    }
-  return(factors)
-}
-
-prime_factorization(80)  
-# stem like analysis : CD39 & CD69 negative population ------------
-
-VlnPlot(
-    T_cells, 
-    features = c('ENTPD1', 'CD69'), 
-    assay = "RNA", 
-    stack = TRUE, 
-    flip = TRUE, 
-    split.by = "Treatment"
-  ) + 
-    theme_classic() +
-    theme(
-      axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
-      axis.title.x = element_blank(),
-      axis.text.y = element_text(size = 24, face = "italic"),
-      axis.title.y = element_text(size = 20, face = "bold"),
-      axis.ticks.y = element_line(size = 0.5),
-      strip.text.y = element_text(angle = 0, size = 16, face = "bold")
-    ) +
-    geom_boxplot(alpha = 0.3, show.legend = FALSE)
-ggsave(file = "figures/Tcells/stem_like.png", dpi=300, width=18, height=8)
-
-# important!
-DefaultAssay(T_cells) <- "RNA"
-dim(T_cells)
-# subset for double negative
-T_cells_stem_like <- subset(T_cells, subset = (ENTPD1 < 0.00005) & (CD69 < 0.00005) & (CD4 < 0.0000000005))
-
-dim(T_cells_stem_like) # 2367 cells in the double negative population
-table(T_cells_stem_like$Treatment)
-DimPlot(T_cells_stem_like, reduction = "tsne")
-
-responders <- subset(T_cells_stem_like, subset = Treatment == "Responder")
-non_responders <- subset(T_cells_stem_like, subset = Treatment == "Non_Responder")
-library(cowplot)
-p1 <- DimPlot(responders, reduction = "tsne", label = TRUE, pt.size = 0.5, label.size = 6) +
-  ggtitle("Responders")
-p2 <- DimPlot(non_responders, reduction = "tsne", label = TRUE, pt.size = 0.5, label.size = 6) +
-  ggtitle("Non Responders")
-plot_grid(p1, p2, ncol = 2)
-ggsave(file = "figures/Tcells/stem_like_tsne_by_treatment.png", dpi=300, width=18, height=8)
-
-
-# bar plots 
-frque <- table(Idents(T_cells_stem_like), T_cells_stem_like$Treatment)
-frque <- as.data.frame(frque)
-frque <- frque %>% dplyr::rename(Cluster = Var1, Treatment = Var2)
-frque$Treatment <- factor(frque$Treatment)
-
-frque <- ddply(frque, .(Treatment),  transform, percentperstatus   = Freq/sum(Freq))
-frque <- ddply(frque, .(Cluster), transform, percentpercluster  = Freq/sum(Freq))
-frque <- ddply(frque, .(Cluster), transform, normalizedppstatus = percentperstatus/sum(percentperstatus)*100)
-frque <- ddply(frque, .(Treatment),  transform, normalizedpcluster = percentpercluster/sum(percentpercluster))
-
-mfrque <- table(Idents(T_cells_stem_like), T_cells_stem_like$orig.ident)
-mfrque <- as.data.frame(mfrque)
-mfrque <- mfrque %>% dplyr::rename(Cluster = Var1, patient = Var2)
-
-mfrque <- ddply(mfrque, .(patient),  transform, percentperstatus   = Freq/sum(Freq))
-mfrque <- ddply(mfrque, .(Cluster), transform, percentpercluster  = Freq/sum(Freq))
-mfrque <- ddply(mfrque, .(Cluster), transform, normalizedppstatus = percentperstatus/sum(percentperstatus)*100)
-mfrque <- ddply(mfrque, .(patient),  transform, normalizedpcluster = percentpercluster/sum(percentpercluster))
-
-
-p3 <- ggplot(mfrque, aes(x = Cluster, y = normalizedppstatus, fill = patient)) +
-  theme_minimal() +
-  geom_bar(stat = "identity", width = 0.7,position="dodge") +
-  scale_fill_manual(values= c("#CFBAE1", "#A8A5CA", "#8291B3", "#5C7D9D", "#FF6F61", "#D78459", "#AF9A52", "#88B04B"))+
-  ggtitle("Normalized Cluster Counts") +
-  ylab("Normalized Proportions in %") +
-  theme(
-    axis.text.x  = element_text(angle = 67, hjust = 1, size = 11, color = "black"),
-    axis.text.y  = element_text(size = 11, color = "black"),
-    axis.title.x = element_text(size = 13, color = "black"),
-    axis.title.y = element_text(size = 13, color = "black"),
-    title = element_text(size = 13),
-    legend.justification = "top",
-    panel.border = element_blank()) +
-  geom_hline(yintercept = 20, linetype='dotted')
-
-
-p1 <- ggplot(frque, aes(x = Cluster, y = normalizedppstatus, fill = Treatment)) +
-  theme_minimal() +
-  geom_bar(stat = "identity", width = 0.7,position="dodge") +
-  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
-  ggtitle("Normalized Cluster Counts") +
-  ylab("Normalized Proportions in %") +
-  theme(
-    axis.text.x  = element_text(angle = 67, hjust = 1, size = 11, color = "black"),
-    axis.text.y  = element_text(size = 11, color = "black"),
-    axis.title.x = element_text(size = 13, color = "black"),
-    axis.title.y = element_text(size = 13, color = "black"),
-    title = element_text(size = 13),
-    legend.justification = "top",
-    panel.border = element_blank()) +
-  geom_hline(yintercept = 50, linetype='dotted') 
-
-p2<-ggplot(frque, aes(x= Cluster, y= Freq, fill = Treatment)) +
-  theme_minimal() +
-  geom_bar(stat = "identity", width = 0.7) +
-  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
-  ggtitle("Cluster Counts") + ylab("Cell counts\n") +
-  theme(
-    axis.text.x  = element_text(angle = 67, hjust = 1, size = 11, color = "black"),
-    axis.text.y  = element_text(size = 11, color = "black"),
-    axis.title.x = element_text(size = 13, color = "black"),
-    axis.title.y = element_text(size = 13, color = "black"),
-    title = element_text(size = 13),
-    legend.justification = "top",
-    panel.border = element_blank())
-
-p2+p1+plot_layout(guides = "collect")+plot_annotation(tag_levels = 'A') 
-ggsave(file = "figures/T_cells_stem_like/unnormalized_and_normalized_contribution_per_patient.png", dpi=300, width=14, height=10)
-
-p3
-ggsave(file = "figures/T_cells_stem_like/normalized_cluster_counts.png", dpi=300, width=14, height=10)
-
-
-
-
-
-
-
-
-
-# cluster 2 DE genes visualisation vln -----------------
-DefaultAssay(clus2) <- "RNA"
-
-allmarkers <- read.delim("excels/allmarkers.csv", sep = ",", header = T, quote="\"", check.names=FALSE)
-clus2.markers = allmarkers %>%
-  filter(cluster=="2_cytotoxic_CD8") %>% # 19.9.24
-  top_n(n = 80, wt = avg_log2FC) %>%
-  as.data.frame %>% 
-  arrange(cluster,-avg_log2FC) %>% 
-  pull(gene)
-
-#M# in clus2
-i <- 1
-while(i<length(clus2.markers)){
-  VlnPlot(
-    clus2, 
-    features = c(clus2.markers[i], clus2.markers[i+1], clus2.markers[i+2], clus2.markers[i+3], clus2.markers[i+4], clus2.markers[i+5], clus2.markers[i+6], clus2.markers[i+7]), 
-    assay = "RNA", 
-    stack = TRUE, 
-    flip = TRUE, 
-    split.by = "Treatment"
-  ) + 
-    theme_classic()+  scale_fill_manual(values= c("#A799B7", "#DD614A")) +
-    theme(
-      axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
-      axis.title.x = element_blank(),
-      axis.text.y = element_text(size = 24, face = "italic"),
-      axis.title.y = element_text(size = 20, face = "bold"),
-      axis.ticks.y = element_line(size = 0.5),
-      strip.text.y = element_text(angle = 0, size = 16, face = "bold")
-    ) +
-    geom_boxplot(alpha = 0.3, show.legend = FALSE)
-  ggsave(file = paste0("figures/clus2/de_gene_search_by_cluster/","interesting_DE_run_", i,  ".png"), dpi=300, width=16, height=12)
-  i <- i+8
-}
-i <- 1
-
-#M# in all cells
-i <- 1
-while(i<length(clus2.markers)){
-  VlnPlot(
-    T_cells, 
-    features = c(clus2.markers[i], clus2.markers[i+1], clus2.markers[i+2], clus2.markers[i+3], clus2.markers[i+4], clus2.markers[i+5], clus2.markers[i+6], clus2.markers[i+7]), 
-    assay = "RNA", 
-    stack = TRUE, 
-    flip = TRUE, 
-    split.by = "Treatment"
-  ) + 
-    theme_classic()+  scale_fill_manual(values= c("#A799B7", "#DD614A")) +
-    theme(
-      axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
-      axis.title.x = element_blank(),
-      axis.text.y = element_text(size = 24, face = "italic"),
-      axis.title.y = element_text(size = 20, face = "bold"),
-      axis.ticks.y = element_line(size = 0.5),
-      strip.text.y = element_text(angle = 0, size = 16, face = "bold")
-    ) +
-    geom_boxplot(alpha = 0.3, show.legend = FALSE)
-  ggsave(file = paste0("figures/clus2/de_gene_search_by_cluster_allCellsClusters/","all_cells_interesting_DE_run_", i,  ".png"), dpi=300, width=16, height=12)
-  i <- i+8
-}
-i <- 1
-
-# save tsne with cluster number as label for all cells -------------------------
-DimPlot(T_cells, reduction = "tsne", group.by = "seurat_clusters", label = TRUE, pt.size = 0.5, label.size = 16)
-ggsave(file = "figures/Tcells/tsne_number_labels.png", dpi=300, width=15, height=10)
-
-# info for rons tool ---------------------
-
-# convert seurat version to lower than 5
-for_ron_tool <- T_cells
-for_ron_tool[["RNA3"]] <- as(object = T_cells[["RNA"]], Class = "Assay")
-saveRDS(for_ron_tool, file = "objects/for_ron_tool.rds")
-
-# old trys
-cell_annotations <- data.frame(Cell_ID = names(Idents(T_cells)), 
-                               Identity = Idents(T_cells), row.names = NULL)
-write.csv(cell_annotations, file = "excels/T_cells_idents_annotations.csv", row.names = FALSE)
-
-
-rna_assay <- GetAssayData(T_cells, assay = "RNA", slot = "counts")
-rna_assay_df <- as.data.frame(as.matrix(rna_assay))
-write.csv(rna_assay_df, file = "excels/T_cells_RNA_assay_counts.csv")
-
-
-
-
-# merge proliferation clusters(5,7,8) in all cells--------------------------------------------
-
-new.cluster.ids <- c("0" = "0_activated_memory_CD4",
-                     "1" = "1_cytotoxic_CD8",
-                     "2" = "2_cytotoxic_CD8",
-                     "3" = "3_CD8_DNA_replication",
-                     "4" = "4_CD8 heat_shock_proteins",
-                     "5" = "5_CD8_proliferation",
-                     "6" = "6_CD8_(CD4)_exhausted",
-                     "7" = "5_CD8_proliferation",
-                     "8" = "5_CD8_proliferation")
-names(new.cluster.ids) <- levels(T_cells)
-T_cells <- RenameIdents(T_cells, new.cluster.ids)
-DimPlot(T_cells, reduction = "tsne", label = TRUE, pt.size = 0.5) + NoLegend()
-
-#M# saveRDS(T_cells, file = "objects/tils_all_.45_integrgate_annotated_merge_prolif.rds")
-
-
-# info of proliferation cluster in all cells ----------------------------------
-cluster_5_cells <- subset(T_cells, idents = c("5_CD8_proliferation"))
-
-Res_cell_counts <- table(cluster_5_cells$Treatment)["Responder"]
-Non_res_cell_counts <- table(cluster_5_cells$Treatment)["Non_Responder"]
-total_cells_in_cluster <- Res_cell_counts + Non_res_cell_counts
-
-res_percentage <- (Res_cell_counts / total_cells_in_cluster) * 100
-non_res_percentage <-  (Non_res_cell_counts / total_cells_in_cluster) * 100
-
-
-
-cluster_5_stats <- data.frame(
-  Treatment = names(cell_counts),
-  Cluster_5_Cell_Counts = as.vector(cell_counts),
-  Total_Cell_Counts = as.vector(total_cells),
-  Percentage_in_Cluster_5 = as.vector(percentages)
-)
-
-print(cluster_5_stats)
-
-
-# signature score function ------------
-SignatureScore <- function(object, name){
-  merged_responder <- subset(object, subset = Treatment == "Responder")
-  merged_NON_responder <- subset(object, subset = Treatment == "Non_Responder")
-  
-  
-  pval <- unlist(wilcox.test(unlist(merged_NON_responder[[paste0(name)]]), 
-                             unlist(merged_responder[[paste0(name)]]), 
-                             alternative = "two.sided"))[2]
-  
-  object$normalized = (object[[name]]-min(object[[name]]))/(max(object[[name]])-min(object[[name]]))
-  
-  # print(pval)
-  # y.max <-  1.14*max(ggplot_build(p)$layout$panel_scales_y[[1]]$range$range)
-  y.max <- max(object[['normalized']])
-  annot.max.y <- y.max*0.98
-  
-  label <- as.character(symnum(as.numeric(pval), corr = FALSE, na = FALSE,
-                               cutpoints = c(0,0.0001, 0.001, 0.01, 0.05,1),
-                               symbols = c('****',"***", "**", "*", "ns")))
-  # print(label)
-  print(paste0("Pvalue = ",pval, " == ", label))
-  
-  p <- VlnPlot(object, features='normalized', group.by = "Treatment",
-               y.max = y.max, pt.size = 0,
-               cols= c("#A799B7", "#DD614A")) +  theme_classic(base_size = 14) +
-    theme(text = element_text(size=18, colour = "black")) + RotatedAxis() +
-    theme(axis.title.x=element_blank(), axis.text.x=element_blank(),axis.ticks.x=element_blank())+
-    labs(title = "", y = name,  x="") + theme(legend.position="right") +
-    stat_summary(fun.data = "mean_sdl",  fun.args = list(mult = 1),  geom = "pointrange", color = "black") +
-    annotate("text", x = 1.5, y=annot.max.y, label = label, size = 6) +
-    scale_y_continuous(labels = comma)
-  return (p)
-  
-}
-# cytokine tool ------------------------------------------------------------
-cyto_df <- read_csv("excels/df_irea_clus_0.csv")
-cy <- cyto_df %>% select(c("Enrichment Score", "Cytokine")) %>% rename('Cluster_0' = 'Enrichment Score')
-
-cyto_df_clus_1 <- read_csv("excels/df_irea_clus_1.csv") %>% select(c("Enrichment Score", "Cytokine")) %>% rename('Cluster_1' = 'Enrichment Score')
-
-cyto_df_clus_2 <- read_csv("excels/df_irea_clus_2.csv") %>% select(c("Enrichment Score", "Cytokine")) %>% rename('Cluster_2' = 'Enrichment Score')
-
-merged_data <- cy %>%
-  full_join(cyto_df_clus_1, by = "Cytokine") %>%
-  full_join(cyto_df_clus_2, by = "Cytokine") %>%  
-  column_to_rownames(var = "Cytokine")
-
-long_data <- merged_data %>%
-  rownames_to_column(var = "Gene") %>%
-  pivot_longer(cols = starts_with("Cluster"), names_to = "Cluster", values_to = "Score")
-
-# write_csv(long_data, "excels/long_cyto_enrich.csv") 
-# merged_data_with_genes <- merged_data %>%
- #  rownames_to_column(var = "Gene")
-# write_csv(merged_data_with_genes, "excels/cyto_by_clusteR_enrich.csv") 
-
-long_data <- read_csv("excels/long_cyto_enrich.csv")
-merged_data <- read_csv("excels/cyto_by_clusteR_enrich.csv")
-
-clus2_top_10 <- merged_data %>% 
-  top_n(n=10, wt=Cluster_2) %>% 
-  pull(Gene)
-
-clus_2_lowest_10 <- merged_data %>% 
-  top_n(n=-10, wt=Cluster_2) %>% 
-  pull(Gene)
-
-selected_genes <- c(clus_2_lowest_10, clus2_top_10)
-
-filtered_data <- long_data %>%
-  filter(Gene %in% selected_genes)
-
-#M# control gene order in plot : have to put all genes in list
-gene_order <- c(clus2_top_10, clus_2_lowest_10)
-filtered_data$Gene <- factor(filtered_data$Gene, levels = gene_order)
-
-# Create the bar plot
-ggplot(filtered_data, aes(x = Gene, y = Score, fill = Cluster)) +
-  geom_bar(stat = "identity", position = "dodge") +
-  theme_minimal() +
-  labs(title = "Scores for Selected Genes Across Clusters",
-       x = "Gene",
-       y = "Score",
-       fill = "Cluster") + 
-  coord_flip() + # Flip the coordinates
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
-ggsave(file = "figures/cytokine tool/clus_2.png", dpi=300, width=5, height=5)
-
-#M# cluster 0 10 highest and lowest scored cytokines
-clus0_top_10 <- merged_data %>% 
-  top_n(n=10, wt=Cluster_0) %>% 
-  pull(Gene)
-
-clus_0_lowest_10 <- merged_data %>% 
-  top_n(n=-10, wt=Cluster_0) %>% 
-  pull(Gene)
-
-selected_genes <- c(clus_0_lowest_10, clus0_top_10)
-
-filtered_data <- long_data %>%
-  filter(Gene %in% selected_genes)
-
-#M# control gene order in plot : have to put all genes in list
-gene_order <- c(clus0_top_10, clus_0_lowest_10)
-filtered_data$Gene <- factor(filtered_data$Gene, levels = gene_order)
-
-# Create the bar plot
-ggplot(filtered_data, aes(x = Gene, y = Score, fill = Cluster)) +
-  geom_bar(stat = "identity", position = "dodge") +
-  theme_minimal() +
-  labs(title = "Scores for Selected Genes Across Clusters",
-       x = "Gene",
-       y = "Score",
-       fill = "Cluster") + 
-  coord_flip() + # Flip the coordinates
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
-ggsave(file = "figures/cytokine tool/clus_0.png", dpi=300, width=5, height=5)
-
-#M# cluster 1 10 highest and lowest scored cytokines
-clus_1_top_10 <- merged_data %>% 
-  top_n(n=10, wt=Cluster_1) %>% 
-  pull(Gene)
-
-clus_1_lowest_10 <- merged_data %>% 
-  top_n(n=-10, wt=Cluster_1) %>% 
-  pull(Gene)
-
-selected_genes <- c(clus_1_lowest_10, clus_1_top_10)
-
-filtered_data <- long_data %>%
-  filter(Gene %in% selected_genes)
-
-#M# control gene order in plot : have to put all genes in list
-gene_order <- c(clus_1_top_10, clus_1_lowest_10)
-filtered_data$Gene <- factor(filtered_data$Gene, levels = gene_order)
-
-# Create the bar plot
-ggplot(filtered_data, aes(x = Gene, y = Score, fill = Cluster)) +
-  geom_bar(stat = "identity", position = "dodge") +
-  theme_minimal() +
-  labs(title = "Scores for Selected Genes Across Clusters",
-       x = "Gene",
-       y = "Score",
-       fill = "Cluster") + 
-  coord_flip() + # Flip the coordinates
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
-ggsave(file = "figures/cytokine tool/clus_1.png", dpi=300, width=5, height=5)
-
-
-# conversion --------------------------------------------------------------
-#M# convert genes from human(uppercase) to mouse format for cytokyne tool
-
-# Define the function
-capitalize_genes <- function(gene_string) {
-  gene_list <- strsplit(gene_string, "\n")[[1]]
-  gene_list <- trimws(gene_list)
-  capitalized_genes <- sapply(gene_list, function(gene) {
-    paste0(toupper(substr(gene, 1, 1)), tolower(substr(gene, 2, nchar(gene))))
-  })
-  capitalized_gene_string <- paste(capitalized_genes, collapse = "\n")
-  return(capitalized_gene_string)
-}
-
-genes <- "MSRB2
-CFAP36
-SVIP
-MALSU1
-PFDN4
-ARCN1
-ZNHIT3
-GLRX5
-RPS26
-MRPS33
-RPLP0
-RPLP1
-MED28
-RTRAF
-PSMD4
-EEF1B2
-RPS10
-NDUFB4
-PPA1
-RPL23
-RPL36A
-GAS5
-PRDX1
-SYF2
-ZNF706
-RPS17
-EEF1G
-RPL37A
-ADA
-ATP5MPL
-RPL13A
-RPL37
-RPS4X
-LAMTOR5
-LDHB
-RPL4
-UQCRB
-RPS20
-GNG10
-ABRACL
-RPS18
-MRPL20
-COX14
-RPS6
-RSL24D1
-RPS27L
-NOSIP
-RPS8
-RPL31
-NDUFS5
-"
-
-capitalized_genes <- capitalize_genes(genes)
-cat(capitalized_genes)
-
-
-# make list of genes into vector ------------------------------------------
-gene_list <- "TYROBP
-FCER1G
-NCR2
-KIT
-TRDC
-RHOBTB3
-ADAM12
-CXXC5
-RASSF8
-KRT81
-SYK
-FAM49A
-ZBTB16
-TLE1
-AREG
-TRIO
-KRT86
-TMIGD2
-AL136456.1
-GSN
-PLD1
-TNFRSF18
-NCR1
-APOL4
-SH2D1B
-KLRC1
-IKZF2
-PDE6G
-DOCK5
-FUCA1
-FES
-CST3
-LINC00299
-NCAM1
-TSPAN4
-IL4I1
-FSD1
-RNF165
-ITM2C
-CHKA
-AHDC1
-SLFN12
-PLEK
-CEBPD
-HIP1R
-ZNF169
-SKAP2
-DPF3
-ITGAX
-GALE
-"
-gene_list <- strsplit(gene_list, "\n")[[1]]
-gene_list <- trimws(gene_list)
-gene_list[2]
-a <- gene_list
-b <- gene_list
-a %in% b
-
 # figures for presentation ------------------------------------------------
 #M# all cells 
 # exhaustion
@@ -598,7 +48,7 @@ VlnPlot(
     axis.ticks.y = element_line(size = 0.5),
     strip.text.y = element_text(angle = 0, size = 16, face = "bold"), 
     legend.text = element_text(size=24)
-    ) +
+  ) +
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
 ggsave(filename = "vln_activation_exhastion_cluster_by_treatment_1.png" , path = "figures/Tcells/", dpi=300, width=19, height=10)
 
@@ -611,7 +61,7 @@ VlnPlot(
   flip= TRUE,
   group.by = "Treatment",
   fill.by ="ident"
-  )+ 
+)+ 
   theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
     axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
@@ -1267,7 +717,7 @@ for (patient in patients) {
 ratios_df <- do.call(rbind, lapply(ratios_list, as.data.frame))
 
 ratios_df <- data.frame(Sample = patients, Treatment = treatments, ratios_df)
-ratios_df$ratio <- as.numeric(ratios_df$ratio)
+# ratios_df$ratio <- as.numeric(ratios_df$ratio)
 print(ratios_df)
 
 colnames(ratios_df)[colnames(ratios_df) == "X..i.."] <- "ratio"
@@ -1299,11 +749,11 @@ ggplot(summary_stats, aes(x = Treatment, y = Mean_Ratio, fill = Treatment)) +
   theme_minimal() +
   theme(
     plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
-    axis.title.x = element_text(size = 16),
-    axis.title.y = element_text(size = 16),
-    axis.text.x = element_text(size = 12, angle = 40),
-    axis.text.y = element_text(size = 12)
-  )+
+    axis.title.x = element_text(size = 20),
+    axis.title.y = element_text(size = 20),
+    axis.text.x = element_text(size = 18, angle = -40, hjust=0),
+    axis.text.y = element_text(size = 18),
+    legend.position = "none")+
   ylab("CD8/CD4 ratio")
 ggsave(file = "figures/Tcells/cd8_cd4_ratio_2.png", dpi=300, width=4, height=6)
 
@@ -1390,6 +840,556 @@ VlnPlot(clus2, features = c("CD40LG"),
   ) +
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
 ggsave(file = "figures/clus2/cd40lg_cluster_2.png", dpi=300, width=10, height=6)
+
+# checking Adi's R question function with browser() ----------------
+prime_factorization= function(num){
+  factors=c()
+  devider=2
+  new_num=num
+  while (devider!=new_num){
+    if (new_num %% devider ==0){
+      browser()
+      factors=c(factors, devider)
+      new_num= num %% devider
+      devider=devider+1
+      }
+    else { devider=devider+1 }
+    }
+  return(factors)
+}
+
+prime_factorization(80)  
+# stem like analysis : CD39 & CD69 negative population ------------
+
+VlnPlot(
+    T_cells, 
+    features = c('ENTPD1', 'CD69'), 
+    assay = "RNA", 
+    stack = TRUE, 
+    flip = TRUE, 
+    split.by = "Treatment"
+  ) + 
+    theme_classic() +
+    theme(
+      axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+      axis.title.x = element_blank(),
+      axis.text.y = element_text(size = 24, face = "italic"),
+      axis.title.y = element_text(size = 20, face = "bold"),
+      axis.ticks.y = element_line(size = 0.5),
+      strip.text.y = element_text(angle = 0, size = 16, face = "bold")
+    ) +
+    geom_boxplot(alpha = 0.3, show.legend = FALSE)
+ggsave(file = "figures/Tcells/stem_like.png", dpi=300, width=18, height=8)
+
+# important!
+DefaultAssay(T_cells) <- "RNA"
+dim(T_cells)
+# subset for double negative
+T_cells_stem_like <- subset(T_cells, subset = (ENTPD1 < 0.00005) & (CD69 < 0.00005) & (CD4 < 0.0000000005))
+
+dim(T_cells_stem_like) # 2367 cells in the double negative population
+table(T_cells_stem_like$Treatment)
+DimPlot(T_cells_stem_like, reduction = "tsne")
+
+responders <- subset(T_cells_stem_like, subset = Treatment == "Responder")
+non_responders <- subset(T_cells_stem_like, subset = Treatment == "Non_Responder")
+library(cowplot)
+p1 <- DimPlot(responders, reduction = "tsne", label = TRUE, pt.size = 0.5, label.size = 6) +
+  ggtitle("Responders")
+p2 <- DimPlot(non_responders, reduction = "tsne", label = TRUE, pt.size = 0.5, label.size = 6) +
+  ggtitle("Non Responders")
+plot_grid(p1, p2, ncol = 2)
+ggsave(file = "figures/Tcells/stem_like_tsne_by_treatment.png", dpi=300, width=18, height=8)
+
+
+# bar plots 
+frque <- table(Idents(T_cells_stem_like), T_cells_stem_like$Treatment)
+frque <- as.data.frame(frque)
+frque <- frque %>% dplyr::rename(Cluster = Var1, Treatment = Var2)
+frque$Treatment <- factor(frque$Treatment)
+
+frque <- ddply(frque, .(Treatment),  transform, percentperstatus   = Freq/sum(Freq))
+frque <- ddply(frque, .(Cluster), transform, percentpercluster  = Freq/sum(Freq))
+frque <- ddply(frque, .(Cluster), transform, normalizedppstatus = percentperstatus/sum(percentperstatus)*100)
+frque <- ddply(frque, .(Treatment),  transform, normalizedpcluster = percentpercluster/sum(percentpercluster))
+
+mfrque <- table(Idents(T_cells_stem_like), T_cells_stem_like$orig.ident)
+mfrque <- as.data.frame(mfrque)
+mfrque <- mfrque %>% dplyr::rename(Cluster = Var1, patient = Var2)
+
+mfrque <- ddply(mfrque, .(patient),  transform, percentperstatus   = Freq/sum(Freq))
+mfrque <- ddply(mfrque, .(Cluster), transform, percentpercluster  = Freq/sum(Freq))
+mfrque <- ddply(mfrque, .(Cluster), transform, normalizedppstatus = percentperstatus/sum(percentperstatus)*100)
+mfrque <- ddply(mfrque, .(patient),  transform, normalizedpcluster = percentpercluster/sum(percentpercluster))
+
+
+p3 <- ggplot(mfrque, aes(x = Cluster, y = normalizedppstatus, fill = patient)) +
+  theme_minimal() +
+  geom_bar(stat = "identity", width = 0.7,position="dodge") +
+  scale_fill_manual(values= c("#CFBAE1", "#A8A5CA", "#8291B3", "#5C7D9D", "#FF6F61", "#D78459", "#AF9A52", "#88B04B"))+
+  ggtitle("Normalized Cluster Counts") +
+  ylab("Normalized Proportions in %") +
+  theme(
+    axis.text.x  = element_text(angle = 67, hjust = 1, size = 11, color = "black"),
+    axis.text.y  = element_text(size = 11, color = "black"),
+    axis.title.x = element_text(size = 13, color = "black"),
+    axis.title.y = element_text(size = 13, color = "black"),
+    title = element_text(size = 13),
+    legend.justification = "top",
+    panel.border = element_blank()) +
+  geom_hline(yintercept = 20, linetype='dotted')
+
+
+p1 <- ggplot(frque, aes(x = Cluster, y = normalizedppstatus, fill = Treatment)) +
+  theme_minimal() +
+  geom_bar(stat = "identity", width = 0.7,position="dodge") +
+  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
+  ggtitle("Normalized Cluster Counts") +
+  ylab("Normalized Proportions in %") +
+  theme(
+    axis.text.x  = element_text(angle = 67, hjust = 1, size = 11, color = "black"),
+    axis.text.y  = element_text(size = 11, color = "black"),
+    axis.title.x = element_text(size = 13, color = "black"),
+    axis.title.y = element_text(size = 13, color = "black"),
+    title = element_text(size = 13),
+    legend.justification = "top",
+    panel.border = element_blank()) +
+  geom_hline(yintercept = 50, linetype='dotted') 
+
+p2<-ggplot(frque, aes(x= Cluster, y= Freq, fill = Treatment)) +
+  theme_minimal() +
+  geom_bar(stat = "identity", width = 0.7) +
+  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
+  ggtitle("Cluster Counts") + ylab("Cell counts\n") +
+  theme(
+    axis.text.x  = element_text(angle = 67, hjust = 1, size = 11, color = "black"),
+    axis.text.y  = element_text(size = 11, color = "black"),
+    axis.title.x = element_text(size = 13, color = "black"),
+    axis.title.y = element_text(size = 13, color = "black"),
+    title = element_text(size = 13),
+    legend.justification = "top",
+    panel.border = element_blank())
+
+p2+p1+plot_layout(guides = "collect")+plot_annotation(tag_levels = 'A') 
+ggsave(file = "figures/T_cells_stem_like/unnormalized_and_normalized_contribution_per_patient.png", dpi=300, width=14, height=10)
+
+p3
+ggsave(file = "figures/T_cells_stem_like/normalized_cluster_counts.png", dpi=300, width=14, height=10)
+
+
+
+
+
+
+
+
+
+# cluster 2 DE genes visualisation vln -----------------
+DefaultAssay(clus2) <- "RNA"
+
+allmarkers <- read.delim("excels/allmarkers.csv", sep = ",", header = T, quote="\"", check.names=FALSE)
+clus2.markers = allmarkers %>%
+  filter(cluster=="2_cytotoxic_CD8") %>% # 19.9.24
+  top_n(n = 80, wt = avg_log2FC) %>%
+  as.data.frame %>% 
+  arrange(cluster,-avg_log2FC) %>% 
+  pull(gene)
+
+#M# in clus2
+i <- 1
+while(i<length(clus2.markers)){
+  VlnPlot(
+    clus2, 
+    features = c(clus2.markers[i], clus2.markers[i+1], clus2.markers[i+2], clus2.markers[i+3], clus2.markers[i+4], clus2.markers[i+5], clus2.markers[i+6], clus2.markers[i+7]), 
+    assay = "RNA", 
+    stack = TRUE, 
+    flip = TRUE, 
+    split.by = "Treatment"
+  ) + 
+    theme_classic()+  scale_fill_manual(values= c("#A799B7", "#DD614A")) +
+    theme(
+      axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+      axis.title.x = element_blank(),
+      axis.text.y = element_text(size = 24, face = "italic"),
+      axis.title.y = element_text(size = 20, face = "bold"),
+      axis.ticks.y = element_line(size = 0.5),
+      strip.text.y = element_text(angle = 0, size = 16, face = "bold")
+    ) +
+    geom_boxplot(alpha = 0.3, show.legend = FALSE)
+  ggsave(file = paste0("figures/clus2/de_gene_search_by_cluster/","interesting_DE_run_", i,  ".png"), dpi=300, width=16, height=12)
+  i <- i+8
+}
+i <- 1
+
+#M# in all cells
+i <- 1
+while(i<length(clus2.markers)){
+  VlnPlot(
+    T_cells, 
+    features = c(clus2.markers[i], clus2.markers[i+1], clus2.markers[i+2], clus2.markers[i+3], clus2.markers[i+4], clus2.markers[i+5], clus2.markers[i+6], clus2.markers[i+7]), 
+    assay = "RNA", 
+    stack = TRUE, 
+    flip = TRUE, 
+    split.by = "Treatment"
+  ) + 
+    theme_classic()+  scale_fill_manual(values= c("#A799B7", "#DD614A")) +
+    theme(
+      axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+      axis.title.x = element_blank(),
+      axis.text.y = element_text(size = 24, face = "italic"),
+      axis.title.y = element_text(size = 20, face = "bold"),
+      axis.ticks.y = element_line(size = 0.5),
+      strip.text.y = element_text(angle = 0, size = 16, face = "bold")
+    ) +
+    geom_boxplot(alpha = 0.3, show.legend = FALSE)
+  ggsave(file = paste0("figures/clus2/de_gene_search_by_cluster_allCellsClusters/","all_cells_interesting_DE_run_", i,  ".png"), dpi=300, width=16, height=12)
+  i <- i+8
+}
+i <- 1
+
+# save tsne with cluster number as label for all cells -------------------------
+DimPlot(T_cells, reduction = "tsne", group.by = "seurat_clusters", label = TRUE, pt.size = 0.5, label.size = 16)
+ggsave(file = "figures/Tcells/tsne_number_labels.png", dpi=300, width=15, height=10)
+
+# info for rons tool ---------------------
+
+# convert seurat version to lower than 5
+for_ron_tool <- T_cells
+for_ron_tool[["RNA3"]] <- as(object = T_cells[["RNA"]], Class = "Assay")
+saveRDS(for_ron_tool, file = "objects/for_ron_tool.rds")
+
+# old trys
+cell_annotations <- data.frame(Cell_ID = names(Idents(T_cells)), 
+                               Identity = Idents(T_cells), row.names = NULL)
+write.csv(cell_annotations, file = "excels/T_cells_idents_annotations.csv", row.names = FALSE)
+
+
+rna_assay <- GetAssayData(T_cells, assay = "RNA", slot = "counts")
+rna_assay_df <- as.data.frame(as.matrix(rna_assay))
+write.csv(rna_assay_df, file = "excels/T_cells_RNA_assay_counts.csv")
+
+
+
+
+# merge proliferation clusters(5,7,8) in all cells--------------------------------------------
+
+new.cluster.ids <- c("0" = "0_activated_memory_CD4",
+                     "1" = "1_cytotoxic_CD8",
+                     "2" = "2_cytotoxic_CD8",
+                     "3" = "3_CD8_DNA_replication",
+                     "4" = "4_CD8 heat_shock_proteins",
+                     "5" = "5_CD8_proliferation",
+                     "6" = "6_CD8_(CD4)_exhausted",
+                     "7" = "5_CD8_proliferation",
+                     "8" = "5_CD8_proliferation")
+names(new.cluster.ids) <- levels(T_cells)
+T_cells <- RenameIdents(T_cells, new.cluster.ids)
+DimPlot(T_cells, reduction = "tsne", label = TRUE, pt.size = 0.5) + NoLegend()
+
+#M# saveRDS(T_cells, file = "objects/tils_all_.45_integrgate_annotated_merge_prolif.rds")
+
+
+# info of proliferation cluster in all cells ----------------------------------
+cluster_5_cells <- subset(T_cells, idents = c("5_CD8_proliferation"))
+
+Res_cell_counts <- table(cluster_5_cells$Treatment)["Responder"]
+Non_res_cell_counts <- table(cluster_5_cells$Treatment)["Non_Responder"]
+total_cells_in_cluster <- Res_cell_counts + Non_res_cell_counts
+
+res_percentage <- (Res_cell_counts / total_cells_in_cluster) * 100
+non_res_percentage <-  (Non_res_cell_counts / total_cells_in_cluster) * 100
+
+
+
+cluster_5_stats <- data.frame(
+  Treatment = names(cell_counts),
+  Cluster_5_Cell_Counts = as.vector(cell_counts),
+  Total_Cell_Counts = as.vector(total_cells),
+  Percentage_in_Cluster_5 = as.vector(percentages)
+)
+
+print(cluster_5_stats)
+
+
+# signature score function ------------
+SignatureScore <- function(object, name){
+  merged_responder <- subset(object, subset = Treatment == "Responder")
+  merged_NON_responder <- subset(object, subset = Treatment == "Non_Responder")
+  
+  
+  pval <- unlist(wilcox.test(unlist(merged_NON_responder[[paste0(name)]]), 
+                             unlist(merged_responder[[paste0(name)]]), 
+                             alternative = "two.sided"))[2]
+  
+  object$normalized = (object[[name]]-min(object[[name]]))/(max(object[[name]])-min(object[[name]]))
+  
+  # print(pval)
+  # y.max <-  1.14*max(ggplot_build(p)$layout$panel_scales_y[[1]]$range$range)
+  y.max <- max(object[['normalized']])
+  annot.max.y <- y.max*0.98
+  
+  label <- as.character(symnum(as.numeric(pval), corr = FALSE, na = FALSE,
+                               cutpoints = c(0,0.0001, 0.001, 0.01, 0.05,1),
+                               symbols = c('****',"***", "**", "*", "ns")))
+  # print(label)
+  print(paste0("Pvalue = ",pval, " == ", label))
+  
+  p <- VlnPlot(object, features='normalized', group.by = "Treatment",
+               y.max = y.max, pt.size = 0,
+               cols= c("#A799B7", "#DD614A")) +  theme_classic(base_size = 14) +
+    theme(text = element_text(size=18, colour = "black")) + RotatedAxis() +
+    theme(axis.title.x=element_blank(), axis.text.x=element_blank(),axis.ticks.x=element_blank())+
+    labs(title = "", y = name,  x="") + theme(legend.position="right") +
+    stat_summary(fun.data = "mean_sdl",  fun.args = list(mult = 1),  geom = "pointrange", color = "black") +
+    annotate("text", x = 1.5, y=annot.max.y, label = label, size = 6) +
+    scale_y_continuous(labels = comma)
+  return (p)
+  
+}
+# cytokine tool ------------------------------------------------------------
+cyto_df <- read_csv("excels/df_irea_clus_0.csv")
+cy <- cyto_df %>% select(c("Enrichment Score", "Cytokine")) %>% rename('Cluster_0' = 'Enrichment Score')
+
+cyto_df_clus_1 <- read_csv("excels/df_irea_clus_1.csv") %>% select(c("Enrichment Score", "Cytokine")) %>% rename('Cluster_1' = 'Enrichment Score')
+
+cyto_df_clus_2 <- read_csv("excels/df_irea_clus_2.csv") %>% select(c("Enrichment Score", "Cytokine")) %>% rename('Cluster_2' = 'Enrichment Score')
+
+merged_data <- cy %>%
+  full_join(cyto_df_clus_1, by = "Cytokine") %>%
+  full_join(cyto_df_clus_2, by = "Cytokine") %>%  
+  column_to_rownames(var = "Cytokine")
+
+long_data <- merged_data %>%
+  rownames_to_column(var = "Gene") %>%
+  pivot_longer(cols = starts_with("Cluster"), names_to = "Cluster", values_to = "Score")
+
+# write_csv(long_data, "excels/long_cyto_enrich.csv") 
+# merged_data_with_genes <- merged_data %>%
+ #  rownames_to_column(var = "Gene")
+# write_csv(merged_data_with_genes, "excels/cyto_by_clusteR_enrich.csv") 
+
+long_data <- read_csv("excels/long_cyto_enrich.csv")
+merged_data <- read_csv("excels/cyto_by_clusteR_enrich.csv")
+
+clus2_top_10 <- merged_data %>% 
+  top_n(n=10, wt=Cluster_2) %>% 
+  pull(Gene)
+
+clus_2_lowest_10 <- merged_data %>% 
+  top_n(n=-10, wt=Cluster_2) %>% 
+  pull(Gene)
+
+selected_genes <- c(clus_2_lowest_10, clus2_top_10)
+
+filtered_data <- long_data %>%
+  filter(Gene %in% selected_genes)
+
+#M# control gene order in plot : have to put all genes in list
+gene_order <- c(clus2_top_10, clus_2_lowest_10)
+filtered_data$Gene <- factor(filtered_data$Gene, levels = gene_order)
+
+# Create the bar plot
+ggplot(filtered_data, aes(x = Gene, y = Score, fill = Cluster)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  theme_minimal() +
+  labs(title = "Scores for Selected Genes Across Clusters",
+       x = "Gene",
+       y = "Score",
+       fill = "Cluster") + 
+  coord_flip() + # Flip the coordinates
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+ggsave(file = "figures/cytokine tool/clus_2.png", dpi=300, width=5, height=5)
+
+#M# cluster 0 10 highest and lowest scored cytokines
+clus0_top_10 <- merged_data %>% 
+  top_n(n=10, wt=Cluster_0) %>% 
+  pull(Gene)
+
+clus_0_lowest_10 <- merged_data %>% 
+  top_n(n=-10, wt=Cluster_0) %>% 
+  pull(Gene)
+
+selected_genes <- c(clus_0_lowest_10, clus0_top_10)
+
+filtered_data <- long_data %>%
+  filter(Gene %in% selected_genes)
+
+#M# control gene order in plot : have to put all genes in list
+gene_order <- c(clus0_top_10, clus_0_lowest_10)
+filtered_data$Gene <- factor(filtered_data$Gene, levels = gene_order)
+
+# Create the bar plot
+ggplot(filtered_data, aes(x = Gene, y = Score, fill = Cluster)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  theme_minimal() +
+  labs(title = "Scores for Selected Genes Across Clusters",
+       x = "Gene",
+       y = "Score",
+       fill = "Cluster") + 
+  coord_flip() + # Flip the coordinates
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+ggsave(file = "figures/cytokine tool/clus_0.png", dpi=300, width=5, height=5)
+
+#M# cluster 1 10 highest and lowest scored cytokines
+clus_1_top_10 <- merged_data %>% 
+  top_n(n=10, wt=Cluster_1) %>% 
+  pull(Gene)
+
+clus_1_lowest_10 <- merged_data %>% 
+  top_n(n=-10, wt=Cluster_1) %>% 
+  pull(Gene)
+
+selected_genes <- c(clus_1_lowest_10, clus_1_top_10)
+
+filtered_data <- long_data %>%
+  filter(Gene %in% selected_genes)
+
+#M# control gene order in plot : have to put all genes in list
+gene_order <- c(clus_1_top_10, clus_1_lowest_10)
+filtered_data$Gene <- factor(filtered_data$Gene, levels = gene_order)
+
+# Create the bar plot
+ggplot(filtered_data, aes(x = Gene, y = Score, fill = Cluster)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  theme_minimal() +
+  labs(title = "Scores for Selected Genes Across Clusters",
+       x = "Gene",
+       y = "Score",
+       fill = "Cluster") + 
+  coord_flip() + # Flip the coordinates
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+ggsave(file = "figures/cytokine tool/clus_1.png", dpi=300, width=5, height=5)
+
+
+# conversion --------------------------------------------------------------
+#M# convert genes from human(uppercase) to mouse format for cytokyne tool
+
+# Define the function
+capitalize_genes <- function(gene_string) {
+  gene_list <- strsplit(gene_string, "\n")[[1]]
+  gene_list <- trimws(gene_list)
+  capitalized_genes <- sapply(gene_list, function(gene) {
+    paste0(toupper(substr(gene, 1, 1)), tolower(substr(gene, 2, nchar(gene))))
+  })
+  capitalized_gene_string <- paste(capitalized_genes, collapse = "\n")
+  return(capitalized_gene_string)
+}
+
+genes <- "MSRB2
+CFAP36
+SVIP
+MALSU1
+PFDN4
+ARCN1
+ZNHIT3
+GLRX5
+RPS26
+MRPS33
+RPLP0
+RPLP1
+MED28
+RTRAF
+PSMD4
+EEF1B2
+RPS10
+NDUFB4
+PPA1
+RPL23
+RPL36A
+GAS5
+PRDX1
+SYF2
+ZNF706
+RPS17
+EEF1G
+RPL37A
+ADA
+ATP5MPL
+RPL13A
+RPL37
+RPS4X
+LAMTOR5
+LDHB
+RPL4
+UQCRB
+RPS20
+GNG10
+ABRACL
+RPS18
+MRPL20
+COX14
+RPS6
+RSL24D1
+RPS27L
+NOSIP
+RPS8
+RPL31
+NDUFS5
+"
+
+capitalized_genes <- capitalize_genes(genes)
+cat(capitalized_genes)
+
+
+# make list of genes into vector ------------------------------------------
+gene_list <- "TYROBP
+FCER1G
+NCR2
+KIT
+TRDC
+RHOBTB3
+ADAM12
+CXXC5
+RASSF8
+KRT81
+SYK
+FAM49A
+ZBTB16
+TLE1
+AREG
+TRIO
+KRT86
+TMIGD2
+AL136456.1
+GSN
+PLD1
+TNFRSF18
+NCR1
+APOL4
+SH2D1B
+KLRC1
+IKZF2
+PDE6G
+DOCK5
+FUCA1
+FES
+CST3
+LINC00299
+NCAM1
+TSPAN4
+IL4I1
+FSD1
+RNF165
+ITM2C
+CHKA
+AHDC1
+SLFN12
+PLEK
+CEBPD
+HIP1R
+ZNF169
+SKAP2
+DPF3
+ITGAX
+GALE
+"
+gene_list <- strsplit(gene_list, "\n")[[1]]
+gene_list <- trimws(gene_list)
+gene_list[2]
+a <- gene_list
+b <- gene_list
+a %in% b
+
 
 # 41bb zoom in----------
 VlnPlot(cd4_cells, features = c("TNFRSF9"),
@@ -2276,6 +2276,11 @@ ggsave(file = "figures/Tcells/proliferation1_vln_signature.png", dpi=300, width=
 # responder vs. non responder in all cells all together
 p <- SignatureScore(T_cells, 'proliferation1') + ggtitle("proliferation sig")
 ggsave(file = "figures/Tcells/proliferation1_all_cells_combined_signature.png", dpi=300, width=8, height=6)
+
+
+
+
+
 
 
 

@@ -48,11 +48,11 @@ setwd("D:/Michael/git_check/tils")
 
 x1=4.6
 # T_cells = readRDS("objects/tils_all_.45_integrgate_annotated.rds")
-T_cells = readRDS("objects/tils_all_.45_integrgate_annotated (2).rds")
+T_cells = readRDS("objects/tils_all_.45_integrgate_annotated_merge_prolif.rds")
 
 DimPlot(T_cells, reduction = "tsne",repel = T, label = TRUE, label.size = 5)
 DefaultAssay(T_cells) <- "RNA" #M# important before subseting! otherwise doesnt find cd8
-T_cells_0 <- subset(T_cells, idents = c("0" = "0_activated_memory_CD4")) #M# also subset out CD8 cells
+T_cells_0 <- subset(T_cells, idents = c("0" = "0_CD4_activated_Tmem")) #M# also subset out CD8 cells
 table(T_cells_0$orig.ident)
 table(T_cells_0$seurat_clusters)
 #M# save cd8 to move to cluster 1 cd8 analysis
