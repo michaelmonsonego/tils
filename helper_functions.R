@@ -772,7 +772,7 @@ VlnPlot(T_cells, features = c("CD40LG"),
 ) + 
   theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
-    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = -40, hjust = 0, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),

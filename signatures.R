@@ -1018,6 +1018,10 @@ SignatureScore(clus_2_with_sigs, 'effector_memory1')
 ggsave(file = "figures/clus2/clus_2_effector_memory_vln_all_clusters.png", dpi=300, width=8, height=6)
 
 
+# signature cytotoxic all cells ---------------------------------------
+SignatureScore(T_cells, 'cytotoxic_list1')
+
+
 # another section ---------------------------------------------------------
 
 
