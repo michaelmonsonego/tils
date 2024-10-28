@@ -1707,22 +1707,22 @@ VlnPlot(clus1, features = c("TGFBR3", "HIVEP1"),
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
 ggsave(file = "figures/clus1/1.png", dpi=300, width=10, height=6)
 
-VlnPlot(clus2, features = c("TGFBR3", "HIVEP1"),
+VlnPlot(cd4_cells, features = c("TGFB1"), pt.size=0,
         assay = "RNA", 
         flip = TRUE, 
         split.by = "Treatment"
 ) + 
   theme_classic() +
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = -40, hjust = 0, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
     axis.ticks.y = element_line(size = 0.5),
     strip.text.y = element_text(angle = 0, size = 16, face = "bold")
-  ) + 
+  )+  scale_fill_manual(values= c("#A799B7", "#DD614A"))+ 
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
-ggsave(file = "figures/clus2/2.png", dpi=300, width=10, height=6)
+ggsave(file = "figures/cd4_cells/tgfb_cd4_cluster.png", dpi=300, width=10, height=6)
 
 
 
@@ -2286,6 +2286,65 @@ ggsave(file = "figures/Tcells/proliferation1_all_cells_combined_signature.png", 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# for asaf grant figure VLN Prf1, GzmB, Entpd1 (CD39) and CD40L ------------------------------
+
+VlnPlot(T_cells, features = c("PRF1", "GZMB", "ENTPD1"), 
+        assay = "RNA", 
+        stack = TRUE, 
+        flip = TRUE, 
+        split.by = "Treatment"
+) + 
+  theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
+  theme(
+    axis.text.x = element_text(angle = -40, hjust = 0, size = 24, face = "bold"),
+    axis.title.x = element_blank(),
+    axis.text.y = element_text(size = 24, face = "italic"),
+    axis.title.y = element_text(size = 20, face = "bold"),
+    axis.ticks.y = element_line(size = 0.5),
+    strip.text.y = element_text(angle = 0, size = 16, face = "bold"),
+    legend.text = element_text(size=24)
+  ) +
+  geom_boxplot(alpha = 0.3, show.legend = FALSE)
+ggsave(file = "figures/Tcells/for_asaf_vln_DE.png", dpi=300, width=12, height=10, limitsize=FALSE)
+
+
+
+# same but no legend
+VlnPlot(T_cells, features = c("PRF1", "GZMB", "ENTPD1"), 
+        assay = "RNA", 
+        stack = TRUE, 
+        flip = TRUE, 
+        split.by = "Treatment"
+) + 
+  theme_classic() +  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
+  theme(
+    axis.text.x = element_text(angle = -40, hjust = 0, size = 24, face = "bold"),
+    axis.title.x = element_blank(),
+    axis.text.y = element_text(size = 24, face = "italic"),
+    axis.title.y = element_text(size = 20, face = "bold"),
+    axis.ticks.y = element_line(size = 0.5),
+    strip.text.y = element_text(angle = 0, size = 16, face = "bold"),
+    legend.position = "none"
+  ) +
+  geom_boxplot(alpha = 0.3, show.legend = FALSE)
+ggsave(file = "figures/Tcells/for_asaf_vln_DE.png", dpi=300, width=15, height=10, limitsize=FALSE)
 
 
 

@@ -209,6 +209,16 @@ write_csv(Top100Markers, "excels/Top100Markers_per_treatment_tils_0_.4.csv")
 
 
 
+#M# find DE genes between non-responders to responders 
+DE_genes <- FindMarkers(T_cells_0, ident.1 = "Non_Responder", ident.2 = "Responder", group.by = "Treatment", assay = "RNA")
+DE_genes <- rownames_to_column(DE_genes, var = "gene")
+write_csv(DE_genes, "excels/DE_genes_oppisite_CD4_.csv") 
+Top100Markers <- DE_genes %>% 
+top_n(n = 100, wt = avg_log2FC) %>% 
+as.data.frame
+write_csv(Top100Markers, "excels/Top100Markers_oppisite_cd4.csv") 
+
+
 T_cells_0.markers %>%
     group_by(cluster) %>%
     top_n(n = 10, wt = avg_log2FC) -> top10_T
