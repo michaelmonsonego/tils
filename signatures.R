@@ -67,7 +67,7 @@ ggsave(file = "figures/clus2/clus_2_up_tgfb_vln.png", dpi=300, width=16, height=
 
 #M# vlnplot for all clusters combined 
 SignatureScore(clus2, 'up_tgfb1')
-ggsave(file = "figures/clus2/clus2_up_tgfb_vln_all_clusters.png", dpi=300, width=8, height=6)
+ggsave(file = "figures/clus2/clus2_up_tgfb_vln_all_clusters.png", dpi=300, width=6, height=6)
 
 
 # clus 1
@@ -439,7 +439,7 @@ ggsave(file = "figures/clus2/clus_2_up_ifng_vln.png", dpi=300, width=16, height=
 
 #M# vlnplot for all clusters combined 
 SignatureScore(clus2, 'up_ifng1')
-ggsave(file = "figures/clus2/clus_2_up_ifng_vln_all_clusters.png", dpi=300, width=8, height=6)
+ggsave(file = "figures/clus2/clus_2_up_ifng_vln_all_clusters.png", dpi=300, width=6, height=6)
 
 
 # clus 1
@@ -931,7 +931,7 @@ ggsave(file = "figures/clus2/il2_sig_per_cluster_treatment.png", dpi=300, width=
 
 #M# vlnplot for all clusters combined 
 SignatureScore(clus2, 'il21')
-ggsave(file = "figures/clus2/clus_2_il21_vln_all_clusters.png", dpi=300, width=8, height=6)
+ggsave(file = "figures/clus2/clus_2_il21_vln_all_clusters.png", dpi=300, width=6, height=6)
 
 
 
@@ -974,7 +974,7 @@ ggsave(file = "figures/clus2/persistance_up_sig_per_cluster_treatment.png", dpi=
 
 #M# vlnplot for all clusters combined 
 SignatureScore(clus2, 'persistance_up1')
-ggsave(file = "figures/clus2/clus_2_persistance_up_vln_all_clusters.png", dpi=300, width=8, height=6)
+ggsave(file = "figures/clus2/clus_2_persistance_up_vln_all_clusters.png", dpi=300, width=6, height=6)
 
 
 # ____
@@ -1014,13 +1014,21 @@ cowplot::plot_grid(plotlist = gglist, ncol = 4, nrow = 2) +
   ggtitle(name)
 ggsave(file = "figures/clus2/effector_memory_sig_per_cluster_treatment.png", dpi=300, width=16, height=10)
 
-SignatureScore(clus_2_with_sigs, 'effector_memory1')
-ggsave(file = "figures/clus2/clus_2_effector_memory_vln_all_clusters.png", dpi=300, width=8, height=6)
+SignatureScore(clus2, 'effector_memory1')
+ggsave(file = "figures/clus2/clus_2_effector_memory_vln_all_clusters.png", dpi=300, width=6, height=6)
 
 
 # signature cytotoxic all cells ("GZMB","GZMC","GRZMF", "IFNG","PRF1", "TNF")---------------------------------------
 SignatureScore(T_cells, 'cytotoxic1')
 ggsave(file = "figures/Tcells/cytotoxic_sig.png", dpi=300, width=6, height=6, limitsize=FALSE)
+
+# cd40lg all cells------------------------------------------------------
+
+CD40LG_list = list(c("CD40LG"))
+T_cells = AddModuleScore(object = T_cells, features = CD40LG_list, name = "CD40LG", assay = "RNA")
+
+SignatureScore(T_cells, 'CD40LG1')
+ggsave(file = "figures/Tcells/CD40LG_sig.png", dpi=300, width=6, height=6, limitsize=FALSE)
 
 
 # another section ---------------------------------------------------------

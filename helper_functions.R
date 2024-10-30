@@ -41,7 +41,7 @@ VlnPlot(
 ) + 
   theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
-    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = -40, hjust = 0, size = 30, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
@@ -50,7 +50,7 @@ VlnPlot(
     legend.text = element_text(size=24)
   ) +
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
-ggsave(filename = "vln_activation_exhastion_cluster_by_treatment_1.png" , path = "figures/Tcells/", dpi=300, width=19, height=10)
+ggsave(filename = "vln_activation_exhastion_cluster_by_treatment_1.png" , path = "figures/Tcells/", dpi=300, width=18, height=10)
 
 
 VlnPlot(
@@ -88,7 +88,7 @@ VlnPlot(
 ) + 
   theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
-    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = -40, hjust = 0, size = 30, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
@@ -97,7 +97,7 @@ VlnPlot(
     legend.text = element_text(size=24)
   ) +
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
-ggsave(file = "figures/Tcells/Vln_T_effector_cluster_by_treatment_1.png", dpi=300, width=19, height=10, limitsize=FALSE)
+ggsave(file = "figures/Tcells/Vln_T_effector_cluster_by_treatment_1.png", dpi=300, width=18, height=10, limitsize=FALSE)
 
 
 VlnPlot(
@@ -134,7 +134,7 @@ VlnPlot(
 ) + 
   theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
-    axis.text.x = element_text(angle = 50, hjust = 1, size = 30, face = "bold"),
+    axis.text.x = element_text(angle = -40, hjust = 0, size = 30, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 34, face = "italic"),
     axis.title.y = element_text(size = 30, face = "bold"),
@@ -143,7 +143,7 @@ VlnPlot(
     legend.text = element_text(size=30)
   ) +
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
-ggsave(file = "figures/Tcells/Vln_T_naive_cluster_by_treatment_1.png", dpi=300, width=30, height=10, limitsize=FALSE)
+ggsave(file = "figures/Tcells/Vln_T_naive_cluster_by_treatment_1.png", dpi=300, width=18, height=10, limitsize=FALSE)
 
 
 VlnPlot(
@@ -196,6 +196,28 @@ VlnPlot(
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
 ggsave(filename = "vln_activation_exhastion_cluster_by_treatment_1.png" , path = "figures/cd4_cluster0/", dpi=300, width=8, height=10)
 
+# only TOX for paper
+VlnPlot(
+  cd4_cluster0, 
+  features = c("TOX"), 
+  assay = "RNA", 
+  flip = TRUE, 
+  split.by = "Treatment",
+  pt.size = 0
+) + 
+  theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
+  theme(
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
+    axis.title.x = element_blank(),
+    axis.text.y = element_text(size = 24, face = "italic"),
+    axis.title.y = element_text(size = 20, face = "bold"),
+    axis.ticks.y = element_line(size = 0.5),
+    strip.text.y = element_text(angle = 0, size = 16, face = "bold"), 
+    legend.text = element_text(size=24)
+  ) +
+  geom_boxplot(alpha = 0.3, show.legend = FALSE)
+ggsave(filename = "TOX.png" , path = "figures/cd4_cluster0/", dpi=300, width=8, height=10)
+
 
 VlnPlot(
   cd4_cluster0,
@@ -242,6 +264,30 @@ VlnPlot(
   ) +
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
 ggsave(file = "figures/cd4_cluster0/Vln_T_effector_cluster_by_treatment_1.png", dpi=300, width=8, height=10, limitsize=FALSE)
+
+# for paper
+VlnPlot(
+  cd4_cluster0, 
+  features = c("PRF1","IFNG"), 
+  assay = "RNA", 
+  stack = TRUE, 
+  flip = TRUE, 
+  split.by = "Treatment",
+  pt.size = 0
+) + 
+  theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
+  theme(
+    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
+    axis.title.x = element_blank(),
+    axis.text.y = element_text(size = 24, face = "italic"),
+    axis.title.y = element_text(size = 20, face = "bold"),
+    axis.ticks.y = element_line(size = 0.5),
+    strip.text.y = element_text(angle = 0, size = 16, face = "bold"), 
+    legend.text = element_text(size=24)
+  ) +
+  geom_boxplot(alpha = 0.3, show.legend = FALSE)
+ggsave(file = "figures/cd4_cluster0/prf_ifng.png", dpi=300, width=8, height=8, limitsize=FALSE)
+
 
 
 VlnPlot(
@@ -468,7 +514,7 @@ VlnPlot(
 ) + 
   theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
-    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = -40, hjust = 0, size = 30, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
@@ -491,7 +537,7 @@ VlnPlot(
 )+ 
   theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
-    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = -40, hjust = 0, size = 30, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
@@ -515,7 +561,7 @@ VlnPlot(
 ) + 
   theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
-    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = -40, hjust = 0, size = 30, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
@@ -560,7 +606,7 @@ VlnPlot(
 ) + 
   theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
-    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = -40, hjust = 0, size = 30, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
@@ -1389,7 +1435,6 @@ gene_list[2]
 a <- gene_list
 b <- gene_list
 a %in% b
-
 
 # 41bb zoom in----------
 VlnPlot(cd4_cells, features = c("TNFRSF9"),
