@@ -802,6 +802,7 @@ ggplot(summary_stats, aes(x = Treatment, y = Mean_Ratio, fill = Treatment)) +
     legend.position = "none")+
   ylab("CD8/CD4 ratio")
 ggsave(file = "figures/Tcells/cd8_cd4_ratio_2.png", dpi=300, width=4, height=6)
+ggsave(file = "figures/Tcells/cd8_cd4_ratio_2.pdf", dpi=300, width=4, height=6)
 
 
 
@@ -1245,6 +1246,7 @@ ggplot(filtered_data, aes(x = Gene, y = Score, fill = Cluster)) +
   coord_flip() + # Flip the coordinates
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ggsave(file = "figures/cytokine tool/clus_2.png", dpi=300, width=5, height=5)
+ggsave(file = "figures/cytokine tool/clus_2.pdf", dpi=300, width=5, height=5)
 
 #M# cluster 0 10 highest and lowest scored cytokines
 clus0_top_10 <- merged_data %>% 
@@ -2368,6 +2370,7 @@ VlnPlot(T_cells, features = c("PRF1", "GZMB", "ENTPD1"),
   ) +
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
 ggsave(file = "figures/Tcells/for_asaf_vln_DE.png", dpi=300, width=12, height=10, limitsize=FALSE)
+ggsave(file = "figures/Tcells/vln_DE.pdf", dpi=300, width=12, height=10, limitsize=FALSE)
 
 
 
