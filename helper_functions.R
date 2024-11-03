@@ -207,7 +207,7 @@ VlnPlot(
 ) + 
   theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
-    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = -40, hjust = 0, size = 30, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
@@ -277,7 +277,7 @@ VlnPlot(
 ) + 
   theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
-    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = -40, hjust = 0, size = 30, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
@@ -2350,7 +2350,7 @@ ggsave(file = "figures/Tcells/proliferation1_all_cells_combined_signature.png", 
 
 
 
-# for asaf grant figure VLN Prf1, GzmB, Entpd1 (CD39) and CD40L ------------------------------
+# for asaf grant figure VLN Prf1, GzmB, Entpd1 (CD39)  ------------------------------
 
 VlnPlot(T_cells, features = c("PRF1", "GZMB", "ENTPD1"), 
         assay = "RNA", 

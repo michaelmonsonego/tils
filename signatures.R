@@ -1030,6 +1030,7 @@ T_cells = AddModuleScore(object = T_cells, features = CD40LG_list, name = "CD40L
 
 SignatureScore(T_cells, 'CD40LG1')
 ggsave(file = "figures/Tcells/CD40LG_sig.png", dpi=300, width=6, height=6, limitsize=FALSE)
+ggsave(file = "figures/Tcells/CD40LG_sig.pdf", dpi=300, width=6, height=6, limitsize=FALSE)
 
 
 # another section ---------------------------------------------------------
