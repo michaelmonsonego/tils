@@ -67,6 +67,24 @@ table(T_cells$orig.ident)["N3"] #
 table(T_cells$orig.ident)["N4"] #  
 table(T_cells$Treatment)
 
+#M# calculate mean and SD cell counts between response groups
+cell_counts <- as.data.frame(table(T_cells$orig.ident))
+colnames(cell_counts) <- c("Sample", "Count")
+cell_counts <- cell_counts %>%
+  mutate(Treatment = ifelse(grepl("^R", Sample), "Responder", "Non_Responder"))
+summary_stats = cell_counts %>%
+  group_by(Treatment) %>% 
+  summarise(mean=mean(Count), SD=sd(Count))
+summary_stats
+#M# do it manually cause grouping doesnt work for some reason
+# Non-Responders
+mean(c(5197, 6265, 6233, 6385))
+sd(c(5197, 6265, 6233, 6385))
+# Responders
+mean(c(4161, 6203, 4526, 6566))
+sd(c(4161, 6203, 4526, 6566))
+
+
 DimPlot(T_cells, reduction = "tsne", label = TRUE, pt.size = 0.5, label.size = 10) +
   ggplot2::theme(legend.position = "none") +
   ggplot2::theme(

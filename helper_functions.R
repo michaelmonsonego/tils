@@ -1718,8 +1718,12 @@ VlnPlot(clus2, features = c("IL1A"),
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
 ggsave(file = "figures/clus2/IL1_cluster_2.png", dpi=300, width=10, height=6)
 # checking ------------
+DefaultAssay(T_cells) <- "RNA"
+FeaturePlot(T_cells, features = c("MKI67", "CD8A","CD8B", "CD4"),order=TRUE,pt.size=0.5, reduction="tsne", ncol=3)
+ggsave(file = "figures/Tcells/check_proliferatio_cd4.png", dpi=300, width=10, height=6)
 
-VlnPlot(T_cells, features = c("KLF2", "SLAMF6", "CD27"),
+
+VlnPlot(T_cells, features = c("MKI67", "CD8A","CD8B", "CD4"),
         assay = "RNA", 
         stack = TRUE, 
         flip = TRUE, 
@@ -2266,11 +2270,18 @@ ggsave(file = "figures/Tcells/CD8_Proliferating_cluster_8_Markers.png", dpi=300,
 
 
 
+#cluster 0 (cd4 cells) proliferation signature between response groups------
+proliferation_sig <- c("MKI67", "STMN1","TOP2A","Nolc1", "Npm1","Ccne2")
+proliferation_sig <- toupper(proliferation_sig)
+proliferation_sig <- list(proliferation_sig)
+cd4_cells = AddModuleScore(object = cd4_cells, features = proliferation_sig, name = "proliferation", assay = "RNA")
 
+SignatureScore(cd4_cells, 'proliferation1') + ggtitle("proliferation sig")
+ggsave(file = "figures/cd4_cells/proliferation_cd4_combined_signature.png", dpi=300, width=8, height=6)
 
-
-
-
+#M# all cells
+SignatureScore(T_cells, 'proliferation1') + ggtitle("proliferation sig")
+ggsave(file = "figures/Tcells/proliferation_all_combined_signature.png", dpi=300, width=8, height=6)
 
 
 
@@ -2281,6 +2292,9 @@ T_cells = readRDS("objects/tils_all_.45_integrgate_annotated_merge_prolif.rds")
 proliferation_sig <- c("MKI67", "STMN1","TOP2A","Nolc1", "Npm1","Ccne2")
 proliferation_sig <- toupper(proliferation_sig)
 proliferation_sig <- list(proliferation_sig)
+
+
+
 
 # proliferation object (clusters 5, 7, 8)
 prolif = AddModuleScore(object = prolif, features = proliferation_sig, name = "proliferation", assay = "RNA")
