@@ -1719,11 +1719,11 @@ VlnPlot(clus2, features = c("IL1A"),
 ggsave(file = "figures/clus2/IL1_cluster_2.png", dpi=300, width=10, height=6)
 # checking ------------
 DefaultAssay(T_cells) <- "RNA"
-FeaturePlot(T_cells, features = c("MKI67", "CD8A","CD8B", "CD4"),order=TRUE,pt.size=0.5, reduction="tsne", ncol=3)
+FeaturePlot(T_cells, features = c("TBX21", "CD8A","CD8B", "CD4"),order=TRUE,pt.size=0.5, reduction="tsne", ncol=3)
 ggsave(file = "figures/Tcells/check_proliferatio_cd4.png", dpi=300, width=10, height=6)
 
 
-VlnPlot(T_cells, features = c("MKI67", "CD8A","CD8B", "CD4"),
+VlnPlot(T_cells, features = c("TBX21", "CD8A","CD8B", "CD4"),
         assay = "RNA", 
         stack = TRUE, 
         flip = TRUE, 
@@ -1758,8 +1758,9 @@ VlnPlot(clus1, features = c("TGFBR3", "HIVEP1"),
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
 ggsave(file = "figures/clus1/1.png", dpi=300, width=10, height=6)
 
-VlnPlot(cd4_cells, features = c("TGFB1"), pt.size=0,
+VlnPlot(cd4_cells, features = c("TBX21", "TCF7"), pt.size=0,
         assay = "RNA", 
+        stack = TRUE, 
         flip = TRUE, 
         split.by = "Treatment"
 ) + 
@@ -1773,7 +1774,7 @@ VlnPlot(cd4_cells, features = c("TGFB1"), pt.size=0,
     strip.text.y = element_text(angle = 0, size = 16, face = "bold")
   )+  scale_fill_manual(values= c("#A799B7", "#DD614A"))+ 
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
-ggsave(file = "figures/cd4_cells/tgfb_cd4_cluster.png", dpi=300, width=10, height=6)
+ggsave(file = "figures/cd4_cells/PD1_TCF1_cd4_cluster.png", dpi=300, width=10, height=6)
 
 
 
