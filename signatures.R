@@ -864,6 +864,12 @@ cowplot::plot_grid(plotlist = gglist, ncol = 4, nrow = 2) +
 ggsave(file = "figures/clus1/persistance_up_sig_per_cluster_treatment.png", dpi=300, width=16, height=10)
 
 
+
+# cd4 persistance : violin plot per treatment 
+SignatureScore(cd4_cells, 'persistance_up1')
+ggsave(file = "figures/cd4_cells/cd4_persistance_all_clusters.png", dpi=300, width=6, height=6)
+
+
 # ____
 
 # violin plot per treatment per cluster

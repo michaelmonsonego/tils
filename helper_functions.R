@@ -324,7 +324,7 @@ VlnPlot(
 ) + 
   theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
-    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = -40, hjust = 0, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
@@ -333,7 +333,7 @@ VlnPlot(
     legend.text = element_text(size=24)
   ) +
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
-ggsave(file = "figures/cd4_cells/cluster0_only/Vln_T_naive_cluster_by_treatment_1.png", dpi=300, width=8, height=10, limitsize=FALSE)
+ggsave(file = "figures/cd4_cells/cluster0_only/Vln_T_naive_cluster_by_treatment_1.png", dpi=300, width=6, height=6, limitsize=FALSE)
 
 
 VlnPlot(
@@ -662,6 +662,34 @@ VlnPlot(
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
 ggsave(file = "figures/clus2/de_gene_search/interesting_DE_genes_for_presentation.png", dpi=300, width=16, height=12)
 
+# cell count per treament box plots -------------------
+# Assuming df looks like this:
+df <- data.frame(
+  sample = c("N1", "N2", "N3", "N4", "R1", "R2", "R3", "R4"),
+  count = c(5197, 6265, 6233, 6385, 4161, 6203, 4526, 6566),
+  Treatment = c("Non_Responder", "Non_Responder", "Non_Responder", "Non_Responder",
+                "Responder", "Responder", "Responder", "Responder")
+)
+
+ggplot(df, aes(x = Treatment, y = count, fill = Treatment)) +
+  geom_boxplot(position = position_dodge(0.6), width = 0.6) +
+  scale_fill_manual(values = c("#A799B7", "#DD614A")) + 
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+    axis.title.x = element_text(size = 20),
+    axis.title.y = element_text(size = 20),
+    axis.text.x = element_text(size = 18, angle = -40, hjust = 0),
+    axis.text.y = element_text(size = 18),
+    legend.position = "none"
+  ) +
+  ylab("Cell Count") +
+  xlab("") +
+  ggtitle("Cells infused by Treatment")
+ggsave(file = "figures/Tcells/cd8_cd4_ratio_2.png", dpi=300, width=4, height=6)
+ggsave(file = "figures/Tcells/cd8_cd4_ratio_2.pdf", dpi=300, width=4, height=6)
+
+
 # make tsne's by responders/non responders ---------------
 # all cells
 responders <- subset(T_cells, subset = Treatment == "Responder")
@@ -742,8 +770,53 @@ df <-  T_cells@meta.data %>%
   tally(name = "Freq") %>% 
   as.data.frame()
 
+#M#  CD4
+df$Treatment <- ifelse(grepl("R", df$Sample), "Responder", "Non_Responder")
+df_filtered <- df[df$cell_type %in% c("CD4", "CD8"), ]
+
+ggplot(df_filtered[df_filtered$cell_type == "CD4", ], aes(x = Treatment, y = Freq, fill = Treatment)) +
+  geom_boxplot(position = position_dodge(0.6), width = 0.6) +
+  scale_fill_manual(values = c("#A799B7", "#DD614A")) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 24, face = "bold"),
+    axis.title.x = element_text(size = 20),
+    axis.title.y = element_text(size = 20),
+    axis.text.x = element_text(size = 18, angle = -50, hjust=0, face = "bold"),
+    axis.text.y = element_text(size = 18),
+    legend.position = "none"
+  ) +
+  ylab("Cell count") +
+  xlab("") +
+  ggtitle("CD4")
+ggsave(file = "figures/Tcells/cd4_count.png", dpi=300, width=4, height=6)
+ggsave(file = "figures/Tcells/cd4_count.pdf", dpi=300, width=4, height=6)
 
 
+# CD8 
+ggplot(df_filtered[df_filtered$cell_type == "CD8", ], aes(x = Treatment, y = Freq, fill = Treatment)) +
+  geom_boxplot(position = position_dodge(0.6), width = 0.6) +
+  scale_fill_manual(values = c("#A799B7", "#DD614A")) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 24, face = "bold"),
+    axis.title.x = element_text(size = 20),
+    axis.title.y = element_text(size = 20),
+    axis.text.x = element_text(size = 18, angle = -50, hjust=0, face = "bold"),
+    axis.text.y = element_text(size = 18),
+    legend.position = "none"
+  ) +
+  ylab("Cell count") +
+  xlab("") +
+  ggtitle("CD8")
+ggsave(file = "figures/Tcells/cd8_count.png", dpi=300, width=4, height=6)
+ggsave(file = "figures/Tcells/cd8_count.pdf", dpi=300, width=4, height=6)
+
+
+
+
+
+####
 calculate_ratio <- function(df, sample_id) {
   cd4_count <- df[df$Sample == sample_id & df$cell_type == "CD4", "Freq"]
   cd8_count <- df[df$Sample == sample_id & df$cell_type == "CD8", "Freq"]
@@ -806,6 +879,39 @@ ggsave(file = "figures/Tcells/cd8_cd4_ratio_2.pdf", dpi=300, width=4, height=6)
 
 
 
+ggplot(summary_stats, aes(x = Treatment, y = Mean_Ratio, fill = Treatment)) +
+  geom_boxplot(position = position_dodge(0.6), width = 0.6, outlier.size = 2, outlier.colour = "#D55E00") +
+  scale_fill_manual(values= c("#A799B7", "#DD614A")) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+    axis.title.x = element_text(size = 20),
+    axis.title.y = element_text(size = 20),
+    axis.text.x = element_text(size = 18, angle = -40, hjust=0),
+    axis.text.y = element_text(size = 18),
+    legend.position = "none"
+  ) +
+  ylab("CD8/CD4 ratio") +
+  ggtitle("Distribution of CD8/CD4 Ratios by Treatment")
+
+#M# box plot instead of bar plot
+ggplot(ratios_df, aes(x = Treatment, y = ratio, fill = Treatment)) +
+  geom_boxplot(position = position_dodge(0.6), width = 0.6) +
+  scale_fill_manual(values = c("#A799B7", "#DD614A")) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 24, face = "bold"),
+    axis.title.x = element_text(size = 20),
+    axis.title.y = element_text(size = 20),
+    axis.text.x = element_text(size = 18, angle = -40, hjust = 0, face = "bold"),
+    axis.text.y = element_text(size = 18),
+    legend.position = "none"
+  ) +
+  ylab("CD8/CD4 Ratio") +
+  xlab("") + 
+  ggtitle("CD8/CD4")
+ggsave(file = "figures/Tcells/box_cd8_cd4_ratio_2.png", dpi=300, width=4, height=6)
+ggsave(file = "figures/Tcells/box_cd8_cd4_ratio_2.pdf", dpi=300, width=4, height=6)
 
 
 
