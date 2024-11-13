@@ -210,6 +210,7 @@ p1 <- ggplot(frque, aes(x = Cluster, y = normalizedppstatus, fill = Treatment)) 
  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
  ggtitle("Normalized Cluster Counts") +
  ylab("Normalized Proportions in %") +
+ xlab("") +   
  theme(
    axis.text.x  = element_text(angle = -40, hjust = 0, size = 30, color = "black"),
    axis.text.y  = element_text(size = 26, color = "black"),
@@ -220,7 +221,7 @@ p1 <- ggplot(frque, aes(x = Cluster, y = normalizedppstatus, fill = Treatment)) 
    legend.text = element_text(size=34)) +
  geom_hline(yintercept = 50, linetype='dotted') 
 
-p2<-ggplot(frque, aes(x= Cluster, y= Freq, fill = Treatment)) +
+p2 <- ggplot(frque, aes(x= Cluster, y= Freq, fill = Treatment)) +
  theme_minimal() +
  geom_bar(stat = "identity", width = 0.7) +
  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
@@ -233,7 +234,8 @@ p2<-ggplot(frque, aes(x= Cluster, y= Freq, fill = Treatment)) +
    title = element_text(size = 30),
    legend.justification = "top",
    panel.border = element_blank(),
-   legend.text = element_text(size=34))
+   legend.text = element_text(size=34)) + 
+  xlab("") 
 
 p2+p1+plot_layout(guides = "collect")+plot_annotation(tag_levels = 'A') 
 ggsave(file = "figures/Tcells/unnormalized_and_normalized_contribution_per_patient.png", dpi=300, width=14, height=10)
