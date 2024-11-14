@@ -334,7 +334,7 @@ VlnPlot(
     legend.text = element_text(size=24)
   ) +
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
-ggsave(file = "figures/cd4_cells/cluster0_only/Vln_T_naive_cluster_by_treatment_1.png", dpi=300, width=6, height=6, limitsize=FALSE)
+ggsave(file = "figures/cd4_cluster0/Vln_T_naive_cluster_by_treatment_1.png", dpi=300, width=6, height=6, limitsize=FALSE)
 
 
 VlnPlot(
@@ -661,7 +661,7 @@ VlnPlot(
     legend.text = element_text(size=24)
   ) +
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
-ggsave(file = "figures/clus2/de_gene_search/interesting_DE_genes_for_presentation.png", dpi=300, width=16, height=12)
+ggsave(file = "figures/clus2/interesting_DE_genes_for_presentation.png", dpi=300, width=16, height=12)
 
 # cell count per treament box plots -------------------
 # Assuming df looks like this:
