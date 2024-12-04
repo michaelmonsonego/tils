@@ -663,6 +663,12 @@ VlnPlot(
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
 ggsave(file = "figures/clus2/interesting_DE_genes_for_presentation.png", dpi=300, width=16, height=12)
 
+# saving responder & non-responder separate objects for interflow tool ---------------
+responders <- subset(T_cells, subset = Treatment == "Responder")
+non_responders <- subset(T_cells, subset = Treatment == "Non_Responder")
+saveRDS(responders, file = "objects/responders.rds")
+saveRDS(non_responders, file = "objects/non_responders.rds")
+
 # cell count per treament box plots -------------------
 # Assuming df looks like this:
 df <- data.frame(
