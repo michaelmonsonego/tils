@@ -1830,7 +1830,7 @@ FeaturePlot(T_cells, features = c("BTLA4", "CD8A","CD8B", "CD4"),order=TRUE,pt.s
 ggsave(file = "figures/Tcells/check_BTLA4.png", dpi=300, width=14, height=6)
 
 
-VlnPlot(T_cells, features = c("BTLA", "CD8A","CD8B", "CD4"),
+VlnPlot(T_cells, features = c("BTLA","TNFRSF9", "CD8A","CD8B", "CD4"),
         assay = "RNA", 
         stack = TRUE, 
         flip = TRUE, 
@@ -1846,7 +1846,7 @@ VlnPlot(T_cells, features = c("BTLA", "CD8A","CD8B", "CD4"),
     strip.text.y = element_text(angle = 0, size = 16, face = "bold")
   ) + 
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
-ggsave(file = "figures/Tcells/check_BTLA4.png", dpi=300, width=10, height=6)
+ggsave(file = "figures/Tcells/check_BTLA4_41BB.png", dpi=300, width=10, height=6)
 
 VlnPlot(clus1, features = c("TGFBR3", "HIVEP1"),
         assay = "RNA", 
