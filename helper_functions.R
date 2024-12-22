@@ -1331,6 +1331,35 @@ long_data <- merged_data %>%
 long_data <- read_csv("excels/long_cyto_enrich.csv")
 merged_data <- read_csv("excels/cyto_by_clusteR_enrich.csv")
 
+#M# create merged bar plot for paper
+genes_of_interest <- c("41BBL", "IFNa1","IL27", "TNFa", "IL21", "IL11", "CD40L", "IL2")
+
+paper_data <- long_data %>%
+  filter(Gene %in% genes_of_interest)
+paper_data$Gene <-  factor(paper_data$Gene, levels = genes_of_interest)
+
+paper_data <- paper_data %>%
+  mutate(Cluster = recode(Cluster, 
+                          "Cluster_0" = "CD4", 
+                          "Cluster_1" = "CD8_1",
+                          "Cluster_2" = "CD8_2"))
+
+ggplot(paper_data, aes(x = Gene, y = Score, fill = Cluster)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  theme_minimal() +
+  labs(title = "Scores for Selected Genes Across Clusters",
+       x = "Gene",
+       y = "Score",
+       fill = "Cluster") + 
+  coord_flip() + # Flip the coordinates
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+ggsave(file = "figures/cytokine tool/final_cyto.png", dpi=300, width=5, height=5)
+ggsave(file = "figures/cytokine tool/final_cyto.pdf", dpi=300, width=5, height=5)
+
+
+
+
+#M# create bar plots per clusters top cytokynes
 clus2_top_10 <- merged_data %>% 
   top_n(n=10, wt=Cluster_2) %>% 
   pull(Gene)
