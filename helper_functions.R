@@ -663,6 +663,64 @@ VlnPlot(
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
 ggsave(file = "figures/clus2/interesting_DE_genes_for_presentation.png", dpi=300, width=16, height=12)
 
+# wilcox in TNF between response groups ----------------
+merged_responder <- subset(T_cells, subset = Treatment == "Responder")
+merged_NON_responder <- subset(T_cells, subset = Treatment == "Non_Responder")
+
+tnf_responder <- as.numeric(merged_responder@assays$RNA@data["TNF", ])
+tnf_non_responder <- as.numeric(merged_NON_responder@assays$RNA@data["TNF", ])
+
+wilcox_result <- wilcox.test(tnf_responder, tnf_non_responder, alternative = "two.sided")
+
+median_responder <- median(tnf_responder)
+median_non_responder <- median(tnf_non_responder)
+
+
+
+# exhaustion FACS plot generation ------------------------------------------------
+
+
+nr_df <- data.frame(
+  row.names = c("NR1", "NR2", "NR3", "NR4", "NR5", "NR6", "NR7"),
+  'TIGIT+TIM3-' = c(5.91, 1.26, 2.12, 2.54, 1.61, 1.23, 1.18),
+  'TIGIT+TIM3' = c(19.9, 48.6, 22.1, 53.9, 45.7, 45.3, 47.0),
+  'TIGIT-TIM3+' = c(16.9, 47.8, 60.2, 27.7, 33.0, 52.1, 44.3)
+)
+
+r_df <-  data.frame(
+  row.names = c("R1", "R2", "R3", "R4", "R5", "R6", "R7"),
+  'TIGIT+TIM3-' = c(6.03, 0.69, 3.99, 2.51, 1.96, 1.46, 2.31),
+  'TIGIT+TIM3+' = c(59.5, 70.7, 39.7, 41.0, 94.1, 60.5, 86.0),
+  'TIGIT-TIM3+' = c(14.9, 22.5, 31.1, 44.9, 2.23, 30.7, 6.27)
+)
+#M# doesnt show + and -
+
+
+nr_df <- nr_df %>%
+  tibble::rownames_to_column("Sample") %>%
+  mutate(Group = "Non_Responder")
+r_df <- r_df %>%
+  tibble::rownames_to_column("Sample") %>%
+  mutate(Group = "Responder")
+combined_df <- bind_rows(nr_df, r_df)
+
+long_df <- combined_df %>%
+  pivot_longer(
+    cols = c(`TIGIT+TIM3-`, `TIGIT+TIM3+`, `TIGIT-TIM3+`), 
+    names_to = "Marker", 
+    values_to = "Value"
+  )
+  
+
+
+
+
+
+
+
+
+
+
 # saving responder & non-responder separate objects for interflow tool ---------------
 responders <- subset(T_cells, subset = Treatment == "Responder")
 non_responders <- subset(T_cells, subset = Treatment == "Non_Responder")
@@ -1865,15 +1923,15 @@ FeaturePlot(T_cells, features = c("BTLA4", "CD8A","CD8B", "CD4"),order=TRUE,pt.s
 ggsave(file = "figures/Tcells/check_BTLA4.png", dpi=300, width=14, height=6)
 
 
-VlnPlot(T_cells, features = c("BTLA","TNFRSF9", "CD8A","CD8B", "CD4"),
+VlnPlot(T_cells, features = c("CD40"),
         assay = "RNA", 
-        stack = TRUE, 
+        # stack = TRUE, 
         flip = TRUE, 
         split.by = "Treatment"
 ) + 
   theme_classic() +
   theme(
-    axis.text.x = element_text(angle = 70, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = -40, hjust = 1, size = 16, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_text(size = 24, face = "italic"),
     axis.title.y = element_text(size = 20, face = "bold"),
@@ -1881,7 +1939,7 @@ VlnPlot(T_cells, features = c("BTLA","TNFRSF9", "CD8A","CD8B", "CD4"),
     strip.text.y = element_text(angle = 0, size = 16, face = "bold")
   ) + 
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
-ggsave(file = "figures/Tcells/check_BTLA4_41BB.png", dpi=300, width=10, height=6)
+ggsave(file = "figures/Tcells/check_CD40.png", dpi=300, width=10, height=6)
 
 VlnPlot(clus1, features = c("TGFBR3", "HIVEP1"),
         assay = "RNA", 
@@ -2413,7 +2471,7 @@ ggsave(file = "figures/Tcells/CD8_Proliferating_cluster_8_Markers.png", dpi=300,
 
 
 
-#cluster 0 (cd4 cells) proliferation signature between response groups------
+# cluster 0 (cd4 cells) proliferation signature between response groups------
 proliferation_sig <- c("MKI67", "STMN1","TOP2A","Nolc1", "Npm1","Ccne2")
 proliferation_sig <- toupper(proliferation_sig)
 proliferation_sig <- list(proliferation_sig)
@@ -2428,7 +2486,7 @@ ggsave(file = "figures/Tcells/proliferation_all_combined_signature.png", dpi=300
 
 
 
-#proliferation signature between response groups------
+# proliferation signature between response groups------
 prolif = readRDS("objects/prolif.rds")
 T_cells = readRDS("objects/tils_all_.45_integrgate_annotated_merge_prolif.rds")
 

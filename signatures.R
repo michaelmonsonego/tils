@@ -66,7 +66,8 @@ cowplot::plot_grid(plotlist = gglist, ncol = 4, nrow = 2) +
 ggsave(file = "figures/clus2/clus_2_up_tgfb_vln.png", dpi=300, width=16, height=10)
 
 #M# vlnplot for all clusters combined 
-SignatureScore(clus2, 'up_tgfb1')
+SignatureScore(clus2, 'up_tgfb1')   + 
+  labs(title = "", y = 'up_tgfb',  x="")
 ggsave(file = "figures/clus2/clus2_up_tgfb_vln_all_clusters.png", dpi=300, width=6, height=6)
 
 
@@ -438,7 +439,8 @@ cowplot::plot_grid(plotlist = gglist, ncol = 4, nrow = 2) +
 ggsave(file = "figures/clus2/clus_2_up_ifng_vln.png", dpi=300, width=16, height=10)
 
 #M# vlnplot for all clusters combined 
-SignatureScore(clus2, 'up_ifng1')
+SignatureScore(clus2, 'up_ifng1')  + 
+  labs(title = "", y = 'up_ifng',  x="")
 ggsave(file = "figures/clus2/clus_2_up_ifng_vln_all_clusters.png", dpi=300, width=6, height=6)
 
 
@@ -631,8 +633,9 @@ cowplot::plot_grid(plotlist = gglist, ncol = 4, nrow = 2) +
 ggsave(file = "figures/signatures/stem_cd8_clus_2_up_vln.png", dpi=300, width=16, height=10)
 
 #M# vlnplot for all clusters combined 
-SignatureScore(clus2, 'stem_cd81')
-ggsave(file = "figures/clus2/clus2_up_telomere_vln_all_clusters.png", dpi=300, width=8, height=6)
+SignatureScore(clus2, 'stem_cd81') + 
+  labs( y = "stem_cd8")
+ggsave(file = "figures/clus2/clus2_up_telomere_vln_all_clusters.png", dpi=300, width=6, height=6)
 
 
 gglist <-  list()
@@ -649,8 +652,9 @@ cowplot::plot_grid(plotlist = gglist, ncol = 4, nrow = 2) +
 ggsave(file = "figures/signatures/stem_cd8_clus_1_up_vln.png", dpi=300, width=16, height=10)
 
 #M# vlnplot for all clusters combined 
-SignatureScore(clus1, 'stem_cd81')
-ggsave(file = "figures/clus1/clus1_up_telomere_vln_all_clusters.png", dpi=300, width=8, height=6)
+SignatureScore(clus1, 'stem_cd81') + 
+  labs( y = "stem_cd8")
+ggsave(file = "figures/clus1/clus1_up_telomere_vln_all_clusters.png", dpi=300, width=6, height=6)
 
 #M# cd4 upregulated genes telomere signature ---------
 cd4_cells = readRDS("objects/tils_0_.35.rds")
@@ -866,7 +870,7 @@ ggsave(file = "figures/clus1/persistance_up_sig_per_cluster_treatment.png", dpi=
 
 
 # cd4 persistance : violin plot per treatment 
-SignatureScore(cd4_cells, 'persistance_up1')
+SignatureScore(cd4_cells, 'persistance_up1') + labs(y = 'persistance_up')
 ggsave(file = "figures/cd4_cells/cd4_persistance_all_clusters.png", dpi=300, width=6, height=6)
 
 
@@ -917,8 +921,8 @@ DefaultAssay(clus1_with_sigs) <- "integrated"
 # ____
 
 #M# same for cluster 2 : 
-clus_2_with_sigs <- readRDS("objects/tils_2_with_sigs.rds")
-
+# clus_2_with_sigs <- readRDS("objects/tils_2_with_sigs.rds")
+clus_2_with_sigs <-  clus2
 # violin plot per treatment per cluster
 gglist <-  list()
 name <- "il21"
@@ -936,7 +940,8 @@ cowplot::plot_grid(plotlist = gglist, ncol = 4, nrow = 2) +
 ggsave(file = "figures/clus2/il2_sig_per_cluster_treatment.png", dpi=300, width=16, height=10)
 
 #M# vlnplot for all clusters combined 
-SignatureScore(clus2, 'il21')
+SignatureScore(clus2, 'il21') + 
+  labs(title = "", y = 'il2',  x="")
 ggsave(file = "figures/clus2/clus_2_il21_vln_all_clusters.png", dpi=300, width=6, height=6)
 
 
@@ -979,7 +984,8 @@ cowplot::plot_grid(plotlist = gglist, ncol = 4, nrow = 2) +
 ggsave(file = "figures/clus2/persistance_up_sig_per_cluster_treatment.png", dpi=300, width=16, height=10)
 
 #M# vlnplot for all clusters combined 
-SignatureScore(clus2, 'persistance_up1')
+SignatureScore(clus2, 'persistance_up1') + 
+  labs(title = "", y = 'persistance_up',  x="")
 ggsave(file = "figures/clus2/clus_2_persistance_up_vln_all_clusters.png", dpi=300, width=6, height=6)
 
 
@@ -1020,7 +1026,8 @@ cowplot::plot_grid(plotlist = gglist, ncol = 4, nrow = 2) +
   ggtitle(name)
 ggsave(file = "figures/clus2/effector_memory_sig_per_cluster_treatment.png", dpi=300, width=16, height=10)
 
-SignatureScore(clus2, 'effector_memory1')
+SignatureScore(clus2, 'effector_memory1')  + 
+  labs(title = "", y = 'effector_memory',  x="")
 ggsave(file = "figures/clus2/clus_2_effector_memory_vln_all_clusters.png", dpi=300, width=6, height=6)
 
 
