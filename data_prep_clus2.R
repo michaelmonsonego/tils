@@ -100,8 +100,8 @@ all_tSNE <- plot_grid(tSNE_0.05,tSNE_0.3,tSNE_0.35,tSNE_0.4,tSNE_0.45,tSNE_0.5, 
 ggsave(all_tSNE,filename = 'figures/data_prep_2/tils_0_14_dim_res_test.png', dpi=300, height=10, width=16)
 
 T_cells_2 <- FindClusters(T_cells_2, resolution = 0.5)
-saveRDS(T_cells_2, file = "objects/tils_2.rds")
-T_cells_2 <- readRDS("objects/tils_2.rds")
+# saveRDS(T_cells_2, file = "objects/tils_2.rds")
+# T_cells_2 <- readRDS("objects/tils_2.rds")
 
 
 
