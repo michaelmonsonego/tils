@@ -244,13 +244,7 @@ ggsave(file = "figures/clus2/volcano.png", dpi=300, width=15, height=10)
 
 
 
-DE_genes <- read.csv("excels/DE_genes_res_nonRes_clus2.csv")
-Top100Markers_names <- DE_genes %>%
-  top_n(n = 100, wt = avg_log2FC) %>% 
-  select(gene) %>% 
-  as.data.frame
 
-write_tsv(Top100Markers_names, "excels/Top100Markers_per_treatment_clus2_names.csv") 
 
 ```
 Top DE genes between responders and non-responders

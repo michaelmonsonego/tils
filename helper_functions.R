@@ -663,6 +663,27 @@ VlnPlot(
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
 ggsave(file = "figures/clus2/interesting_DE_genes_for_presentation.png", dpi=300, width=16, height=12)
 
+# CLUE pertubation and drug alighnment gene expression --------------
+
+DE_genes <- read.csv("excels/DE_genes_res_nonRes_clus2.csv")
+Top100_upregulated_Markers_names <- DE_genes %>%
+  filter(avg_log2FC > 0) %>% 
+  top_n(n = 100, wt = avg_log2FC) %>% 
+  select(gene) %>% 
+  as.data.frame
+write_tsv(Top100_upregulated_Markers_names, "excels/Top100_upregulated_Markers_names_per_treatment_clus2.tsv") 
+
+
+Top100_down_Markers_names <- DE_genes %>%
+  filter(avg_log2FC < 0) %>% 
+  top_n(n = 100, wt = avg_log2FC) %>% 
+  select(gene) %>% 
+  as.data.frame
+write_tsv(Top100_down_Markers_names, "excels/Top100_down_Markers_names_per_treatment_clus2.tsv") 
+
+
+
+
 # wilcox in TNF between response groups ----------------
 merged_responder <- subset(T_cells, subset = Treatment == "Responder")
 merged_NON_responder <- subset(T_cells, subset = Treatment == "Non_Responder")
