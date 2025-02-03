@@ -163,32 +163,32 @@ p1 <- ggplot(frque, aes(x = Cluster, y = normalizedppstatus, fill = Treatment)) 
  theme_minimal() +
  geom_bar(stat = "identity", width = 0.7,position="dodge") +
  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
- ggtitle("Normalized Cluster Counts") +
+ ggtitle("") +
  ylab("Normalized Proportions in %") +
  theme(
-   axis.text.x  = element_text(angle = -40, hjust = 0, size = 30, color = "black"),
-   axis.text.y  = element_text(size = 26, color = "black"),
-   axis.title.x = element_text(size = 36, color = "black"),
-   axis.title.y = element_text(size = 36, color = "black"),
-   title = element_text(size = 30),
+   axis.text.x  = element_text(angle = -40, hjust = 0, size = 40, color = "black"),
+   axis.text.y  = element_text(size = 40, color = "black"),
+   axis.title.x = element_text(size = 60, color = "black"),
+   axis.title.y = element_text(size = 60, color = "black"),
+   title = element_text(size = 60),
    panel.border = element_blank(),
-   legend.text = element_text(size=34)) +
+   legend.text = element_text(size=40)) +
  geom_hline(yintercept = 50, linetype='dotted') 
 
 p2<-ggplot(frque, aes(x= Cluster, y= Freq, fill = Treatment)) +
  theme_minimal() +
  geom_bar(stat = "identity", width = 0.7) +
  scale_fill_manual(values= c("#A799B7", "#DD614A"))+
- ggtitle("Cluster Counts") + ylab("Cell counts\n") +
+ ggtitle("") + ylab("Cell counts\n") +
  theme(
-   axis.text.x  = element_text(angle = -40, hjust = 0, size = 30, color = "black"),
-   axis.text.y  = element_text(size = 26, color = "black"),
-   axis.title.x = element_text(size = 36, color = "black"),
-   axis.title.y = element_text(size = 36 , color = "black"),
-   title = element_text(size = 30),
+   axis.text.x  = element_text(angle = -40, hjust = 0, size = 40, color = "black"),
+   axis.text.y  = element_text(size = 40, color = "black"),
+   axis.title.x = element_text(size = 60, color = "black"),
+   axis.title.y = element_text(size = 60 , color = "black"),
+   title = element_text(size = 60),
    legend.justification = "top",
    panel.border = element_blank(),
-   legend.text = element_text(size=34))
+   legend.text = element_text(size=40))
 
 p2+p1+plot_layout(guides = "collect")+plot_annotation(tag_levels = 'A') 
 ggsave(file = "figures/clus2/unnormalized_and_normalized_contribution_per_patient.png", dpi=300, width=14, height=10)

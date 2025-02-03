@@ -512,16 +512,16 @@ VlnPlot(
   stack = TRUE, 
   flip = TRUE, 
   split.by = "Treatment"
-) + 
+) +  
   theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
     axis.text.x = element_text(angle = -40, hjust = 0, size = 30, face = "bold"),
     axis.title.x = element_blank(),
-    axis.text.y = element_text(size = 24, face = "italic"),
-    axis.title.y = element_text(size = 20, face = "bold"),
+    axis.text.y = element_text(size = 30, face = "italic"),
+    axis.title.y = element_text(size = 30, face = "bold"),
     axis.ticks.y = element_line(size = 0.5),
-    strip.text.y = element_text(angle = 0, size = 16, face = "bold"),
-    legend.text = element_text(size=24)
+    strip.text.y = element_text(angle = 0, size = 26, face = "bold"),
+    legend.text = element_text(size=30)
   ) +
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
 ggsave(filename = "vln_activation_exhastion_cluster_by_treatment_1.png" , path = "figures/clus2/", dpi=300, width=12, height=10)
@@ -649,19 +649,19 @@ VlnPlot(
   stack = TRUE, 
   flip = TRUE, 
   split.by = "Treatment"
-) + 
+)+  
   theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
   theme(
-    axis.text.x = element_text(angle = 50, hjust = 1, size = 16, face = "bold"),
+    axis.text.x = element_text(angle = -40, hjust = 0, size = 30, face = "bold"),
     axis.title.x = element_blank(),
-    axis.text.y = element_text(size = 24, face = "italic"),
-    axis.title.y = element_text(size = 20, face = "bold"),
+    axis.text.y = element_text(size = 30, face = "italic"),
+    axis.title.y = element_text(size = 30, face = "bold"),
     axis.ticks.y = element_line(size = 0.5),
-    strip.text.y = element_text(angle = 0, size = 16, face = "bold"),
-    legend.text = element_text(size=24)
+    strip.text.y = element_text(angle = 0, size = 26, face = "bold"),
+    legend.text = element_text(size=30)
   ) +
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
-ggsave(file = "figures/clus2/interesting_DE_genes_for_presentation.png", dpi=300, width=16, height=12)
+ggsave(file = "figures/clus2/interesting_DE_genes_for_presentation.png", dpi=300, width=12, height=10)
 
 # CLUE pertubation and drug alighnment gene expression --------------
 
@@ -2536,6 +2536,19 @@ for(clus in levels(prolif$seurat_clusters)){
 cowplot::plot_grid(plotlist = gglist, ncol = 4, nrow = 2) + 
   ggtitle(name)
 ggsave(file = "figures/prolif/proliferation1_vln_signature.png", dpi=300, width=16, height=10)
+
+
+SignatureScore(prolif, 'proliferation1')+ 
+  labs(title = "", y = 'proliferation',  x="")+ labs(y = '') + ggtitle("proliferation signature") +
+  theme(axis.text.y = element_text(size = 24),
+        legend.text = element_text(size = 20), 
+        plot.title = element_text(size = 24, face = "bold"))+
+  guides(fill = guide_legend(override.aes = list(shape = NA, color = NA)))
+ggsave(file = "figures/prolif/proliferation1_vln_signature_joined.png", dpi=300, width=8, height=6)
+
+
+
+
 
 # all cells
 T_cells = AddModuleScore(object = T_cells, features = proliferation_sig, name = "proliferation", assay = "RNA")
