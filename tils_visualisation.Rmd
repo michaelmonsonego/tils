@@ -85,7 +85,7 @@ mean(c(4161, 6203, 4526, 6566))
 sd(c(4161, 6203, 4526, 6566))
 
 
-DimPlot(T_cells, reduction = "tsne", label = TRUE, pt.size = 0.5, label.size = 10) +
+DimPlot(T_cells, reduction = "tsne", label = TRUE, pt.size = 0.5, label.size = 11) +
   ggplot2::theme(legend.position = "none") +
   ggplot2::theme(
     axis.title.x = element_text(size = 30),  # X-axis title size
