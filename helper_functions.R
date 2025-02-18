@@ -802,7 +802,7 @@ ggsave(file = "figures/cd4_cells/tsne_by_treatment_together.png", dpi=300, width
 responders <- subset(clus1, subset = Treatment == "Responder")
 non_responders <- subset(clus1, subset = Treatment == "Non_Responder")
 p1 <- DimPlot(responders, reduction = "tsne", label = TRUE, pt.size = 0.5, label.size = 6) +
-  ggtitle("Responders")
+  ggtitle("Responders") 
 p2 <- DimPlot(non_responders, reduction = "tsne", label = TRUE, pt.size = 0.5, label.size = 6) +
   ggtitle("Non Responders")
 plot_grid(p1, p2, ncol = 2)
@@ -812,7 +812,9 @@ ggsave(file = "figures/clus1/tsne_by_treatment_together.png", dpi=300, width=14,
 responders <- subset(clus2, subset = Treatment == "Responder")
 non_responders <- subset(clus2, subset = Treatment == "Non_Responder")
 p1 <- DimPlot(responders, reduction = "tsne", label = TRUE, pt.size = 0.5, label.size = 6) +
-  ggtitle("Responders")
+  ggtitle("Responders")+ theme(legend.text = element_text(size = 20))
+ggsave(file = "figures/clus2/Rs_only.png", dpi=300, width=14, height=5)
+
 p2 <- DimPlot(non_responders, reduction = "tsne", label = TRUE, pt.size = 0.5, label.size = 6) +
   ggtitle("Non Responders")
 plot_grid(p1, p2, ncol = 2)
@@ -828,7 +830,7 @@ T_cells$cell_type <- ifelse(T_cells@assays$RNA@data["CD8A", ] > 0 | T_cells@assa
                             ifelse(T_cells@assays$RNA@data["CD4", ] > 0, 
                                    "CD4", 
                                    "Other"))
-table(T_cells$cell_type)
+table(T_cells$Treatment, T_cells@active.ident)
 
 responders <- subset(T_cells, subset = Treatment == "Responder")
 non_responders <- subset(T_cells, subset = Treatment == "Non_Responder")
@@ -2234,8 +2236,13 @@ Tefm_markers <- c("GPR183", "AQP3", "TNFRSF4", "LTB", "KLF2", "RASA3")
 
 DefaultAssay(cd4_cells) <- "RNA"
 
-FeaturePlot(cd4_cells, features = Tefm_markers, label.size = 8, pt.size = 1, label=F, ncol = 3, order = T,reduction = "tsne") + 
-  scale_color_gradient(low = "grey", high = "blue")
+p <-FeaturePlot(cd4_cells, features = Tefm_markers, label.size = 8, pt.size = 1, label=F, ncol = 3, order = T,reduction = "tsne") + 
+  scale_color_gradient(low = "grey", high = "blue") 
+
+p + theme(
+  strip.text = element_text(size = 34, face = "bold")  
+)
+
 ggsave(file = "figures/cd4_cells/Tefm_markers.png", dpi=300, width=14, height=x1*2)
 
 
