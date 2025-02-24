@@ -53,7 +53,7 @@ setwd("D:/Michael/git_check/tils")
 x1=4.6
 cd4_cells = readRDS("objects/tils_0_.35.rds")
 
-DimPlot(cd4_cells , reduction = "tsne", label= TRUE, pt.size=0.5, label.size = 6)
+DimPlot(cd4_cells , reduction = "tsne", label= TRUE, pt.size=0.5, label.size = 6) # + theme(legend.text=element_text(size=30))
 ggsave(file = "figures/cd4_cells/tsne.png", dpi=300, width=10, height=8)
 TSNEPlot(cd4_cells, group.by ="Treatment", cols= c("#A799B7", "#DD614A"), pt.size=0.5)+
   theme(legend.text=element_text(size=20))
