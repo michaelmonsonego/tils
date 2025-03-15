@@ -1980,6 +1980,233 @@ VlnPlot(clus2, features = c("IL1A"),
   ) + 
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
 ggsave(file = "figures/clus2/IL1_cluster_2.png", dpi=300, width=10, height=6)
+# for asaf -----------------------
+DefaultAssay(T_cells) <- "RNA"
+DefaultAssay(clus2) <- "RNA"
+DefaultAssay(cd4_cells) <- "RNA"
+
+VlnPlot(
+  T_cells, 
+  features = c("FTL"), 
+  assay = "RNA", 
+  # stack = TRUE, 
+  flip = TRUE, 
+  group.by = "Treatment",
+  fill.by ="ident",
+  pt.size = 0
+) + 
+  theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
+  theme(
+    axis.text.x = element_text(angle = -40, hjust = 0, size = 30, face = "bold"),
+    axis.title.x = element_blank(),
+    axis.text.y = element_text(size = 24, face = "italic"),
+    axis.title.y = element_text(size = 20, face = "bold"),
+    axis.ticks.y = element_line(size = 0.5),
+    strip.text.y = element_text(angle = 0, size = 16, face = "bold"), 
+    legend.text = element_text(size=24)
+  ) +
+  geom_boxplot(alpha = 0.3, show.legend = FALSE)
+ggsave(filename = "all_cells_FTL.png" , path = "figures/Tcells/", dpi=300, width=8, height=6)
+
+
+# ____________
+VlnPlot(
+  clus2, 
+  features = c("FTL"), 
+  assay = "RNA", 
+  # stack = TRUE, 
+  flip = TRUE, 
+  group.by = "Treatment",
+  fill.by ="ident",
+  pt.size = 0
+) + 
+  theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
+  theme(
+    axis.text.x = element_text(angle = -40, hjust = 0, size = 30, face = "bold"),
+    axis.title.x = element_blank(),
+    axis.text.y = element_text(size = 24, face = "italic"),
+    axis.title.y = element_text(size = 20, face = "bold"),
+    axis.ticks.y = element_line(size = 0.5),
+    strip.text.y = element_text(angle = 0, size = 16, face = "bold"), 
+    legend.text = element_text(size=24)
+  ) +
+  geom_boxplot(alpha = 0.3, show.legend = FALSE)
+ggsave(filename = "clus_2_FTL.png" , path = "figures/Tcells/", dpi=300, width=8, height=6)
+
+# ______________
+
+VlnPlot(
+  cd4_cells, 
+  features = c("FTL"), 
+  assay = "RNA", 
+  # stack = TRUE, 
+  flip = TRUE, 
+  group.by = "Treatment",
+  fill.by ="ident",
+  pt.size = 0
+) + 
+  theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
+  theme(
+    axis.text.x = element_text(angle = -40, hjust = 0, size = 30, face = "bold"),
+    axis.title.x = element_blank(),
+    axis.text.y = element_text(size = 24, face = "italic"),
+    axis.title.y = element_text(size = 20, face = "bold"),
+    axis.ticks.y = element_line(size = 0.5),
+    strip.text.y = element_text(angle = 0, size = 16, face = "bold"), 
+    legend.text = element_text(size=24)
+  ) +
+  geom_boxplot(alpha = 0.3, show.legend = FALSE)
+ggsave(filename = "cd4_FTL.png" , path = "figures/Tcells/", dpi=300, width=8, height=6)
+
+# FTH
+VlnPlot(
+  T_cells, 
+  features = c("FTH1"), 
+  assay = "RNA", 
+  # stack = TRUE, 
+  flip = TRUE, 
+  group.by = "Treatment",
+  fill.by ="ident",
+  pt.size = 0
+) + 
+  theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
+  theme(
+    axis.text.x = element_text(angle = -40, hjust = 0, size = 30, face = "bold"),
+    axis.title.x = element_blank(),
+    axis.text.y = element_text(size = 24, face = "italic"),
+    axis.title.y = element_text(size = 20, face = "bold"),
+    axis.ticks.y = element_line(size = 0.5),
+    strip.text.y = element_text(angle = 0, size = 16, face = "bold"), 
+    legend.text = element_text(size=24)
+  ) +
+  geom_boxplot(alpha = 0.3, show.legend = FALSE)
+ggsave(filename = "all_cells_FTH1.png" , path = "figures/Tcells/", dpi=300, width=8, height=6)
+
+
+# ____________
+VlnPlot(
+  clus2, 
+  features = c("FTH1"), 
+  assay = "RNA", 
+  # stack = TRUE, 
+  flip = TRUE, 
+  group.by = "Treatment",
+  fill.by ="ident",
+  pt.size = 0
+) + 
+  theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
+  theme(
+    axis.text.x = element_text(angle = -40, hjust = 0, size = 30, face = "bold"),
+    axis.title.x = element_blank(),
+    axis.text.y = element_text(size = 24, face = "italic"),
+    axis.title.y = element_text(size = 20, face = "bold"),
+    axis.ticks.y = element_line(size = 0.5),
+    strip.text.y = element_text(angle = 0, size = 16, face = "bold"), 
+    legend.text = element_text(size=24)
+  ) +
+  geom_boxplot(alpha = 0.3, show.legend = FALSE)
+ggsave(filename = "clus_2_FTH1.png" , path = "figures/Tcells/", dpi=300, width=8, height=6)
+
+# ______________
+
+VlnPlot(
+  cd4_cells, 
+  features = c("FTH1"), 
+  assay = "RNA", 
+  # stack = TRUE, 
+  flip = TRUE, 
+  group.by = "Treatment",
+  fill.by ="ident",
+  pt.size = 0
+) + 
+  theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
+  theme(
+    axis.text.x = element_text(angle = -40, hjust = 0, size = 30, face = "bold"),
+    axis.title.x = element_blank(),
+    axis.text.y = element_text(size = 24, face = "italic"),
+    axis.title.y = element_text(size = 20, face = "bold"),
+    axis.ticks.y = element_line(size = 0.5),
+    strip.text.y = element_text(angle = 0, size = 16, face = "bold"), 
+    legend.text = element_text(size=24)
+  ) +
+  geom_boxplot(alpha = 0.3, show.legend = FALSE)
+ggsave(filename = "cd4_FTH1.png" , path = "figures/Tcells/", dpi=300, width=8, height=6)
+
+# CD71
+VlnPlot(
+  T_cells, 
+  features = c("TFRC"), 
+  assay = "RNA", 
+  # stack = TRUE, 
+  flip = TRUE, 
+  group.by = "Treatment",
+  fill.by ="ident",
+  pt.size = 0
+) + 
+  theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
+  theme(
+    axis.text.x = element_text(angle = -40, hjust = 0, size = 30, face = "bold"),
+    axis.title.x = element_blank(),
+    axis.text.y = element_text(size = 24, face = "italic"),
+    axis.title.y = element_text(size = 20, face = "bold"),
+    axis.ticks.y = element_line(size = 0.5),
+    strip.text.y = element_text(angle = 0, size = 16, face = "bold"), 
+    legend.text = element_text(size=24)
+  ) +
+  geom_boxplot(alpha = 0.3, show.legend = FALSE)
+ggsave(filename = "all_cells_TFRC.png" , path = "figures/Tcells/", dpi=300, width=8, height=6)
+
+
+# ____________
+VlnPlot(
+  clus2, 
+  features = c("TFRC"), 
+  assay = "RNA", 
+  # stack = TRUE, 
+  flip = TRUE, 
+  group.by = "Treatment",
+  fill.by ="ident",
+  pt.size = 0
+) + 
+  theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
+  theme(
+    axis.text.x = element_text(angle = -40, hjust = 0, size = 30, face = "bold"),
+    axis.title.x = element_blank(),
+    axis.text.y = element_text(size = 24, face = "italic"),
+    axis.title.y = element_text(size = 20, face = "bold"),
+    axis.ticks.y = element_line(size = 0.5),
+    strip.text.y = element_text(angle = 0, size = 16, face = "bold"), 
+    legend.text = element_text(size=24)
+  ) +
+  geom_boxplot(alpha = 0.3, show.legend = FALSE)
+ggsave(filename = "clus_2_TFRC.png" , path = "figures/Tcells/", dpi=300, width=8, height=6)
+
+# ______________
+
+VlnPlot(
+  cd4_cells, 
+  features = c("TFRC"), 
+  assay = "RNA", 
+  # stack = TRUE, 
+  flip = TRUE, 
+  group.by = "Treatment",
+  fill.by ="ident",
+  pt.size = 0
+) + 
+  theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
+  theme(
+    axis.text.x = element_text(angle = -40, hjust = 0, size = 30, face = "bold"),
+    axis.title.x = element_blank(),
+    axis.text.y = element_text(size = 24, face = "italic"),
+    axis.title.y = element_text(size = 20, face = "bold"),
+    axis.ticks.y = element_line(size = 0.5),
+    strip.text.y = element_text(angle = 0, size = 16, face = "bold"), 
+    legend.text = element_text(size=24)
+  ) +
+  geom_boxplot(alpha = 0.3, show.legend = FALSE)
+ggsave(filename = "cd4_TFRC.png" , path = "figures/Tcells/", dpi=300, width=8, height=6)
+
+
 # for Adi stuff ------------------
 DefaultAssay(T_cells) <- "RNA"
 DefaultAssay(clus2) <- "RNA"
@@ -2172,6 +2399,52 @@ VlnPlot(
   ) +
   geom_boxplot(alpha = 0.3, show.legend = FALSE)
 ggsave(filename = "cd4_IFNG.png" , path = "figures/Tcells/", dpi=300, width=8, height=6)
+
+VlnPlot(
+  cd4_cells, 
+  features = c("TNFSF8"), 
+  assay = "RNA", 
+  # stack = TRUE, 
+  flip = TRUE, 
+  group.by = "Treatment",
+  fill.by ="ident",
+  pt.size = 0
+) + 
+  theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
+  theme(
+    axis.text.x = element_text(angle = -40, hjust = 0, size = 30, face = "bold"),
+    axis.title.x = element_blank(),
+    axis.text.y = element_text(size = 24, face = "italic"),
+    axis.title.y = element_text(size = 20, face = "bold"),
+    axis.ticks.y = element_line(size = 0.5),
+    strip.text.y = element_text(angle = 0, size = 16, face = "bold"), 
+    legend.text = element_text(size=24)
+  ) +
+  geom_boxplot(alpha = 0.3, show.legend = FALSE)
+ggsave(filename = "cd4_TNFSF8.png" , path = "figures/Tcells/", dpi=300, width=8, height=6)
+
+VlnPlot(
+  cd4_cells, 
+  features = c("IL7R"), 
+  assay = "RNA", 
+  # stack = TRUE, 
+  flip = TRUE, 
+  group.by = "Treatment",
+  fill.by ="ident",
+  pt.size = 0
+) + 
+  theme_classic() + scale_fill_manual(values=c("#A799B7", "#DD614A")) + 
+  theme(
+    axis.text.x = element_text(angle = -40, hjust = 0, size = 30, face = "bold"),
+    axis.title.x = element_blank(),
+    axis.text.y = element_text(size = 24, face = "italic"),
+    axis.title.y = element_text(size = 20, face = "bold"),
+    axis.ticks.y = element_line(size = 0.5),
+    strip.text.y = element_text(angle = 0, size = 16, face = "bold"), 
+    legend.text = element_text(size=24)
+  ) +
+  geom_boxplot(alpha = 0.3, show.legend = FALSE)
+ggsave(filename = "cd4_IL7R.png" , path = "figures/Tcells/", dpi=300, width=8, height=6)
 
 VlnPlot(
   cd4_cells, 

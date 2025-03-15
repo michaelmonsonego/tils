@@ -116,6 +116,47 @@ cowplot::plot_grid(plotlist = gglist, ncol = 4, nrow = 2) +
 ggsave(file = "figures/cd4_cells/clus_0_up_tgfb_vln.png", dpi=300, width=16, height=10)
 
 
+# for asaf sigs 15/3/25: ----------------
+
+iron_list <- list(c(
+    "FTH1", "STEAP1", "STEAP2", "STEAP3", "NCOA4", 
+    "DMT1", "NRAMP2", "SLC11A2", "DCYTB", "CYBRD1", 
+    "HO-1", "HMOX1", "HO-2", "HMOX2", "PCB2", 
+    "SLC40A1", "HEPH", "TF", "TFR1", "CD71", "TRFC",
+    "SCARA5", "TRF1", "TERF1", "FPN1", "ACO1", "IREB2"
+  )
+)
+
+T_cells = AddModuleScore(object = T_cells, features = iron_list, name = "iron_related", assay = "RNA")
+clus2 = AddModuleScore(object = clus2, features = iron_list, name = "iron_related", assay = "RNA")
+cd4_cells = AddModuleScore(object = cd4_cells, features = iron_list, name = "iron_related", assay = "RNA")
+
+
+#M# vlnplot for all clusters combined 
+SignatureScore(T_cells, 'iron_related1')   + 
+  labs(title = "", y = 'iron_in_T',  x="")+ labs(y = '') + ggtitle("T cells iron_in_T signature") +
+  theme(axis.text.y = element_text(size = 24),
+        legend.text = element_text(size = 20), 
+        plot.title = element_text(size = 24, face = "bold"))+
+  guides(fill = guide_legend(override.aes = list(shape = NA, color = NA)))
+ggsave(file = "figures/Tcells/all_cells_iron_in_T_vln_all_clusters.png", dpi=300, width=6, height=6)
+
+SignatureScore(clus2, 'iron_related1')   + 
+  labs(title = "", y = 'iron_in_T',  x="")+ labs(y = '') + ggtitle("cluster 2 iron_in_T signature") +
+  theme(axis.text.y = element_text(size = 24),
+        legend.text = element_text(size = 20), 
+        plot.title = element_text(size = 24, face = "bold"))+
+  guides(fill = guide_legend(override.aes = list(shape = NA, color = NA)))
+ggsave(file = "figures/clus2/clus2_iron_in_T_vln_all_clusters.png", dpi=300, width=6, height=6)
+
+SignatureScore(cd4_cells, 'iron_related1')   + 
+  labs(title = "", y = 'iron_in_T',  x="")+ labs(y = '') + ggtitle("cd4_cells iron_in_T signature") +
+  theme(axis.text.y = element_text(size = 24),
+        legend.text = element_text(size = 20), 
+        plot.title = element_text(size = 24, face = "bold"))+
+  guides(fill = guide_legend(override.aes = list(shape = NA, color = NA)))
+ggsave(file = "figures/cd4_cells/cd4_iron_in_T_vln_all_clusters.png", dpi=300, width=6, height=6)
+
 # IFNg down signature cluster 2-------------------------------
 down_ifng <- "Akr1c18
 Apex1
